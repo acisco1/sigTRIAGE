@@ -1,0 +1,49 @@
+$(document).ready(function(){
+    $('input[name=triage_id]').focus();
+    $('input[name=triage_id]').keyup(function(event){
+        var triage_id=$(this).val();
+        var input=$(this);
+        if(triage_id.length==11 && triage_id!=''){
+            $.ajax({
+                url:base_url+'Arimac/AjaxBuscarPaciente',
+                type:'POST',
+                dataType:'json',
+                data:{
+                    triage_id:triage_id,
+                    csrf_token:csrf_token
+                },beforeSend:function(){
+                    msj_loading();
+                },success:function(data){
+                    bootbox.hideAll();
+                    if(data.accion=='1'){
+                        window.open(base_url+'Arimac/Paciente/'+triage_id,'_blank')
+                    }
+                },error:function(e){
+                    bootbox.hideAll();
+                    MsjError();
+                }
+            })
+            input.val('');
+        }
+    });
+    $('.form-expediente').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:base_url+'Arimac/AjaxExpediente',
+            type:'POST',
+            dataType:'json',
+            data:$(this).serialize(),
+            beforeSend:function(e){
+                msj_loading();
+            },success:function(data){
+                bootbox.hideAll();
+                AbrirDocumentoMultiple(base_url+'Inicio/Documentos/ExpedienteAmarilloBack/'+$('input[name=triage_id_val]').val(),'back',100);
+                AbrirDocumento(base_url+'Inicio/Documentos/ExpedienteAmarillo/'+$('input[name=triage_id_val]').val());
+                
+            },error:function(e){
+                bootbox.hideAll;
+                MsjError();
+            }
+        })
+    })
+});

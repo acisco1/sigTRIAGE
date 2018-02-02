@@ -1,0 +1,1012 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of Documentos
+ *
+ * @author bienTICS
+ */
+require_once APPPATH.'modules/config/controllers/Config.php';
+class Documentos extends Config{
+    public function index() {
+        die('ACCESO NO PERMITIDO');
+    }
+    public function Expediente($paciente) {
+        if($_GET['tipo']=='Choque'){
+            $choque= $this->config_mdl->_get_data_condition('os_choque_v2',array(
+                'triage_id'=>$paciente
+            ));
+            if($choque[0]['medico_id']==''){
+                $this->config_mdl->_update_data('os_choque_v2',array(
+                    'medico_id'=> $this->UMAE_USER
+                ),array(
+                    'triage_id'=>$paciente
+                ));  
+                $this->AccesosUsuarios(array('acceso_tipo'=>'Médico Choque','triage_id'=>$paciente,'areas_id'=>$choque[0]['choque_id']));
+            }
+            
+        }
+        $sql['HojaClasificacion']= $this->config_mdl->_get_data_condition('os_triage_clasificacion',array(
+            'triage_id'=>$paciente
+        ));
+        $sql['HojasFrontales']= $this->config_mdl->_get_data_condition('os_consultorios_especialidad_hf',array(
+            'triage_id'=> $paciente
+        ));
+        $sql['ce']= $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
+            'triage_id'=> $paciente
+        ))[0];
+        $sql['obs']= $this->config_mdl->_get_data_condition('os_observacion',array(
+            'triage_id'=> $paciente
+        ))[0];
+        $sql['NotasAll']= $this->config_mdl->_query("SELECT * FROM doc_notas, os_empleados WHERE 
+            doc_notas.empleado_id=os_empleados.empleado_id AND
+            doc_notas.triage_id=".$paciente);
+        $sql['info']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $paciente
+        ))[0];
+        $sql['AvisoMp']= $this->config_mdl->_query("SELECT * FROM os_empleados, ts_ministerio_publico WHERE
+            os_empleados.empleado_id=ts_ministerio_publico.medico_familiar AND
+            ts_ministerio_publico.triage_id=".$paciente);
+        $sql['PINFO']= $this->config_mdl->_get_data_condition('paciente_info',array(
+            'triage_id'=>$paciente
+        ))[0];
+        $sql['DocumentosHoja']= $this->config_mdl->_get_data('pc_documentos',array(
+            'doc_nombre'=>'Hoja Frontal'
+        ));
+        $sql['DocumentosNotas']= $this->config_mdl->_query("SELECT * FROM pc_documentos WHERE doc_nombre!='Hoja Frontal'");
+        $this->load->view('Documentos/Expediente',$sql);
+    }
+    public function ExpedienteEmpleado($data) {
+        $sql= $this->config_mdl->_get_data_condition('os_empleados',array(
+            'empleado_id'=> $data['empleado_id']
+        ));
+        if(empty($sql)){
+            return 'No Especificado';
+        }else{
+            return $sql[0]['empleado_nombre'].' '.$sql[0]['empleado_apellidos'];
+        }     
+    }
+    public function HojaFrontal() {
+        $sql['Especialidades']= $this->config_mdl->_query("SELECT * FROM um_especialidades GROUP BY um_especialidades.especialidad_nombre");
+        $sql['info']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get_post('folio')
+        ))[0];
+        $sql['hojafrontal']=  $this->config_mdl->_get_data_condition('os_consultorios_especialidad_hf',array(
+            'hf_id'=>  $this->input->get_post('hf')
+        ));
+        $sql['am']=  $this->config_mdl->_get_data_condition('os_asistentesmedicas',array(
+            'triage_id'=>  $this->input->get_post('folio')
+        ));
+        $sql['DirEmpresa']=  $this->config_mdl->_get_data_condition('os_triage_directorio',array(
+            'directorio_tipo'=>'Empresa',
+            'triage_id'=>  $this->input->get_post('folio')
+        ))[0];
+        $sql['ce']=  $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
+            'triage_id'=>  $this->input->get_post('folio')
+        ));
+        $sql['INFO_USER']=  $this->config_mdl->_get_data_condition('os_empleados',array(
+            'empleado_id'=>  $_SESSION['UMAE_USER']
+        ));
+        $sql['Empresa']= $this->config_mdl->_get_data_condition('os_triage_empresa',array(
+            'triage_id'=>$this->input->get_post('folio')
+        ))[0];
+        $sql['MinisterioPublico']= $this->config_mdl->_get_data_condition('ts_ministerio_publico',array(
+            'triage_id'=>$this->input->get_post('folio')
+        ))[0];
+        $sql['PINFO']= $this->config_mdl->_get_data_condition('paciente_info',array(
+            'triage_id'=>$this->input->get_post('folio') 
+        ))[0];
+        $sql['SignosVitales']= $this->config_mdl->_get_data_condition('os_triage_signosvitales',array(
+            'triage_id'=>$this->input->get_post('folio') 
+        ))[0];
+        $sql['Documentos']= $this->config_mdl->_get_data_condition('pc_documentos',array(
+            'doc_nombre'=>'Hoja Frontal'
+        ));
+        $this->load->view('Documentos/Doc_HojaFrontal',$sql);
+        
+    }
+    public function GuardarHojaFrontal() {
+        $consultorio= $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
+            'triage_id'=>  $this->input->post('triage_id')
+        ))[0];
+        foreach ($this->input->post('hf_mecanismolesion') as $value) {
+            $hf_mecanismolesion.=$value.',';
+        }
+        foreach ($this->input->post('hf_quemadura') as $value) {
+            $hf_quemadura.=$value.',';
+        }
+        foreach ($this->input->post('hf_trataminentos') as $value) {
+            $hf_trataminentos.=$value.',';
+        }
+        $data=array(
+            'hf_ce'=> ($this->input->post('tipo')=='Consultorios' ? '1': '0'),
+            'hf_obs'=> ($this->input->post('tipo')=='Observación' ? '1': '0'),
+            'hf_choque'=> ($this->input->post('tipo')=='Choque' ? '1': '0'),
+            'hf_fg'=> date('Y-m-d'),      
+            'hf_hg'=> date('H:i'),
+            'hf_documento'=> $this->input->post('hf_documento'),
+            'hf_intoxitacion'=>  $this->input->post('hf_intoxitacion'),
+            'hf_intoxitacion_descrip'=>  $this->input->post('hf_intoxitacion_descrip'),
+            'hf_urgencia'=>  $this->input->post('hf_urgencia'),
+            'hf_atencion'=> $this->input->post('hf_atencion'),
+            'hf_especialidad'=>  $this->input->post('hf_especialidad'),
+            'hf_motivo'=>  $this->input->post('hf_motivo'),
+            'hf_mecanismolesion'=>rtrim($hf_mecanismolesion,','),
+            'hf_mecanismolesion_mtrs'=>  $this->input->post('hf_mecanismolesion_mtrs'),
+            'hf_mecanismolesion_otros'=>  $this->input->post('hf_mecanismolesion_otros'),
+            'hf_quemadura'=>  rtrim($hf_quemadura,','),
+            'hf_quemadura_otros'=>  $this->input->post('hf_quemadura_otros'),
+            'hf_antecedentes'=>  $this->input->post('hf_antecedentes'),
+            'hf_exploracionfisica'=>  $this->input->post('hf_exploracionfisica'),
+            'hf_interpretacion'=>  $this->input->post('hf_interpretacion'),
+            'hf_diagnosticos'=>  $this->input->post('hf_diagnosticos'),
+            'hf_diagnosticos_lechaga'=>  $this->input->post('hf_diagnosticos_lechaga'),
+            'hf_trataminentos'=> rtrim($hf_trataminentos,','),
+            'hf_trataminentos_otros'=>  $this->input->post('hf_trataminentos_otros'),
+            'hf_trataminentos_por'=>  $this->input->post('hf_trataminentos_por'),
+            'hf_receta_por'=>  $this->input->post('hf_receta_por'),
+            'hf_indicaciones'=>  $this->input->post('hf_indicaciones'),
+            'hf_ministeriopublico'=>  $this->input->post('hf_ministeriopublico'),
+            'hf_alta'=> $this->input->post('hf_alta'),
+            'hf_alta_otros'=> $this->input->post('hf_alta_otros'),
+            'hf_incapacidad_dias'=>  $this->input->post('hf_incapacidad_dias'),
+            'hf_incapacidad_ptr_eg'=>  $this->input->post('hf_incapacidad_ptr_eg'),
+            'triage_id'=>  $this->input->post('triage_id'),
+            'empleado_id'=> $this->UMAE_USER
+        ); 
+        $data_am=array(
+            'asistentesmedicas_da'=>  $this->input->post('asistentesmedicas_da'),
+            'asistentesmedicas_dl'=>  $this->input->post('asistentesmedicas_dl'),
+            'asistentesmedicas_ip'=>  $this->input->post('asistentesmedicas_ip'),
+            'asistentesmedicas_tratamientos'=>  $this->input->post('asistentesmedicas_tratamientos'),
+            'asistentesmedicas_ss_in'=>  $this->input->post('asistentesmedicas_ss_in'),
+            'asistentesmedicas_ss_ie'=>  $this->input->post('asistentesmedicas_ss_ie'),
+            'asistentesmedicas_oc_hr'=>  $this->input->post('asistentesmedicas_oc_hr'),
+            'asistentesmedicas_am'=>  $this->input->post('asistentesmedicas_am'),
+            'asistentesmedicas_incapacidad_am'=>  $this->input->post('asistentesmedicas_incapacidad_am'),
+            'asistentesmedicas_incapacidad_ga'=> $this->input->post('asistentesmedicas_incapacidad_ga'),
+            'asistentesmedicas_incapacidad_tipo'=> $this->input->post('asistentesmedicas_incapacidad_tipo'),
+            'asistentesmedicas_incapacidad_dias_a'=> $this->input->post('asistentesmedicas_incapacidad_dias_a'),
+            'asistentesmedicas_incapacidad_fi'=>  $this->input->post('asistentesmedicas_incapacidad_fi'),
+            'asistentesmedicas_incapacidad_da'=>  $this->input->post('asistentesmedicas_incapacidad_da'),
+            'asistentesmedicas_mt'=>  $this->input->post('asistentesmedicas_mt'),
+            'asistentesmedicas_mt_m'=>  $this->input->post('asistentesmedicas_mt_m'),
+            'asistentesmedicas_incapacidad_folio'=>  $this->input->post('asistentesmedicas_incapacidad_folio'),
+            'asistentesmedicas_omitir'=>  $this->input->post('asistentesmedicas_omitir')
+        );
+        if($this->input->post('tipo')=='Consultorios'){
+            if($consultorio['ce_status']=='Salida'){
+                unset($data['hf_alta']);
+            }else{
+                $this->config_mdl->_update_data('os_consultorios_especialidad',array(
+                    'ce_hf'=>($this->input->post('hf_alta')!='Otros' ? $this->input->post('hf_alta') : $this->input->post('hf_alta_otros'))
+                ),array(
+                   'triage_id'=>  $this->input->post('triage_id')
+                ));
+            }
+        }
+        $sqlCheckHojaFrontal= $this->config_mdl->sqlGetDataCondition('os_consultorios_especialidad_hf',array(
+            'triage_id'=> $this->input->post('triage_id')
+        ),'hf_id');
+        if(empty($sqlCheckHojaFrontal)){
+            $this->config_mdl->_insert('os_consultorios_especialidad_hf',$data);
+        }else{
+            unset($data['hf_fg']);
+            unset($data['hf_hg']);
+            unset($data['empleado_id']);
+            $this->config_mdl->_update_data('os_consultorios_especialidad_hf',$data,array(
+                'hf_id'=>  $this->input->post('hf_id')
+            ));
+        }
+        $this->config_mdl->_update_data('os_asistentesmedicas',$data_am,array(
+           'triage_id'=>  $this->input->post('triage_id')
+        ));
+        if($this->input->post('hf_ministeriopublico')=='Si'){
+            $sqlMP= $this->config_mdl->_get_data_condition('ts_ministerio_publico',array(
+                'triage_id'=> $this->input->post('triage_id')
+            ));
+            if(empty($sqlMP)){
+                $this->config_mdl->_insert('ts_ministerio_publico',array(
+                    'mp_estatus'=>'Enviado',
+                    'mp_fecha'=> date('Y-m-d'),
+                    'mp_hora'=> date('H:i:s'),
+                    'mp_area'=> $this->input->post('tipo'),
+                    'triage_id'=> $this->input->post('triage_id'),
+                    'medico_familiar'=> $this->UMAE_USER
+                ));
+            }
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function HojaInicialAbierto() {
+        $sql['Especialidades']= $this->config_mdl->_query("SELECT * FROM um_especialidades GROUP BY um_especialidades.especialidad_nombre");
+        $sql['info']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get_post('folio')
+        ))[0];
+        $sql['hojafrontal']=  $this->config_mdl->_get_data_condition('os_consultorios_especialidad_hf',array(
+            'hf_id'=>  $this->input->get_post('hf')
+        ));
+        $sql['am']=  $this->config_mdl->_get_data_condition('os_asistentesmedicas',array(
+            'triage_id'=>  $this->input->get_post('folio')
+        ));
+        $sql['DirEmpresa']=  $this->config_mdl->_get_data_condition('os_triage_directorio',array(
+            'directorio_tipo'=>'Empresa',
+            'triage_id'=>  $this->input->get_post('folio')
+        ))[0];
+        $sql['ce']=  $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
+            'triage_id'=>  $this->input->get_post('folio')
+        ));
+        $sql['INFO_USER']=  $this->config_mdl->_get_data_condition('os_empleados',array(
+            'empleado_id'=>  $_SESSION['UMAE_USER']
+        ));
+        $sql['Empresa']= $this->config_mdl->_get_data_condition('os_triage_empresa',array(
+            'triage_id'=>$this->input->get_post('folio')
+        ))[0];
+        $sql['MinisterioPublico']= $this->config_mdl->_get_data_condition('ts_ministerio_publico',array(
+            'triage_id'=>$this->input->get_post('folio')
+        ))[0];
+        $sql['PINFO']= $this->config_mdl->_get_data_condition('paciente_info',array(
+            'triage_id'=>$this->input->get_post('folio') 
+        ))[0];
+        $sql['SignosVitales']= $this->config_mdl->_get_data_condition('os_triage_signosvitales',array(
+            'triage_id'=>$this->input->get_post('folio') 
+        ))[0];
+        $sql['Documentos']= $this->config_mdl->_get_data_condition('pc_documentos',array(
+            'doc_nombre'=>'Hoja Frontal'
+        ));
+        $this->load->view('Documentos/HojaInicialAbierto',$sql);
+    }
+    public function AjaxHojaInicialAbierto() {
+        $consultorio= $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
+            'triage_id'=>  $this->input->post('triage_id')
+        ))[0];
+
+        $data=array(
+            'hf_ce'=> ($this->input->post('tipo')=='Consultorios' ? '1': '0'),
+            'hf_obs'=> ($this->input->post('tipo')=='Observación' ? '1': '0'),
+            'hf_choque'=> ($this->input->post('tipo')=='Choque' ? '1': '0'),
+            'hf_fg'=> date('d-m-Y'),
+            'hf_hg'=> date('H:i'),
+            'hf_documento'=> $this->input->post('hf_documento'), 
+            'hf_motivo'=> $this->input->post('hf_motivo'),//Motivo de Consulta
+            'hf_antecedentes'=> $this->input->post('hf_antecedentes'), //Antecedentes
+            'hf_padecimientoa'=> $this->input->post('hf_padecimientoa'), // Padecimiento actual
+            'hf_exploracionfisica'=> $this->input->post('hf_exploracionfisica'), // Eploracion fisica
+            // ESCALA DE GLASGOW
+            'hf_glasgow_expontanea'=> $this->input->post('hf_glasgow_expontanea'),//Apertura Ocular
+            'hf_glasgow_hablar'=> $this->input->post('hf_glasgow_hablar'),
+            'hf_glasgow_dolor'=> $this->input->post('hf_glasgow_dolor'),
+            'hf_glasgow_ausente'=> $this->input->post('hf_glasgow_ausente'),
+            'hf_glasgow_obedece'=> $this->input->post('hf_glasgow_obedece'), // Respuesta Motora
+            'hf_glasgow_localiza'=> $this->input->post('hf_glasgow_localiza'),
+            'hf_glasgow_retira'=> $this->input->post('hf_glasgow_retira'),
+            'hf_glasgow_flexion'=> $this->input->post('hf_glasgow_flexion'),
+            'hf_glasgow_extension'=> $this->input->post('hf_glasgow_extension'),
+            'hf_glasgow_ausencia'=> $this->input->post('hf_glasgow_ausencia'),
+            'hf_glasgow_orientado'=> $this->input->post('hf_glasgow_orientado'),// Respuesta Verbal
+            'hf_glasgow_confuso'=> $this->input->post('hf_glasgow_confuso'),
+            'hf_glasgow_incoherente'=> $this->input->post('hf_glasgow_incoherente'),
+            'hf_glasgow_sonidos'=> $this->input->post('hf_glasgow_sonidos'),
+            'hf_glasgow_arespuesta'=> $this->input->post('hf_glasgow_arespuesta'),
+            'hf_escala_glasgow'=> $this->input->post('hf_escala_glasgow'),
+            'hf_auxiliares'=>$this->input->post('hf_auxiliares'), // Auxiliares Diagnóstico
+            'hf_diagnosticos_lechaga'=>  $this->input->post('hf_diagnosticos_lechaga'), //Diagnóstico de Ingreso
+            'hf_diagnosticos'=> $this->input->post('hf_diagnosticos'), // Comorbilidades
+            'hf_riesgocaida'=> $this->input->post('hf_riesgocaida'),
+            'hf_eva'=> $this->input->post('hf_eva'),
+            'hf_riesgo_trombosis'=> $this->input->post('hf_riesgo_trombosis'),
+            // PLAN MEDICO
+            'hf_ayuno'=> $this->input->post('hf_ayuno'),
+            'hf_signosycuidados'=> $this->input->post('hf_signosycuidados'),
+            'hf_cuidadosenfermeria'=> $this->input->post('hf_cuidadosenfermeria'),
+            'hf_solucionesp'=> $this->input->post('hf_solucionesp'),
+            'hf_medicamentos'=> $this->input->post('hf_medicamentos'),
+            'hf_indicaciones'=> $this->input->post('hf_indicaciones'),//Pronosticos
+            'hf_interpretacion'=> $this->input->post('hf_interpretacion'),//Estado de salud
+            'hf_interconsulta'=> $this->input->post('hf_interconsulta'),
+            'hf_alta'=> $this->input->post('hf_alta'),
+            'hf_alta_otros'=> $this->input->post('hf_alta_otros'),
+            'triage_id'=>  $this->input->post('triage_id'),
+            'empleado_id'=> $this->UMAE_USER
+        ); 
+        $data_am=array(
+            'asistentesmedicas_da'=>  $this->input->post('asistentesmedicas_da'),
+            'asistentesmedicas_dl'=>  $this->input->post('asistentesmedicas_dl'),
+            'asistentesmedicas_ip'=>  $this->input->post('asistentesmedicas_ip'),
+            'asistentesmedicas_tratamientos'=>  $this->input->post('asistentesmedicas_tratamientos'),
+            'asistentesmedicas_ss_in'=>  $this->input->post('asistentesmedicas_ss_in'),
+            'asistentesmedicas_ss_ie'=>  $this->input->post('asistentesmedicas_ss_ie'),
+            'asistentesmedicas_oc_hr'=>  $this->input->post('asistentesmedicas_oc_hr'),
+            'asistentesmedicas_am'=>  $this->input->post('asistentesmedicas_am'),
+            'asistentesmedicas_incapacidad_am'=>  $this->input->post('asistentesmedicas_incapacidad_am'),
+            'asistentesmedicas_incapacidad_ga'=> $this->input->post('asistentesmedicas_incapacidad_ga'),
+            'asistentesmedicas_incapacidad_tipo'=> $this->input->post('asistentesmedicas_incapacidad_tipo'),
+            'asistentesmedicas_incapacidad_dias_a'=> $this->input->post('asistentesmedicas_incapacidad_dias_a'),
+            'asistentesmedicas_incapacidad_fi'=>  $this->input->post('asistentesmedicas_incapacidad_fi'),
+            'asistentesmedicas_incapacidad_da'=>  $this->input->post('asistentesmedicas_incapacidad_da'),
+            'asistentesmedicas_mt'=>  $this->input->post('asistentesmedicas_mt'),
+            'asistentesmedicas_mt_m'=>  $this->input->post('asistentesmedicas_mt_m'),
+            'asistentesmedicas_incapacidad_folio'=>  $this->input->post('asistentesmedicas_incapacidad_folio'),
+            'asistentesmedicas_omitir'=>  $this->input->post('asistentesmedicas_omitir')
+        );
+        if($this->input->post('tipo')=='Consultorios'){
+            if($consultorio['ce_status']=='Salida'){
+                unset($data['hf_alta']);
+            }else{
+                $this->config_mdl->_update_data('os_consultorios_especialidad',array(
+                    'ce_hf'=>($this->input->post('hf_alta')!='Otros' ? $this->input->post('hf_alta') : $this->input->post('hf_alta_otros'))
+                ),array(
+                   'triage_id'=>  $this->input->post('triage_id')
+                ));
+            }
+        }
+        $sqlCheckHojaFrontal= $this->config_mdl->sqlGetDataCondition('os_consultorios_especialidad_hf',array(
+            'triage_id'=> $this->input->post('triage_id')
+        ),'hf_id');
+        if(empty($sqlCheckHojaFrontal)){
+            $this->config_mdl->_insert('os_consultorios_especialidad_hf',$data);
+        }else{
+            unset($data['hf_fg']);
+            unset($data['hf_hg']);
+            unset($data['empleado_id']);
+            $this->config_mdl->_update_data('os_consultorios_especialidad_hf',$data,array(
+                'hf_id'=>  $this->input->post('hf_id')
+            ));
+        }
+        $this->config_mdl->_update_data('os_asistentesmedicas',$data_am,array(
+           'triage_id'=>  $this->input->post('triage_id')
+        ));
+        $this->setOutput(array('accion'=>'1'));
+    }
+    /*DOCUMENTOS OBSERVACIÓN*/
+    public function TratamientoQuirurgico($Paciente) {
+        $sql['tratamientos']=  $this->config_mdl->_get_data_condition('os_observacion_tratamientos',array(
+            'triage_id'=> $Paciente
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico',$sql);
+    }
+    public function AjaxTratamientosQuirurgicos() {
+        $data=array(
+            'tratamiento_nombre'=> $this->input->post('tratamiento_nombre'),
+            'tratamiento_fecha'=> date('d/m/Y'),
+            'tratamiento_hora'=> date('H:i'),
+            'triage_id'=> $this->input->post('triage_id'),
+            'empleado_id'=> $this->UMAE_USER
+        );
+        if($this->input->post('accion')=='add'){
+            $this->config_mdl->_insert('os_observacion_tratamientos',$data);
+        }else{
+            unset($data['tratamiento_fecha']);
+            unset($data['tratamiento_hora']);
+            unset($data['empleado_id']);
+            $this->config_mdl->_update_data('os_observacion_tratamientos',$data,array(
+                'tratamiento_id'=> $this->input->post('tratamiento_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function DocumentosTratamientoQuirurgico($Tratamiento) {
+        $sql['triage']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['observacion']=  $this->config_mdl->_get_data_condition('os_observacion',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['st']=  $this->config_mdl->_get_data_condition('os_observacion_solicitudtransfucion',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $sql['cs']=  $this->config_mdl->_get_data_condition('os_observacion_cirugiasegura',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $sql['si']=  $this->config_mdl->_get_data_condition('os_observacion_ci',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $sql['cci']=  $this->config_mdl->_get_data_condition('os_observacion_cci',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $sql['isq']=  $this->config_mdl->_get_data_condition('os_observacion_isq',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico/ComboQuirurgico',$sql);
+    }
+    public function SolicitudTransfusion($Tratamiento) {
+        $sql['triage']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['observacion']=  $this->config_mdl->_get_data_condition('os_observacion',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['empleado']=  $this->config_mdl->_get_data_condition('os_empleados',array(
+            'empleado_id'=> $sql['observacion'][0]['observacion_medico']
+        ));
+        $sql['st']=  $this->config_mdl->_get_data_condition('os_observacion_solicitudtransfucion',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico/SolicitudTransfusion',$sql);
+    }
+    public function AjaxSolicitudTransfusion() {
+        $data=array(
+            'solicitudtransfucion_sangre'=>  $this->input->post('solicitudtransfucion_sangre'),
+            'solicitudtransfucion_plasma'=>  $this->input->post('solicitudtransfucion_plasma'),
+            'solicitudtransfucion_suspensionconcentrada'=>  $this->input->post('solicitudtransfucion_suspensionconcentrada'),
+            'solicitudtransfucion_otros'=>  $this->input->post('solicitudtransfucion_otros'),
+            'solicitudtransfucion_otros_val'=>  $this->input->post('solicitudtransfucion_otros_val'),
+            'solicitudtransfucion_ordinaria'=>  $this->input->post('solicitudtransfucion_ordinaria'),
+            'solicitudtransfucion_urgente'=>  $this->input->post('solicitudtransfucion_urgente'),
+            'solicitudtransfucion_urgente_vol'=>  $this->input->post('solicitudtransfucion_urgente_vol'),
+            'solicitudtransfucion_operacion_dia'=>  $this->input->post('solicitudtransfucion_operacion_dia'),
+            'solicitudtransfucion_operacion_hora'=>  $this->input->post('solicitudtransfucion_operacion_hora'),
+            'solicitudtransfucion_disponible'=>  $this->input->post('solicitudtransfucion_disponible'),
+            'solicitudtransfucion_reserva'=>  $this->input->post('solicitudtransfucion_reserva'),
+            'solicitudtransfucion_gs_abo'=>  $this->input->post('solicitudtransfucion_gs_abo'),
+            'solicitudtransfucion_gs_rhd'=>  $this->input->post('solicitudtransfucion_gs_rhd'),
+            'solicitudtransfucion_gs_ignora'=>  $this->input->post('solicitudtransfucion_gs_ignora'),
+            'solicitudtransfucion_diagnostico'=>  $this->input->post('solicitudtransfucion_diagnostico'),
+            'solicitudtransfucion_hb'=>  $this->input->post('solicitudtransfucion_hb'),
+            'solicitudtransfucion_ht'=>  $this->input->post('solicitudtransfucion_ht'),
+            'solicitudtransfucion_transfuciones_previas'=>  $this->input->post('solicitudtransfucion_transfuciones_previas'),
+            'solicitudtransfucion_reacciones_postransfuncionales'=>  $this->input->post('solicitudtransfucion_reacciones_postransfuncionales'),
+            'solicitudtransfucion_fecha_ultima'=>  $this->input->post('solicitudtransfucion_fecha_ultima'),
+            'solicitudtransfucion_embarazo_previo'=>  $this->input->post('solicitudtransfucion_embarazo_previo'),
+            'solicitudtransfucion_pfh'=>  $this->input->post('solicitudtransfucion_pfh'),
+            'solicitudtransfucion_solicita_f'=>  $this->input->post('solicitudtransfucion_solicita_f'),
+            'solicitudtransfucion_solicita_h'=>  $this->input->post('solicitudtransfucion_solicita_h'),
+            'solicitudtransfucion_recibio_nombre'=>  $this->input->post('solicitudtransfucion_recibio_nombre'),
+            'solicitudtransfucion_recibio_f'=>  $this->input->post('solicitudtransfucion_recibio_f'),
+            'solicitudtransfucion_recibio_h'=>  $this->input->post('solicitudtransfucion_recibio_h'),
+            'tratamiento_id'=> $this->input->post('tratamiento_id'),
+            'triage_id'=>  $this->input->post('triage_id')
+        );
+        if(empty($this->config_mdl->_get_data_condition('os_observacion_solicitudtransfucion',array('tratamiento_id'=>  $this->input->post('tratamiento_id'))))){
+            $this->config_mdl->_insert('os_observacion_solicitudtransfucion',$data);
+        }else{
+            $this->config_mdl->_update_data('os_observacion_solicitudtransfucion',$data,array(
+                'tratamiento_id'=>  $this->input->post('tratamiento_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function CirugiaSegura($Tratamiento) {
+        $sql['triage']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['observacion']=  $this->config_mdl->_get_data_condition('os_observacion',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['empleado']=  $this->config_mdl->_get_data_condition('os_empleados',array(
+            'empleado_id'=> $sql['observacion'][0]['observacion_medico']
+        ));
+        $sql['cs']=  $this->config_mdl->_get_data_condition('os_observacion_cirugiasegura',array(
+            'triage_id'=> $Tratamiento
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico/CirugiaSegura',$sql);
+    }
+    public function AjaxCirugiaSegura() {
+        $data=array(
+            'cirugiasegura_procedimiento'=>  $this->input->post('cirugiasegura_procedimiento'),
+            'triage_id'=>  $this->input->post('triage_id'),
+            'tratamiento_id'=> $this->input->post('tratamiento_id')
+        );
+        if(empty($this->config_mdl->_get_data_condition('os_observacion_cirugiasegura',array('tratamiento_id'=>  $this->input->post('tratamiento_id'))))){
+            $this->config_mdl->_insert('os_observacion_cirugiasegura',$data);
+        }else{
+            $this->config_mdl->_update_data('os_observacion_cirugiasegura',$data,array(
+                'tratamiento_id'=>  $this->input->post('tratamiento_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function SolicitudeIntervencion($Tratamiento) {
+        $sql['triage']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['observacion']=  $this->config_mdl->_get_data_condition('os_observacion',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['empleado']=  $this->config_mdl->_get_data_condition('os_empleados',array(
+            'empleado_id'=> $sql['observacion'][0]['observacion_medico']
+        ));
+        $sql['si']=  $this->config_mdl->_get_data_condition('os_observacion_ci',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico/SolicitudeIntervencion',$sql);
+    }
+    public function AjaxSolicitudeIntervencion() {
+        $data=array(
+            'ci_servicio'=>  $this->input->post('ci_servicio'),
+            'ci_fecha_solicitud'=>  $this->input->post('ci_fecha_solicitud'),
+            'ci_fecha_solicitada'=>  $this->input->post('ci_fecha_solicitada'),
+            'ci_hora_deseada'=>  $this->input->post('ci_hora_deseada'),
+            'ci_prioridad'=>  $this->input->post('ci_prioridad'),
+            'ci_diagnostico'=>  $this->input->post('ci_diagnostico'),
+            'ci_operacion_planeada'=>  $this->input->post('ci_operacion_planeada'),
+            'ci_operacion_eu'=>  $this->input->post('ci_operacion_eu'),
+            'ci_ap'=>  $this->input->post('ci_ap'),
+            'ci_tec'=>  $this->input->post('ci_tec'),
+            'ci_njs'=>  $this->input->post('ci_njs'),
+            'ci_nmc'=>  $this->input->post('ci_nmc'),
+            'ci_mmc'=>  $this->input->post('ci_mmc'),
+            'triage_id'=>  $this->input->post('triage_id'),
+            'tratamiento_id'=> $this->input->post('tratamiento_id')
+        );
+        if(empty($this->config_mdl->_get_data_condition('os_observacion_ci',array('tratamiento_id'=>  $this->input->post('tratamiento_id'))))){
+            $this->config_mdl->_insert('os_observacion_ci',$data);
+        }else{
+            $this->config_mdl->_update_data('os_observacion_ci',$data,array(
+                'tratamiento_id'=>  $this->input->post('tratamiento_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function ConsentimientoInformado($Tratamiento) {
+        $sql['triage']=  $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['observacion']=  $this->config_mdl->_get_data_condition('os_observacion',array(
+            'triage_id'=> $this->input->get('folio')
+        ));
+        $sql['cci']=  $this->config_mdl->_get_data_condition('os_observacion_cci',array(
+            'triage_id'=> $Tratamiento
+        ));
+        $sql['st']=  $this->config_mdl->_get_data_condition('os_observacion_solicitudtransfucion',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico/ConsentimientoInformado',$sql);
+    }
+    public function AjaxConsentimientoInformado() {
+        $data=array(
+            'cci_fecha'=>  $this->input->post('cci_fecha'),
+            'cci_la_que_suscribe'=>  $this->input->post('cci_la_que_suscribe'),
+            'cci_caracter'=>  $this->input->post('cci_caracter'),
+            'cci_tipo_ct'=>  $this->input->post('cci_tipo_ct'),
+            'cci_pronostico'=>  $this->input->post('cci_pronostico'),
+            'triage_id'=>  $this->input->post('triage_id'),
+            'tratamiento_id'=> $this->input->post('tratamiento_id')
+        );
+        if(empty($this->config_mdl->_get_data_condition('os_observacion_cci',array('tratamiento_id'=>  $this->input->post('tratamiento_id'))))){
+            $this->config_mdl->_insert('os_observacion_cci',$data);
+        }else{
+            $this->config_mdl->_update_data('os_observacion_cci',$data,array(
+                'tratamiento_id'=>  $this->input->post('tratamiento_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function ListaVerificacionISQ($Tratamiento) {
+        
+        $sql['isq']=  $this->config_mdl->_get_data_condition('os_observacion_isq',array(
+            'tratamiento_id'=> $Tratamiento
+        ));
+        $this->load->view('Documentos/TratamientoQuirurgico/ListaVerificacionISQ',$sql);
+    }
+    public function AjaxListaVerificacionISQ() {
+        $data=array(
+            'isq_servicio_area'=>  $this->input->post('isq_servicio_area'),
+            'isq_turno'=>  $this->input->post('isq_turno'),
+            'triage_id'=>  $this->input->post('triage_id'),
+            'tratamiento_id'=> $this->input->post('tratamiento_id')
+        );
+        if(empty($this->config_mdl->_get_data_condition('os_observacion_isq',array('tratamiento_id'=>  $this->input->post('tratamiento_id'))))){
+            $this->config_mdl->_insert('os_observacion_isq',$data);
+        }else{
+            $this->config_mdl->_update_data('os_observacion_isq',$data,array(
+                'tratamiento_id'=>  $this->input->post('tratamiento_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function HojaClasificacion($Paciente) {
+        $sql['info']= $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=>$Paciente
+        ))[0];
+        $this->load->view('Documentos/Doc_HojaClasificacion',$sql);
+    }
+    public function AjaxHojaClasificacion() {
+        $triege_preg_puntaje_s1=0;
+        $triege_preg_puntaje_s2=$this->input->post('triage_preg1_s2')+
+                                $this->input->post('triage_preg2_s2')+
+                                $this->input->post('triage_preg3_s2')+
+                                $this->input->post('triage_preg4_s2')+
+                                $this->input->post('triage_preg5_s2')+
+                                $this->input->post('triage_preg6_s2')+
+                                $this->input->post('triage_preg7_s2')+
+                                $this->input->post('triage_preg8_s2')+
+                                $this->input->post('triage_preg9_s2')+
+                                $this->input->post('triage_preg10_s2')+
+                                $this->input->post('triage_preg11_s2')+ 
+                                $this->input->post('triage_preg12_s2');
+        
+        $triege_preg_puntaje_s3=$this->input->post('triage_preg1_s3')+ 
+                                $this->input->post('triage_preg2_s3')+ 
+                                $this->input->post('triage_preg3_s3')+
+                                $this->input->post('triage_preg4_s3')+
+                                $this->input->post('triage_preg5_s3');
+        $total_puntos=$triege_preg_puntaje_s1+$triege_preg_puntaje_s2+$triege_preg_puntaje_s3;
+        if($total_puntos>30){
+            $color='#E50914';
+            $color_name='Rojo';
+        }if($total_puntos>=21 && $total_puntos<=30){
+            $color='#FF7028';
+            $color_name='Naranja';
+        }if($total_puntos>=11 && $total_puntos<=20){
+            $color='#FDE910';
+            $color_name='Amarillo';
+        }if($total_puntos>=6 && $total_puntos<=10){
+            $color='#4CBB17';
+            $color_name='Verde';
+        }if($total_puntos<=5){
+            $color='#0000FF';
+            $color_name='Azul';
+        }
+        $data=array(
+            'triage_via_registro'=>'Choque',
+            'triage_fecha_clasifica'=> date('Y-m-d'),
+            'triage_hora_clasifica'=> date('H:i'),
+            'triage_status'=>'Finalizado',
+            'triage_etapa'=>'2',
+            'triage_color'=>$color_name,
+            'triage_crea_enfemeria'=> $this->UMAE_USER,
+            'triage_crea_medico'=> $this->UMAE_USER,
+        );
+        $data_clasificacion=array(
+            'triage_preg1_s1'=>  0,
+            'triage_preg2_s1'=>  0,
+            'triage_preg3_s1'=>  0,
+            'triage_preg4_s1'=>  0,
+            'triage_preg5_s1'=>  0,
+            'triege_preg_puntaje_s1'=> $triege_preg_puntaje_s1,
+            'triage_preg1_s2'=>  $this->input->post('triage_preg1_s2'),
+            'triage_preg2_s2'=>  $this->input->post('triage_preg2_s2'),
+            'triage_preg3_s2'=>  $this->input->post('triage_preg3_s2'),
+            'triage_preg4_s2'=>  $this->input->post('triage_preg4_s2'),
+            'triage_preg5_s2'=>  $this->input->post('triage_preg5_s2'),
+            'triage_preg6_s2'=>  $this->input->post('triage_preg6_s2'),
+            'triage_preg7_s2'=>  $this->input->post('triage_preg7_s2'),
+            'triage_preg8_s2'=>  $this->input->post('triage_preg8_s2'),
+            'triage_preg9_s2'=>  $this->input->post('triage_preg9_s2'),
+            'triage_preg10_s2'=> $this->input->post('triage_preg10_s2'),
+            'triage_preg11_s2'=> $this->input->post('triage_preg11_s2'),
+            'triage_preg12_s2'=> $this->input->post('triage_preg12_s2'),
+            'triege_preg_puntaje_s2'=>$triege_preg_puntaje_s2,
+            'triage_preg1_s3'=>  $this->input->post('triage_preg1_s3'),
+            'triage_preg2_s3'=>  $this->input->post('triage_preg2_s3'),
+            'triage_preg3_s3'=>  $this->input->post('triage_preg3_s3'),
+            'triage_preg4_s3'=>  $this->input->post('triage_preg4_s3'),
+            'triage_preg5_s3'=>  $this->input->post('triage_preg5_s3'),
+            'triege_preg_puntaje_s3'=>$triege_preg_puntaje_s3,
+            'triage_puntaje_total'=>$total_puntos,
+            'triage_color'=>$color_name,
+            'triage_id'=> $this->input->post('triage_id')
+        );
+        $this->config_mdl->_update_data('os_triage',$data,array(
+            'triage_id'=>  $this->input->post('triage_id')
+        ));
+        
+        $this->config_mdl->_insert('os_triage_clasificacion',$data_clasificacion);
+        Modules::run('Sections/Api/TriageMedico',$data_clasificacion);
+        $this->AccesosUsuarios(array('acceso_tipo'=>'Triage Enfermería (Choque)','triage_id'=>$this->input->post('triage_id'),'areas_id'=> $this->input->post('triage_id')));
+        $this->AccesosUsuarios(array('acceso_tipo'=>'Triage Médico (Choque)','triage_id'=>$this->input->post('triage_id'),'areas_id'=> $this->input->post('triage_id')));
+        
+        $this->setOutput(array('accion'=>'1'));
+    }
+
+    /*NUEVAS FUNCIONES NOTAS CONSULTORIOS Y OBSERVACIÓN*/
+    public function Notas($Nota) {
+        $sql['info']= $this->config_mdl->_get_data_condition('os_triage',array(
+            'triage_id'=>$_GET['folio']
+        ))[0];
+        $sql['PINFO']= $this->config_mdl->_get_data_condition('paciente_info',array(
+            'triage_id'=>$_GET['folio']
+        ))[0];
+        $sql['Documentos']= $this->config_mdl->_query("SELECT * FROM pc_documentos WHERE doc_nombre!='Hoja Frontal'");
+        $sql['Nota']= $this->config_mdl->_query("SELECT * FROM doc_notas, doc_nota WHERE
+            doc_notas.notas_id=doc_nota.notas_id AND 
+            doc_notas.notas_id=".$Nota)[0];
+        $sql['SignosVitales']= $this->config_mdl->sqlGetDataCondition('os_triage_signosvitales',array(
+            'triage_id'=>$_GET['folio'],
+            'sv_tipo'=>$_GET['inputVia']
+        ))[0];
+        $sql['Especialidades']= $this->config_mdl->sqlGetData('um_especialidades');
+        $sql['Medicos']= $this->config_mdl->_query("SELECT * FROM os_empleados, os_empleados_roles, os_roles WHERE 
+                                                    os_empleados_roles.empleado_id=os_empleados.empleado_id AND
+                                                    os_empleados_roles.rol_id=os_roles.rol_id AND
+                                                    os_roles.rol_id=2");
+        $sql['MedicoResidente'] = $this->config_mdl->_query("SELECT * FROM um_notas_residentes, doc_notas WHERE
+             doc_notas.notas_id=".$Nota);
+
+        $this->load->view('Documentos/Doc_Notas',$sql);
+    }
+    public function AjaxNotas() {
+        foreach ($this->input->post('nota_interconsulta') as $interconsulta_select) {
+                $interconsulta.=$interconsulta_select.',';
+        }
+        $dataNotas=array(
+            'notas_fecha'=> date('Y-m-d'),
+            'notas_hora'=> date('H:i'),
+            'notas_tipo'=> $this->input->post('notas_tipo'),
+            'notas_area'=> $this->UMAE_AREA,
+            'empleado_id'=> $this->UMAE_USER,
+            'notas_medicotratante'=> $this->input->post('notas_medicotratante'),
+            'notas_esresidente' => $this->input->post('residente'),
+            'triage_id'=> $this->input->post('triage_id')
+        );
+        
+        if($this->input->post('accion')=='add'){
+            
+            $this->config_mdl->_insert('doc_notas',$dataNotas);
+            $sqlMax= $this->config_mdl->_get_last_id('doc_notas','notas_id');
+            
+            $this->config_mdl->_insert('doc_nota',array(
+                'nota_motivoInterconsulta'=> $this->input->post('nota_motivoInterconsulta'),
+                'nota_interrogatorio'=> $this->input->post('nota_interrogatorio'),
+                'nota_exploracionf'=> $this->input->post('nota_exploracionf'),
+                'nota_escala_glasgow'=> $this->input->post('hf_escala_glasgow'),
+                'hf_riesgo_caida'=> $this->input->post('hf_riesgo_caida'),
+                'nota_eva'=> $this->input->post('nota_eva'),
+                'nota_riesgotrombosis'=> $this->input->post('nota_riesgotrombosis'),
+                'nota_auxiliaresd'=> $this->input->post('nota_auxiliaresd'),
+                'nota_procedimientos'=> $this->input->post('nota_procedimientos'),
+                'nota_diagnostico'=> $this->input->post('nota_diagnostico'),
+                'nota_pronosticos'=> $this->input->post('nota_pronosticos'),
+                'nota_estadosalud'=> $this->input->post('nota_estadosalud'),
+                'nota_ayuno'=> $this->input->post('nota_ayuno'),
+                'nota_svycuidados'=> $this->input->post('nota_svycuidados'),
+                'nota_cuidadosenfermeria'=> $this->input->post('nota_cuidadosenfermeria'),
+                'nota_solucionesp'=> $this->input->post('nota_solucionesp'),
+                'nota_medicamentos'=> $this->input->post('nota_medicamentos'),
+                'nota_interconsulta'=> trim($interconsulta, ','),
+                'notas_id'=>$sqlMax
+            ));
+            $MaxNota=$sqlMax;
+            /*
+            $this->config_mdl->_insert('um_notas_residentes', array(
+                'nombre_residente' => $this->input->post('apellido_residente'),
+                'apellido_residente'=> $this->input->post('apellido_residente'),
+                'cedula_residente' => $this->input->post('cedula_residente')
+            ));
+
+            $NombreResidente = $this->input->post('nombre_residente');
+            $ApellidoResidente = $this->input->post('apellido_residente');
+            $CedulaResidente = $this->input->post('cedula_residente');
+            
+            
+            foreach ($NombreResidente as $nombre_residente) {
+                $this->config_mdl->_insert('um_notas_residentes', array(
+                    'nombre_residente'=>$this->input->post('nombre_residente'),
+                    'apellido_residente'=>$this->input->post('apellido_residente'),
+                    'cedulap_residente'=>$this->input->post('cedulap_residente')
+                    
+
+                )); 
+            }*/
+            
+        }else{
+            $this->config_mdl->_update_data('doc_notas',array(
+                'notas_medicotratante'=> $this->input->post('notas_medicotratante'),
+            ),array(
+                'notas_id'=> $this->input->post('notas_id')
+            ));
+            $this->config_mdl->_update_data('doc_nota',array(
+                'nota_motivoInterconsulta'=> $this->input->post('nota_motivoInterconsulta'),
+                'nota_interrogatorio'=> $this->input->post('nota_interrogatorio'),
+                'nota_exploracionf'=> $this->input->post('nota_exploracionf'),
+                'nota_escala_glasgow'=> $this->input->post('hf_escala_glasgow'),
+                'hf_riesgo_caida'=> $this->input->post('hf_riesgo_caida'),
+                'nota_eva'=> $this->input->post('nota_eva'),
+                'nota_riesgotrombosis'=> $this->input->post('nota_riesgotrombosis'),
+                'nota_auxiliaresd'=> $this->input->post('nota_auxiliaresd'),
+                'nota_procedimientos'=> $this->input->post('nota_procedimientos'),
+                'nota_diagnostico'=> $this->input->post('nota_diagnostico'),
+                'nota_pronosticos'=> $this->input->post('nota_pronosticos'),
+                'nota_estadosalud'=> $this->input->post('nota_estadosalud'),
+                'nota_ayuno'=> $this->input->post('nota_ayuno'),
+                'nota_svycuidados'=> $this->input->post('nota_svycuidados'),
+                'nota_cuidadosenfermeria'=> $this->input->post('nota_cuidadosenfermeria'),
+                'nota_solucionesp'=> $this->input->post('nota_solucionesp'),
+                'nota_medicamentos'=> $this->input->post('nota_medicamentos'),
+                'nota_interconsulta'=> trim($interconsulta, ',')     
+            ),array(
+                'notas_id'=> $this->input->post('notas_id')
+            ));
+            $MaxNota=$this->input->post('notas_id');
+            /*
+            $NombresResidentes = $this->input->post('nombre_residente');
+            foreach ($NombreResidentes as $nombre_residente) {
+                $this->config_mdl->_update_data('um_notas_residentes', array(
+                    'nombre_residente'=>$this->input->post('nombre_residente'),
+                    'apellido_residente'=>$this->input->post('apellido_residente'),
+                    'cedulap_residente'=>$this->input->post('cedulap_residente'),
+                    'nota_id'=>$sqlMax
+                    ));
+                } */
+        }
+
+        if($this->input->post('via')=='Interconsulta'){
+            $this->config_mdl->_update_data('doc_430200',array(
+                'doc_estatus'=>'Evaluado',
+                'doc_fecha_r'=> date('Y-m-d'),
+                'doc_hora_r'=> date('H:i:s'),
+                'doc_nota_id'=>$MaxNota,
+                'empleado_recive'=> $this->UMAE_USER
+            ),array(
+                'doc_id'=> $this->input->post('doc_id')
+            ));
+
+        }
+        $sqlCheck= $this->config_mdl->sqlGetDataCondition('os_triage_signosvitales',array(
+            'triage_id'=>$this->input->post('triage_id'),
+            'sv_tipo'=> $this->input->post('inputVia')
+        ),'sv_id');
+        $dataSV=array(
+            'sv_tipo'=> $this->input->post('inputVia'),
+            'sv_fecha'=> date('Y-m-d'),
+            'sv_hora'=>date('H:i:s'),
+            'sv_ta'=> $this->input->post('sv_ta'),
+            'sv_temp'=> $this->input->post('sv_temp'),
+            'sv_fc'=> $this->input->post('sv_fc'),
+            'sv_oximetria'=> $this->input->post('sv_oximetria'),
+            'sv_dextrostix'=> $this->input->post('sv_dextrostix'),
+            'sv_peso'=> $this->input->post('sv_peso'),
+            'sv_talla'=> $this->input->post('sv_talla'),  
+            'triage_id'=> $this->input->post('triage_id'),
+            'empleado_id'=> $this->UMAE_USER
+        );
+        if($this->input->post('sv_temp')!=''){
+            if(empty($sqlCheck)){
+                $this->config_mdl->_insert('os_triage_signosvitales',$dataSV);
+            }else{
+                unset($dataSV['sv_fecha']);
+                unset($dataSV['sv_hora']);
+                $this->config_mdl->_update_data('os_triage_signosvitales',$dataSV,array(
+                    'sv_tipo'=>$this->input->post('inputVia'),
+                    'triage_id'=> $this->input->post('triage_id'),
+                ));
+            }   
+        }
+                
+        $this->setOutput(array('accion'=>'1','notas_id'=>$MaxNota));
+    }
+    public function TarjetaDeIdentificacion($Paciente) {
+        $sql['info']= $this->config_mdl->sqlGetDataCondition('os_tarjeta_identificacion',array(
+            'triage_id'=>$Paciente
+        ))[0];
+        $this->load->view('Documentos/Doc_TarjetaIdentificacion',$sql);
+    }
+    public function AjaxTarjetaDeIdentificacion() {
+        $check= $this->config_mdl->sqlGetDataCondition('os_tarjeta_identificacion',array(
+            'triage_id'=> $this->input->post('triage_id')
+        ),'ti_id');
+        $data=array(
+            'ti_enfermedades'=> $this->input->post('ti_enfermedades'),
+            'ti_alergias'=> $this->input->post('ti_alergias'),
+            'ti_fecha'=> date('d/m/Y'),
+            'ti_hora'=> date('H:i'),
+            'empleado_id'=> $this->UMAE_USER,
+            'triage_id'=> $this->input->post('triage_id')
+        );
+        if(empty($check)){
+            $this->config_mdl->_insert('os_tarjeta_identificacion',$data);
+        }else{
+            unset($data['ti_fecha']);
+            unset($data['ti_hora']);
+            $this->config_mdl->_update_data('os_tarjeta_identificacion',$data,array(
+                'triage_id'=> $this->input->post('triage_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1'));
+    }
+    /*Obtener Diagnosticos*/
+    public function AjaxObtenerDiagnosticosKey() {
+        
+    }
+    public function AjaxGuardarDiagnosticos() {
+        $sqlDiagnostico= $this->config_mdl->sqlGetDataCondition('um_cie10',array(
+            'cie10_nombre'=> $this->input->post('cie10_nombre')
+        ));
+        $data=array(
+            'cie10hf_fecha'=> date('Y-m-d H:i:s'),
+            'cie10hf_tipo'=> $this->input->post('cie10hf_tipo'),
+            'cie10hf_estado'=> $this->input->post('cie10hf_estado'),
+            'cie10hf_obs'=> $this->input->post('cie10hf_obs'),
+            'triage_id'=> $this->input->post('triage_id'),
+            'cie10_id'=> $sqlDiagnostico[0]['cie10_id']
+        );
+        if($this->input->post('accion')=='add'){
+            $this->config_mdl->_insert('um_cie10_hojafrontal',$data);
+        }else{
+            unset($data['cie10hf_fecha']);
+            $this->config_mdl->_update_data('um_cie10_hojafrontal',$data,array(
+                'cie10hf_id'=> $this->input->post('cie10hf_id')
+            ));
+        }
+        $this->setOutput(array('accion'=>'1','post'=> $this->input->post()));
+    }
+    public function AjaxObtenerDiagnosticos() {
+        $sql= $this->config_mdl->_query("SELECT * FROM um_cie10_hojafrontal, um_cie10 WHERE
+                    um_cie10_hojafrontal.cie10_id=um_cie10.cie10_id AND
+                    um_cie10_hojafrontal.triage_id=".$this->input->post('triage_id')." ORDER BY cie10hf_tipo='Primario' DESC");
+        foreach ($sql as $value) {
+            $row.='<div class="col-md-12" style="margin-top: -10px;">
+                    <div class="alert alert-info alert-dismissable fade in">
+                        <div class="row" style="margin-right: -36px;    margin-top: -10px;margin-bottom: -9px;">
+                            <div class="col-md-9 text-mayus">
+                                <strong>Diagnostico:</strong> '.$value['cie10_nombre'].'<br>
+                                <h6 style="font-size:9px"><strong>Observaciones:</strong> '.($value['cie10hf_obs']!='' ? $value['cie10hf_obs'] : 'Sin Observaciones').'</h6>
+                            </div>
+                            <div class="col-md-2 text-mayus">
+                                <h6 style="font-size:9px"><strong>'.$value['cie10hf_tipo'].'</strong></h6>
+                                <h6 style="font-size:12px;margin-top: -6px;"><strong>'.($value['cie10hf_estado']=='Presuntivo' ? '<span class="label green">Presuntivo</span>' : '<span class="label amber">Definitivo</span>').'</strong></h6>
+                            </div>
+                            <div class="col-md-1">
+                                <i class="fa fa-pencil icono-accion pointer editar-diagnostico-cie10" data-id="'.$value['cie10hf_id'].'" data-obs="'.$value['cie10hf_obs'].'" data-nombre="'.$value['cie10_nombre'].'"></i>&nbsp;
+                                <i class="fa fa-trash-o icono-accion pointer tip eliminar-diagnostico-cie10" data-id="'.$value['cie10hf_id'].'"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+        }
+        $this->setOutputV2(array('row'=>$row));
+    }
+    public function AjaxEliminarDiagnostico() {
+        $this->config_mdl->_delete_data('um_cie10_hojafrontal',array(
+            'cie10hf_id'=> $this->input->post('cie10hf_id')
+        ));
+        $this->setOutput(array('accion'=>'1'));
+    }
+    public function AjaxCIE10() {
+        $cie10_nombre= $this->input->post('cie10_nombre');
+        $sql= $this->config_mdl->_query("SELECT * FROM um_cie10 WHERE cie10_nombre LIKE '%$cie10_nombre%' LIMIT 50");
+        foreach ($sql as $value) {
+            $um_cie10.='<li>'.$value['cie10_nombre'].'</li>';
+        }
+        $this->setOutput(array('um_cie10'=>$um_cie10));
+    }
+    public function AjaxCheckCIE10() {
+        $sql= $this->config_mdl->sqlGetDataCondition('um_cie10',array(
+            'cie10_nombre'=> $this->input->post('cie10_nombre')
+        ));
+        if(!empty($sql)){
+            $this->setOutput(array('accion'=>'1'));
+        }else{
+            $this->setOutput(array('accion'=>'2'));
+        }
+    }
+    public function GuardarGlasgowHfAbierto()
+    {
+         //apertura ocular
+         $hf_abierto_glasgow_s1=$this->input->post('hf_glasgow_expontanea')+
+                                $this->input->post('hf_glasgow_hablar')+
+                                $this->input->post('hf_glasgow_dolor')+
+                                $this->input->post('hf_glasgow_ausente');
+        //Respuesta motora
+         $hf_abierto_glasgow_s2=$this->input->post('hf_glasgow_obedece')+
+                                $this->input->post('hf_glasgow_localiza')+
+                                $this->input->post('hf_glasgow_retira')+
+                                $this->input->post('hf_glasgow_flexion')+
+                                $this->input->post('hf_glasgow_extension')+
+                                $this->input->post('hf_glasgow_ausencia');
+        // Respuesta verbal
+         $hf_abierto_glasgow_s3=$this->input->post('hf_glasgow_orientado')+
+                                $this->input->post('hf_glasgow_confuso')+
+                                $this->input->post('hf_glasgow_incoherente')+
+                                $this->input->post('hf_glasgow_sonidos')+ 
+                                $this->input->post('hf_glasgow_arespuesta');                     
+                         
+        $total_glasgow=$hf_abierto_glasgow_s1+$hf_abierto_glasgow_s2+$hf_abierto_glasgow_s3;
+        $data_totalGlasgow=array( 
+            'triage_puntaje_total'=>$total_glasgow
+            );
+
+        $this->config_mdl->_insert('os_consultorios_especialidad_hf',$data_totalGlasgow);                  
+    }
+    public function GuardarRiesgoTrobosisHfAbierto() {
+
+         //Edad
+
+    }
+}
