@@ -121,7 +121,6 @@
         </div>
     </div>
 </div>
-<input name="especialidad_nombre" value="<?= Modules::run('Consultorios/ObtenerEspecialidad',array('Consultorio'=>$this->UMAE_AREA))?>">
+<input type="hidden" name="especialidad_nombre" value="<?= Modules::run('Consultorios/ObtenerEspecialidad',array('Consultorio'=>$this->UMAE_AREA))?>">
 <?= modules::run('Sections/Menu/footer'); ?>
-
 <script src="<?= base_url('assets/js/Consultorios.js?'). md5(microtime())?>" type="text/javascript"></script>
