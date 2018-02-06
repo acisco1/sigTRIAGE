@@ -33,8 +33,8 @@
                             </h4>
                         </div>
                         <div class="col-md-3 text-right">
-                            <h3><b>EDAD</b></h3>
-                            <h1 style="margin-top: -10px">
+                            <h4><b>EDAD</b></h4>
+                            <h3 style="margin-top: -10px">
                                 <?php 
                                 if($info['triage_fecha_nac']!=''){
                                     $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
@@ -43,7 +43,7 @@
                                     echo 'S/E';
                                 }
                                 ?>
-                            </h1>
+                            </h3>
                         </div>
                     </div>
                     

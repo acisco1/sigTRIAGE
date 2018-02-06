@@ -22,10 +22,10 @@
                                         <div class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info[0]['triage_color']))?>" style="height: 100px;width: 18px;position: absolute;top: -16px;left: -2px;"></div>
                                     </div>
                                     <div class="col-md-8" style="padding-left: 25px;">
-                                        <h3 style="margin-top: -2px">
+                                        <h4 style="margin-top: -2px">
                                             <input type="text" readonly="" value="PACIENTE: <?=$info[0]['triage_nombre_ap']?> <?=$info[0]['triage_nombre_am']?> <?=$info[0]['triage_nombre']?>" style="font-weight: bold;width: 100%;margin-top: -10px;background: transparent;border: none;height: 44px;">
 
-                                        </h3>
+                                        </h4>
                                         <h4 style="margin-top: -5px">
                                             <b>EDAD: </b>
                                             <?php
@@ -57,6 +57,7 @@
                                                 echo 'S/E';
                                             }
                                             ?> | <?=$info[0]['triage_paciente_sexo']?>
+                                               | <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA: '.$PINFO['pia_procedencia_espontanea_lugar'] : 'PROCEDENCIA: '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?>
                                         </h4>
                                     </div>
                                 </div>
@@ -283,7 +284,7 @@
 
                         <div class="row" style="padding: 14px;margin-top: -15px;margin-bottom: -35px;">
                             <div class="col-md-12 back-imss text-center">
-                                <h5><b>TIPO DE ATENCIÓN Y AFILIACIÓN</b></h5>
+                                <h5><b>TIPO DE ATENCIÓN</b></h5>
                             </div>
                         </div>
                         <div class="panel-body b-b b-light">
@@ -293,12 +294,14 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label><b>PROCEDENCIA ESPONTÁNEA</b></label>&nbsp;
+                                                <div>
                                                     <label class="md-check">
                                                         <input type="radio" name="pia_procedencia_espontanea" data-value="<?=$PINFO['pia_procedencia_espontanea']?>" value="Si" checked="" ><i class="green"></i>SI
                                                     </label>&nbsp;&nbsp;
                                                     <label class="md-check">
                                                         <input type="radio" name="pia_procedencia_espontanea" value="No"><i class="green"></i>NO
                                                     </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
