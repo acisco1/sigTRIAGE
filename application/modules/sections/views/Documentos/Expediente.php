@@ -6,12 +6,12 @@
                 <div class="panel-heading p teal-900 back-imss" style="padding-bottom: 0px;">
                     <div class="row" style="margin-top: -20px;">
                         <div style="position: relative">
-                            <div style="top: 4px;position: absolute;height: 105px;width: 35px;left: -1px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
+                            <div style="top: 4px;position: absolute;height: 88px;width: 35px;left: -1px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
                         </div>
                         <div class="col-md-9" style="padding-left: 40px;">
-                            <h3>
+                            <h4>
                                 <b>PACIENTE:  <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?> </b>
-                            </h3>
+                            </h4>
                             <h4>
                                 <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
                             </h4>
@@ -34,20 +34,20 @@
                         </div>
                         <div class="col-md-3 text-right">
                             <h4><b>EDAD</b></h4>
-                            <h3 style="margin-top: -10px">
+                            <h4 style="margin-top: -10px">
                                 <?php 
                                 if($info['triage_fecha_nac']!=''){
                                     $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
-                                    echo $fecha->y.' <span style="font-size:25px"><b>Años</b></span>';
+                                    echo $fecha->y.' <span style="font-size:22px">Años</span>';
                                 }else{
                                     echo 'S/E';
                                 }
                                 ?>
-                            </h3>
+                            </h4>
                         </div>
                     </div>
                     
-                    <div class="card-tools" style="margin-top: 80px">
+                    <div class="card-tools" style="margin-top: 55px">
                         <ul class="list-inline">
                             <li class="dropdown">
                                 <a md-ink-ripple data-toggle="dropdown" class="md-btn md-fab red md-btn-circle tip" data-original-title="Solicitar Documentos" data-placement="bottom">
