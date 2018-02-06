@@ -12,7 +12,7 @@
                         </h6>
                     </div>
                 </div>
-                <?php }else{ ?>
+                <?php } else{ ?>
                 <div class="row " style="margin-top: -30px;padding: 16px;">
                     <div class="col-md-12 col-centered " style="padding: 0px;margin-bottom: -7px;">
                         <h6 style="font-size: 8px;text-align: right">
@@ -23,42 +23,22 @@
                                 </span>
                             </b>
                         </h6>
-                    </div>
-                    <div class="col-md-3 text-center back-imss" style="padding-left: 0px;padding: 20px;">
-                        <h5 class=""><b>PRESIÓN ARTERIAL</b></h5>
-                        <h3 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?></h3>
-                    </div>
-                    <div class="col-md-3  text-center back-imss" style="border-left: 1px solid white;padding: 20px;">
-                        <h5><b>TEMPERATURA</b></h5>
-                        <h3 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_temp']?> °C</h3>
-                    </div>
-                    <div class="col-md-3  text-center back-imss" style="border-left: 1px solid white;padding: 20px;">
-                        <h5><b>FRECUENCIA CARDÍACA </b></h5>
-                        <h3 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fc']?> (lpm)</h3>
-                    </div>
-                    <div class="col-md-3  text-center back-imss" style="border-left: 1px solid white;padding: 20px;">
-                        <h5><b>FRECUENCIA RESPIRATORIA</b></h5>
-                        <h3 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fr']?> (rpm)</h3>
-                    </div>
-                </div>
-                <?php }?>
-                <div class="panel panel-default " style="margin-top: -8px">
-                    
-                    <div class="panel-heading p teal-900 back-imss" style="padding-bottom: 0px;">
+                    </div>  
+                    <div class="panel-heading p teal-900 back-imss" style="padding-bottom: 6px;">
                         <span style="font-size: 18px;font-weight: 500;text-transform: uppercase">  
                             <div class="row" style="margin-top: -20px;">
                                 <div style="position: relative">
-                                    <div style="top: 4px;margin-left: -1px;position: absolute;height: 105px;width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
+                                    <div style="top: 4px;margin-left: -1px;position: absolute;height: 80px;width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
                                 </div>
                                 <div class="col-md-10" style="padding-left: 40px">
-                                    <h3>
+                                    <h4>
                                         
                                         <b>PACIENTE:  <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?></b>
-                                    </h3>
-                                    <h4>
-                                        <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
                                     </h4>
-                                    <h4 style="margin-top: -5px;text-transform: uppercase">
+                                    <h5>
+                                        <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
+                                    </h5>
+                                    <h5 style="margin-top: -5px;text-transform: uppercase">
                                         <?php 
                                             if($info['triage_fecha_nac']!=''){
                                                 $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
@@ -73,29 +53,58 @@
                                                 echo 'S/E';
                                             }
                                         ?> | <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA: '.$PINFO['pia_procedencia_espontanea_lugar'] : ': '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?> | <?=$info['triage_color']?>
-                                    </h4>
+                                    </h5>
                                 </div>
                                 <div class="col-md-2 text-right">
-                                    <h3>
+                                    <h5>
                                         <b>EDAD</b>
-                                    </h3>
-                                    <h2 style="margin-top: -10px">
+                                    </h5>
+                                    <h3 style="margin-top: -10px">
                                         <?php 
                                         if($info['triage_fecha_nac']!=''){
                                             $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
-                                            echo $fecha->y.' <span style="font-size:25px"><b>Años</b></span>';
+                                            echo $fecha->y.' <span style="font-size:20px"><b>Años</b></span>';
                                         }else{
                                             echo 'S/E';
                                         }
                                         ?>
-                                    </h2>
+                                    </h3>
                                 </div>
                             </div>
                         </span>
                     </div>
+                </div>
+                <?php }?>
+                
+                <div class="panel panel-default " style="margin-top: -16px">
+                    
+                    <div class="col-md-2 text-center back-imss" style="padding-left: 0px;padding: 5px;">
+                        <h5 class=""><b>P.A</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?></h4>
+                    </div>
+                    <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                        <h5><b>TEMP.</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_temp']?> °C</h4>
+                    </div>
+                    <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                        <h5><b>FREC. CARD. </b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fc']?> (lpm)</h4>
+                    </div>
+                    <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                        <h5><b>FREC. RESP</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fr']?> (rpm)</h4>
+                    </div>
+                    <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                        <h5><b>SpO2</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_oximetria']?> (%)</h4>
+                    </div>
+                    <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                        <h5><b>GLUCEMIA</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_dextrostix']?> (mg/dL)</h4>
+                    </div>
                     <div class="panel-body b-b b-light">
                         <div class="card-body" style="padding: 20px 0px;">     
-                            <form class="guardar-solicitud-hi-abierto" style="margin-top: 0px" oninput="x.value=parseInt(hf_eva.value)">
+                            <form class="guardar-solicitud-hi-abierto" style="margin-top: 45px" oninput="x.value=parseInt(hf_eva.value)">
                                 <div class="row" >
                                     <div class="col-md-12 hide">
                                         <div class="input-group m-b">

@@ -1,26 +1,35 @@
 <?= modules::run('Sections/Menu/index'); ?> 
+<style>
+.scroll-box {
+            position: relative;
+            }
+            .scrollspy-body {
+                position: relative;
+                overflow-y: scroll;
+                height: 520px; 
+            }
+</style>
 <div class="box-row">
     <div class="box-cell">
         <div class="">
             <div class="box-inner col-md-12 col-centered" style="margin-top: 10px">
             <div class="panel panel-default " style="margin-top: 0px">
-               
                 <?php if($info['triage_paciente_sexo']=='MUJER'){?>
                 <div  style="background: pink;width: 100%;height: 10px;border-radius: 3px 3px 0px 0px"></div>
                 <?php }?>
-                <div class="panel-heading p teal-900 back-imss text-center" style="height: 10px">
-                    <span><strong>PROCEDIMIENTO PARA LA CLASIFICACIÓN DE PACIENTES</strong></span>
-                </div>
-                <div class="panel-body b-b b-light">
+                <div class="panel-heading p teal-900 back-imss text-center scroll-box">
+                    <span style="font-size: 15px;font-weight: 500"><strong>PROCEDIMIENTO PARA LA CLASIFICACIÓN DE PACIENTES</strong></span>
+                
+                
                     <div class="card-body">
-                        <form class="agregar-paso2">
-                            <div class="row" style="margin-top: -40px">
+                        
+                        <div class="row" style="margin-top: -40px;">
                                 <div class="col-md-8" style="padding-left: 0px">
-                                    <h4>
-                                        <b>PACIENTE:  <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?> </b>
-                                    </h4>
                                     <h5>
-                                        <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| POSIBLE EMBARAZO' : ''?>
+                                        <b>PACIENTE:  <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?> </b>
+                                    </h5>
+                                    <h5>
+                                        <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
                                     </h5>
                                     <h5 style="margin-top: -5px;text-transform: uppercase">
                                         <?php 
@@ -43,7 +52,7 @@
                                     <h5>
                                         <b>EDAD</b>
                                     </h5>
-                                    <h2 style="margin-top: -10px">
+                                    <h1 style="margin-top: -10px">
                                         <?php 
                                         if($info['triage_fecha_nac']!=''){
                                             $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
@@ -52,10 +61,12 @@
                                             echo 'S/E';
                                         }
                                         ?>
-                                    </h2>
+                                    </h1>
                                 </div>
-                                <div class="col-md-4 text-right">
-                                    <h6 style="font-size: 9px;text-align: right;">
+                            </div>
+                            <div class="row " style="margin-top: 0px">
+                                <div class="col-md-12 " style="padding: 0px;margin-bottom: -7px;">
+                                    <h6 style="font-size: 8px;text-align: right">
                                         FECHA Y HORA DE REGISTRO: 
                                         <b>
                                             <span style="font-size: 12px">
@@ -63,38 +74,29 @@
                                             </span>
                                         </b>
                                     </h6>
-
                                 </div>
-                            </div>
-                            <div class="row " style="margin-top: -0px;">                            
-                                <div class="col-md-2 text-center back-imss" style="padding-left: 0px;padding: 5px;">
-                                    <h5 class=""><b>P.A</b></h5>
-                                    <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?> (mmHg)</h4>
+                                <div class="col-md-3 text-center back-imss" style="padding-left: 0px;padding: 20px;">
+                                    <h5 class=""><b>T.A </b></h5>
+                                    <h2 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?></h2>
                                 </div>
-                                <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                                <div class="col-md-3  text-center back-imss" style="border-left: 1px solid white;padding: 20px;">
                                     <h5><b>TEMP</b></h5>
-                                    <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_temp']?> °C</h4>
+                                    <h2 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_temp']?> °C</h2>
                                 </div>
-                                <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
-                                    <h5><b>F.C</b></h5>
-                                    <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fc']?> (lat/min)</h4>
+                                <div class="col-md-3  text-center back-imss" style="border-left: 1px solid white;padding: 20px;">
+                                    <h5><b>F.C </b> </h5>
+                                    <h2 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fc']?> X MIN</h2>
                                 </div>
-                                <div class="col-md-2  text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
+                                <div class="col-md-3  text-center back-imss" style="border-left: 1px solid white;padding: 20px;">
                                     <h5><b>F.R </b></h5>
-                                    <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fr']?> (rpm)</h4>
-                                </div>
-                                <div class="col-md-2 text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
-                                    <h5 class=""><b>SpO2</b></h5>
-                                    <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_oximetria']?> %</h4>
-                                </div>
-                                <div class="col-md-2 text-center back-imss" style="border-left: 1px solid white;padding: 5px;">
-                                    <h5 class=""><b>GLUCEMIA</b></h5>
-                                    <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_dextrostix']?></h4>
+                                    <h2 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_fr']?> X MIN</h2>
                                 </div>
                             </div>
-                          
-                            
-                            <div class="row" style="margin-top: 0px">
+                        </div>
+                    </div>
+                    <div class="panel-body b-b b-light scrollspy-body">
+                            <form class="agregar-paso2">
+                            <div class="row " style="margin-top: 20px">
                                 <div class="col-md-12 col-omitir-clasificacion" style="padding: 0px">
                                     <table class="evaluar-medico-area-efectiva table table-striped table-bordered table-no-padding" >
                                         <caption class="mayus-bold text-center">
@@ -209,7 +211,8 @@
                                     </table>
                                 </div>
                                 <div class="col-md-12 col-omitir-clasificacion" style="padding: 0px">
-                                    <table class="evaluar-medico-area-efectiva table table-striped table-bordered table-no-padding" style="margin-bottom: -10px">
+                                    <br>
+                                    <table class="evaluar-medico-area-efectiva table table-striped table-bordered table-no-padding">
                                         <caption class="mayus-bold text-center">
                                             Evalúa el motivo de atención y algún otro dato relevante que se detecte en el paciente
                                         </caption>
@@ -765,29 +768,29 @@
                             <div class="row row-clasificacion-omitida hide">
                                 <div class="col-md-12" style="padding: 0px">
                                     <div class="form-group">
-                                        <textarea name="clasificacionObservacion" class="form-control" rows="10" maxlength="590" placeholder="Agregar Observación" required></textarea>
+                                        <textarea name="clasificacionObservacion" class="form-control" rows="10" maxlength="590" placeholder="Agregar Observación"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12" style="padding: 0px">
                                     <label class="mayus-bold">COLOR CLASIFICACIÓN</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label class="md-check mayus-bold">
-                                        <input type="radio" required name="clasificacionColor" value="Rojo">
+                                        <input type="radio" name="clasificacionColor" value="Rojo" required>
                                         <i class="blue"></i>Rojo
                                     </label>&nbsp;&nbsp;
                                     <label class="md-check mayus-bold">
-                                        <input type="radio" required name="clasificacionColor" value="Naranja">
+                                        <input type="radio" name="clasificacionColor" value="Naranja" required>
                                         <i class="blue"></i>Naranja
                                     </label>&nbsp;&nbsp;&nbsp;
                                     <label class="md-check mayus-bold">
-                                        <input type="radio" required name="clasificacionColor" value="Amarillo">
+                                        <input type="radio" name="clasificacionColor" value="Amarillo" required>
                                         <i class="blue"></i>Amarillo
                                     </label>&nbsp;&nbsp;&nbsp;
                                     <label class="md-check mayus-bold">
-                                        <input type="radio" required name="clasificacionColor" value="Azul">
+                                        <input type="radio" name="clasificacionColor" value="Azul" required>
                                         <i class="blue"></i>Azul
                                     </label>&nbsp;&nbsp;&nbsp;
                                     <label class="md-check mayus-bold">
-                                        <input type="radio" required name="clasificacionColor" value="Verde">
+                                        <input type="radio" name="clasificacionColor" value="Verde" required>
                                         <i class="blue"></i>Verde
                                     </label>&nbsp;&nbsp;&nbsp;
                                 </div>
@@ -810,7 +813,7 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                
             </div>
         </div>
         </div>

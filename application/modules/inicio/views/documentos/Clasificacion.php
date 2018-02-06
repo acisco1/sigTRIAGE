@@ -28,10 +28,10 @@
             <?php }?>
             <?php if($this->ConfigSolicitarOD=='Si'){?>
             <div style="position: absolute;top: 208px;left: 50px;font-size: 10px">
-                <b>Oximetría:</b> <?=$SignosVitales['sv_oximetria']?>
+                <b>Oximetría:</b> <?=$SignosVitales['sv_oximetria']?> % spO2
             </div>
             <div style="position: absolute;top: 208px;left: 530px;font-size: 10px">
-                <b>Dextrostix:</b> <?=$SignosVitales['sv_dextrostix']?>
+                <b>Glucemia:</b> <?=$SignosVitales['sv_dextrostix']?> mg/dL
             </div>
             <?php }?>
             <!--Seccion 4 Pregunta 1-->
