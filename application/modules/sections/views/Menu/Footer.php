@@ -27,7 +27,7 @@
         <script src="<?=  base_url()?>assets/libs/jquery-inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
         <script src="<?=  base_url()?>assets/libs/jquery-autonumeric/autoNumeric.js" type="text/javascript"></script>
         <script src="<?=  base_url()?>assets/libs/jquery-notifications/js/messenger.min.js" type="text/javascript"></script>
-        <script src="<?=  base_url()?>assets/libs/jquery-notifications/js/messenger-theme-future.js" type="text/javascript"></script>	
+        <script src="<?=  base_url()?>assets/libs/jquery-notifications/js/messenger-theme-future.js" type="text/javascript"></script>
         <script src="<?=  base_url()?>assets/libs/jquery-notifications/js/demo/location-sel.js" type="text/javascript" ></script>
         <script src="<?=  base_url()?>assets/libs/jquery-notifications/js/demo/theme-sel.js" type="text/javascript" ></script>
         <script src="<?=  base_url()?>assets/libs/html5imageupload/html5imageupload.js" type="text/javascript"></script>
@@ -46,12 +46,11 @@
         <script src="<?=  base_url()?>assets/js/bootbox.min.js"></script>
         <script src="<?=  base_url()?>assets/libs/md5.js"></script>
         <script src="<?=  base_url()?>assets/js/jquery.cookie.js"></script>
-        <script src="<?=  base_url()?>assets/js/Mensajes.js?time=<?= sha1(microtime())?>" type="text/javascript"></script> 
+        <script src="<?=  base_url()?>assets/js/Mensajes.js?time=<?= sha1(microtime())?>" type="text/javascript"></script>
 	<script type="text/javascript">
             Pace.options={
                 ajax:false
             }
-            
             var csrf_token = $.cookie('csrf_cookie');
             $('body input[name=csrf_token]').val(csrf_token);
             setInterval(function() {
@@ -69,7 +68,6 @@
                             Notificaciones+='<div class="col-sm-12">'+
                                                 '<h5 style="line-height:1.4;margin-top: -5px;"><b>Mensaje: </b>'+ e.notificacion_descripcion+'</h5>'+
                                                 '<h5 style="line-height:1.4"><b>Fecha: </b>'+e.notificacion_fecha+' '+e.notificacion_hora+ '</h5>'+
-                                                
                                             '</div>';
                         })
                         bootbox.dialog({
@@ -83,7 +81,7 @@
                         console.log('ERROR AL OBTENER NOTIFICACIONES DE ESTA ÁREA');
                     }
                 });
-            })
+            });
         </script>
     </body>
 </html>

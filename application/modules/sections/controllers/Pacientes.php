@@ -33,31 +33,35 @@ class Pacientes extends Config{
         $inputSelect= $this->input->post('inputSelect');
         $inputSearch= $this->input->post('inputSearch');
         if($inputSelect=='POR_NUMERO'){
-            $sql= $this->config_mdl->_query("SELECT triage_id, CONCAT_WS(' ',triage_nombre_ap,triage_nombre_am,triage_nombre) AS nombre_paciente
+            $sql= $this->config_mdl->_query("SELECT triage_id,triage_horacero_f, CONCAT_WS(' ',triage_nombre_ap,triage_nombre_am,triage_nombre) AS nombre_paciente
                                             FROM os_triage WHERE triage_id=".$inputSearch);
         }if($inputSelect=='POR_NOMBRE'){
-            $sql=  $this->config_mdl->_query("SELECT triage_id, CONCAT_WS(' ',TRIM(os_triage.triage_nombre_ap),TRIM(os_triage.triage_nombre_am),TRIM(os_triage.triage_nombre)) AS nombre_paciente 
-                FROM os_triage 
+            $sql=  $this->config_mdl->_query("SELECT triage_id, triage_horacero_f,CONCAT_WS(' ',TRIM(os_triage.triage_nombre_ap),TRIM(os_triage.triage_nombre_am),TRIM(os_triage.triage_nombre)) AS nombre_paciente
+                FROM os_triage
                 HAVING nombre_paciente LIKE '%$inputSearch%' LIMIT 200");
         }if($inputSelect=='POR_NSS'){
-            $sql= $this->config_mdl->_query("SELECT os_triage.triage_id, CONCAT_WS(' ',triage_nombre_ap,triage_nombre_am,triage_nombre) AS nombre_paciente FROM os_triage, paciente_info WHERE
+            $sql= $this->config_mdl->_query("SELECT os_triage.triage_id, os_triage.triage_horacero_f, CONCAT_WS(' ',triage_nombre_ap,triage_nombre_am,triage_nombre) AS nombre_paciente FROM os_triage, paciente_info WHERE
                                             paciente_info.triage_id=os_triage.triage_id AND
                                             paciente_info.pum_nss='".$inputSearch."'");
         }
         if(!empty($sql)){
             foreach ($sql as $value) {
+                $triage_horacero_f = date("d/m/Y", strtotime($value['triage_horacero_f']));
                 $tr.='<tr>
                         <td>'.$value['triage_id'].'</td>
+                        <td>'.date("d/m/Y", strtotime($value['triage_horacero_f'])).'</td>
                         <td>'.$value['nombre_paciente'].'</td>
                         <td>
                             <i class="fa fa-print icono-accion tip pointer iconoPrintTicket" data-id="'.$value['triage_id'].'" data-original-title="Reimprimir Ticket del Paciente"></i>&nbsp;
                             <a href="'.base_url().'Sections/Pacientes/Paciente/'.$value['triage_id'].'" target="_blank">
                                 <i class="fa fa-share-square-o icono-accion tip" data-original-title="Ver Historial del Paciente"></i>
                             </a>
+                            <a href="'.base_url().'Consultaexterna/AsistenteMedica/'.$value['triage_id'].'" target="_blank">
+                                <i class="fa fa-pencil icono-accion tip" data-original-title="Editar o agregar información"></i>
+                            </a>
                         </td>
                     <tr>';
             }
-            
             $this->setOutput(array('accion'=>'1','tr'=>$tr));
         }else{
             $tr.='<tr>
@@ -70,9 +74,8 @@ class Pacientes extends Config{
         $sql['info']= $this->config_mdl->_get_data_condition('os_triage',array(
             'triage_id'=>$Paciente
         ))[0];
-        
         $sql['Historial']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_empleados, os_triage
-                            WHERE 
+                            WHERE
                             os_accesos.empleado_id=os_empleados.empleado_id AND
                             os_accesos.triage_id=os_triage.triage_id AND
                             os_triage.triage_id=$Paciente ORDER BY os_accesos.acceso_id ASC");
@@ -82,7 +85,7 @@ class Pacientes extends Config{
         $sql['PacientesLog']= $this->config_mdl->_query("SELECT * FROM os_empleados, um_pacientes_log
                                 WHERE os_empleados.empleado_id=um_pacientes_log.empleado_id AND
                                 um_pacientes_log.triage_id=".$Paciente);
-        $sql['PacientesCamas']= $this->config_mdl->_query("SELECT * FROM os_camas_log,os_camas, os_empleados WHERE os_camas_log.empleado_id=os_empleados.empleado_id AND 
+        $sql['PacientesCamas']= $this->config_mdl->_query("SELECT * FROM os_camas_log,os_camas, os_empleados WHERE os_camas_log.empleado_id=os_empleados.empleado_id AND
                                 os_camas_log.cama_id=os_camas.cama_id AND
                                 os_camas_log.triage_id=".$Paciente);
         $sql['PacientesEnfermera']= $this->config_mdl->_query("SELECT * FROM os_log_cambio_enfermera, os_empleados, os_camas WHERE
@@ -97,19 +100,19 @@ class Pacientes extends Config{
         $sql['choque']= $this->config_mdl->_get_data_condition('os_choque_v2',array(
             'triage_id'=>$Paciente
         ))[0];
-        $sql['IngresoChoque']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_choque_v2, os_triage, os_empleados WHERE 
+        $sql['IngresoChoque']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_choque_v2, os_triage, os_empleados WHERE
             os_accesos.acceso_tipo='Hora Cero Choque' AND
             os_accesos.areas_id=os_choque_v2.choque_id AND
             os_accesos.empleado_id=os_empleados.empleado_id AND
             os_accesos.triage_id=os_triage.triage_id AND
             os_triage.triage_id=".$Paciente)[0];
-        $sql['IngresoChoqueEnf']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_choque_v2, os_triage, os_empleados WHERE 
+        $sql['IngresoChoqueEnf']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_choque_v2, os_triage, os_empleados WHERE
             os_accesos.acceso_tipo='Ingreso Choque (Asignación Cama)' AND
             os_accesos.areas_id=os_choque_v2.choque_id AND
             os_accesos.empleado_id=os_empleados.empleado_id AND
             os_accesos.triage_id=os_triage.triage_id AND
             os_triage.triage_id=".$Paciente)[0];
-        $sql['IngresoChoqueMed']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_choque_v2, os_triage, os_empleados WHERE 
+        $sql['IngresoChoqueMed']= $this->config_mdl->_query("SELECT * FROM os_accesos, os_choque_v2, os_triage, os_empleados WHERE
             os_accesos.acceso_tipo='Médico Choque' AND
             os_accesos.areas_id=os_choque_v2.choque_id AND
             os_accesos.empleado_id=os_empleados.empleado_id AND
@@ -173,7 +176,7 @@ class Pacientes extends Config{
                 'observacion_area'=>$observacion_area,
                 'observacion_modulo'=>'Observación'
             ));
-            
+
         }if($this->input->post('destino')=='Choque'){
             $this->config_mdl->_delete_data('os_consultorios_especialidad',array('triage_id'=> $this->input->post('triage_id')));
             $this->config_mdl->_delete_data('os_consultorios_especialidad_hf',array('triage_id'=> $this->input->post('triage_id')));

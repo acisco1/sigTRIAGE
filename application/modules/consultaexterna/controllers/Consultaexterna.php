@@ -43,17 +43,23 @@ class Consultaexterna extends Config{
         $sql['PINFO']=  $this->config_mdl->_get_data_condition('paciente_info',array(
            'triage_id'=>  $Paciente,
         ))[0];
-        $sql['Especialidades']= $this->config_mdl->sqlGetData('um_especialidades');
-        $sql['Medicos']= $this->config_mdl->_query("SELECT * FROM os_empleados, os_empleados_roles, os_roles WHERE 
+        $sql['Especialidades'] = $this->config_mdl->_query("SELECT especialidad_id,especialidad_nombre
+                                                            FROM um_especialidades
+                                                            ORDER BY especialidad_nombre");
+        $sql['Doc43051'] = $this->config_mdl->_get_data_condition("doc_43051",array(
+          'triage_id' => $Paciente,
+        ))[0];
+        $sql['Medicos']= $this->config_mdl->_query("SELECT * FROM os_empleados, os_empleados_roles, os_roles WHERE
                                                     os_empleados_roles.empleado_id=os_empleados.empleado_id AND
                                                     os_empleados_roles.rol_id=os_roles.rol_id AND
                                                     os_roles.rol_id=2");
+
         $this->load->view('consultaexterna_am',$sql);
     }
     public function AjaxAsistenteMedica() {
         $data=array(
             'asistentesmedicas_fecha'=> date('Y-m-d'),
-            'asistentesmedicas_hora'=> date('H:i'), 
+            'asistentesmedicas_hora'=> date('H:i'),
             'asistentesmedicas_hoja'=>  $this->input->post('asistentesmedicas_hoja'),
             'asistentesmedicas_renglon'=>  $this->input->post('asistentesmedicas_renglon'),
             'triage_id'=>  $this->input->post('triage_id')
@@ -99,7 +105,6 @@ class Consultaexterna extends Config{
             'triage_crea_enfemeria'=> $this->UMAE_USER,
             'triage_crea_medico'=> $this->UMAE_USER,
             'triage_crea_am'=> $this->UMAE_USER,
-            
         );
         Modules::run('Triage/LogChangesPatient',array(
             'paciente_old'=>$info['triage_nombre'].' '.$info['triage_nombre_ap'].' '.$info['triage_nombre_am'],
@@ -123,11 +128,29 @@ class Consultaexterna extends Config{
             'pic_responsable_parentesco'=>$this->input->post('pic_responsable_parentesco'),
             'pic_responsable_telefono'=>$this->input->post('pic_responsable_telefono'),
             'pic_mt'=> $this->input->post('pic_mt'),
-            'pic_am'=> $this->input->post('pic_am'), 
+            'pic_am'=> $this->input->post('pic_am'),
+            'pia_vigencia' => $this->input->post('pia_vigencia'),
+            'pia_documento' => $this->input->post('pia_documento'),
+            'pia_procedencia_hospital' => $this->input->post('pia_procedencia_hospital')
         ),array(
             'triage_id'=> $this->input->post('triage_id')
         ));
-        
+        //Arreglo con los valores que se registraran en la tabla doc_43051
+        $empleado_matricula = $this->input->post('interConMedicoBase');
+        $query['Empleado'] = $this->config_mdl->_query("SELECT CONCAT(empleado_nombre,' ',empleado_apellidos)empleado,empleado_matricula
+                                                        FROM os_empleados
+                                                        WHERE empleado_matricula ='".$empleado_matricula."' ");
+        $dataDoc_43051 = array(
+          'ac_fecha' => date('Y-m-d'),
+          'ac_ingreso_servicio' => $this->input->post('empleado_servicio'),
+          'ac_ingreso_medico' => $query['Empleado'][0]['empleado'],
+          'ac_ingreso_matricula' => $query['Empleado'][0]['empleado_matricula'],
+          'ac_diagnostico' => $this->input->post('ac_diagnostico'),
+          'ac_procedimiento' => $this->input->post('ac_procedimiento'),
+          'triage_id' => $this->input->post('triage_id'),
+          'empleado_id' => $this->UMAE_USER
+        );
+        $this->config_mdl->_insert("doc_43051",$dataDoc_43051);
         Modules::run('Triage/TriagePacienteDirectorio',array(
             'directorio_tipo'=>'Paciente',
             'directorio_cp'=> $this->input->post('directorio_cp'),
@@ -158,7 +181,7 @@ class Consultaexterna extends Config{
                 'empresa_he'=> $this->input->post('empresa_he'),
                 'empresa_hs'=>$this->input->post('empresa_hs'),
                 'triage_id'=> $this->input->post('triage_id')
-            ));   
+            ));
         }
         $this->config_mdl->_update_data('os_triage',$data_triage,
                 array('triage_id'=>  $this->input->post('triage_id'))
@@ -174,7 +197,7 @@ class Consultaexterna extends Config{
             unset($data_triage['triage_crea_medico']);
             unset($data_triage['triage_crea_am']);
         }
-        
-        $this->setOutput(array('accion'=>'1'));  
+
+        $this->setOutput(array('accion'=>'1'));
     }
 }

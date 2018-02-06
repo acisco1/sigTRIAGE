@@ -173,6 +173,10 @@ $(document).ready(function () {
             return 'indigo';
         }
     }
+    /*
+    Boton para abrir ventana modal. La funcion imprime el formulario para indicar el servicio y el diagnostico de
+    la interconsulta
+    */
     $('body').on('click','.interconsulta-paciente',function (e){
         var id=$(this).attr('data-id');
         var ce_id=$(this).attr('data-ce');
@@ -192,7 +196,7 @@ $(document).ready(function () {
                                             '<select id="select_destino" class="form-control" style="width:100%">'+data.option+'</select>'+
                                         '</div>'+
                                         '<div class="form-group">'+
-                                            '<textarea class="form-control" name="doc_diagn" rows="4" maxlength="300" placeholder="Diagnostico"></textarea>'+
+                                            '<textarea class="form-control" name="doc_diagnostico" rows="4" maxlength="300" placeholder="Diagnostico"></textarea>'+
                                         '</div>'+
                                     '</div>'+
                                 '</div>',
@@ -208,6 +212,7 @@ $(document).ready(function () {
                             if(response==true){
                                 var doc_servicio_solicitado=$('body #select_destino').val();
                                 var doc_diagnostico=$('body textarea[name=doc_diagnostico]').val();
+
                                 if(doc_diagnostico!=''){
                                     SendAjax({
                                         csrf_token:csrf_token,
@@ -217,7 +222,7 @@ $(document).ready(function () {
                                         triage_id:id
                                     },'Consultorios/AjaxInterConsulta',function (response) {
                                         if(response.accion=='1'){
-                                            /*AbrirDocumentoMultiple(base_url+'Inicio/Documentos/DOC430200/'+data.Interconsulta); */
+                                            //AbrirDocumentoMultiple(base_url+'Inicio/Documentos/DOC430200/'+data.Interconsulta); 
                                             ActionWindowsReload();
                                         }if(response.accion=='2'){
                                             MsjNotificacion('<h5>ERROR</h5>','<center><i class="fa fa-exclamation-triangle fa-5x" style="color:#E62117"></i><br>LA INTERCONSULTA SOLICITADO A ESTE CONSULTORIO YA FUE REALIZADO </center>')
