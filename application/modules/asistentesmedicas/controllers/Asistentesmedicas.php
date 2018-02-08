@@ -600,7 +600,22 @@ class Asistentesmedicas extends Config{
           echo "<h1>".$mensajeError."</h1>";
         }else if($tipoError == '3'){
           echo "<h1>".$mensajeError."</h1>";
+        }else{
+          "<h1>".$mensajeError."</h1>";
         }
-
     }
+    /* Funcion ajax para mostrar los medicos pertenecientes a un servicio seleccionados
+    la funcion muestra las opciones para un select, con la matricula como valor y
+    el nombreo completo del medico como vista al usuario */
+    public function AjaxMedicosByServicio(){
+      $servicio = $_GET['servicio'];
+      $sql['Medico'] = $this->config_mdl->_query("SELECT empleado_matricula,empleado_nombre,empleado_apellidos
+                                                  FROM os_empleados
+                                                  WHERE empleado_servicio = '$servicio'
+                                                  ORDER BY empleado_nombre;");
+      for($i = 0; $i < count($sql['Medico']); $i++){
+        echo "<option value='".$sql['Medico'][$i]['empleado_matricula']."'>".$sql['Medico'][$i]['empleado_nombre']." ".$sql['Medico'][$i]['empleado_apellidos']."</option>";
+      }
+    }
+    
 }

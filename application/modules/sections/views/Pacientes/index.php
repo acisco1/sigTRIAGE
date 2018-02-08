@@ -1,4 +1,4 @@
-<?= modules::run('Sections/Menu/index'); ?> 
+<?= modules::run('Sections/Menu/index'); ?>
 <div class="box-row">
     <div class="box-cell">
         <div class="box-inner col-md-9 col-centered" style="margin-top: 10px;">
@@ -34,7 +34,6 @@
                                         <input type="text" name="inputSearch" class="form-control" autocomplete="off" placeholder="Ingresar N° de Paciente">
                                     </div>
                                 </div>
-                                
                                 <div class="col-md-3" style="padding-left: 0px">
                                     <div class="form-group">
                                         <input type="hidden" name="csrf_token">
@@ -44,27 +43,27 @@
                             </form>
                         </div>
                         <div class="row">
-
                             <div class="col-md-12">
                                 <h6 class="inputSelectNombre hide" style="color: red;margin-top: -10px"><i class="fa fa-warning"></i> ESTA CONSULTA ESTA LIMITADA A: 100 REGISTROS</h6>
                                 <table class="footable table table-bordered" id="tableResultSearch" data-filter="#search" data-page-size="20" data-limit-navigation="7">
                                     <thead>
                                         <tr>
                                             <th data-sort-ignore="true">N° DE PACIENTE</th>
+                                            <th data-sort-ignore="true">FECHA INGRESO</th>
                                             <th data-sort-ignore="true">NOMBRE</th>
                                             <th data-sort-ignore="true">ACCIONES</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="3" class="text-center">
+                                            <td colspan="4" class="text-center">
                                                 <h5>NO SE HA REALIZADO UNA BÚSQUEDA</h5>
                                             </td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="3" class="text-center">
+                                            <td colspan="4" class="text-center">
                                                 <ul class="pagination"></ul>
                                             </td>
                                         </tr>
@@ -84,7 +83,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -92,4 +90,4 @@
     </div>
 </div>
 <?= modules::run('Sections/Menu/footer'); ?>
-<script src="<?= base_url('assets/js/sections/Pacientes.js?'). md5(microtime())?>" type="text/javascript"></script> 
+<script src="<?= base_url('assets/js/sections/Pacientes.js?'). md5(microtime())?>" type="text/javascript"></script>

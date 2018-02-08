@@ -596,7 +596,7 @@ $(document).ready(function () {
     /*Evento para agregar dinamicamento nuevos médicos residentes*/
     var cont = 0;
     $("#add_otro_residente").click (function(e) {
-        /*la varivable cont, es un contador que aumenta cada ves que se genera un nuevo médico residente
+        /*la varivable cont incrementa cada ves que se genera un nuevo médico residente
         la variable se concatena al identificador del campo con el proposito de tener distinguir cada uno
         en el momento de ser eliminados*/
         cont += 1;
