@@ -16,16 +16,13 @@ class AdmisionHospitalaria extends Config{
                                             WHERE os_areas.area_id=os_camas.area_id AND os_pisos_camas.cama_id=os_camas.cama_id AND
                                             os_camas.cama_status='$Estado' AND
                                             os_pisos_camas.piso_id=os_pisos.piso_id AND os_pisos.piso_id=".$Piso));
-        
     }
     public function TotalCamasEstatus($Estado) {
         return count($this->config_mdl->_query("SELECT os_camas.cama_id FROM os_camas, os_areas, os_pisos, os_pisos_camas
                                             WHERE os_areas.area_id=os_camas.area_id AND os_pisos_camas.cama_id=os_camas.cama_id AND
                                             os_camas.cama_status='$Estado' AND
                                             os_pisos_camas.piso_id=os_pisos.piso_id"));
-        
     }
-
 /**
  * Funcion para el contenido de visor de camas e por Asistentes Medicas
  *
@@ -50,16 +47,16 @@ class AdmisionHospitalaria extends Config{
             $Mantenimiento= $this->TotalCamasEstatusPisos($value['piso_id'], 'En Mantenimiento');
             $Asignado= $this->TotalCamasEstatusPisos($value['piso_id'], 'Asignado');
             $TotalInfectados= count($this->config_mdl->_query("SELECT os_areas_pacientes.ap_id FROM os_camas,os_areas_pacientes, os_pisos, os_pisos_camas WHERE
-                                os_camas.cama_id=os_areas_pacientes.cama_id AND 
-                                os_pisos.piso_id=os_pisos_camas.piso_id AND 
+                                os_camas.cama_id=os_areas_pacientes.cama_id AND
+                                os_pisos.piso_id=os_pisos_camas.piso_id AND
                                 os_camas.cama_id=os_pisos_camas.cama_id AND os_areas_pacientes.ap_infeccion='Infectado' AND
                                 os_pisos.piso_id=".$value['piso_id']));
-            
+
 /* Realiza el panel en los pisos */
             $Col.=' <div class="panel panel-default">
                         <div class="panel-heading back-imss">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse_'.$value['piso_id'].'"> 
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse_'.$value['piso_id'].'">
                                     <div class="row">
                                         <div class="col-md-2" style="padding: 0px;">
                                             <span style="text-transform:uppercase">'.$value['piso_nombre'].'</span>
@@ -74,7 +71,7 @@ class AdmisionHospitalaria extends Config{
                                             '.$Contaminadas.' Contaminadas
                                         </div>
                                         <div class="col-md-offset-2 col-md-10">
-                                            
+
                                         </div>
                                     </div>
                                 </a>
@@ -84,22 +81,22 @@ class AdmisionHospitalaria extends Config{
                         <div id="collapse_'.$value['piso_id'].'" class="panel-collapse collapse ">
                             <div class="panel-body" style=" padding: 5px;">
                                 <div class="row">';
-                                foreach ($Camas as $value) { 
+                                foreach ($Camas as $value) {
                                     $InfectadoColor='';
                                     $Accion='';
                                     $Paciente='&nbsp;';
                                     $Enfermera='&nbsp;';
-                                    
-                                    
+
+
                                     $sqlPaciente= $this->config_mdl->sqlGetDataCondition('doc_43051',array(
                                         'ac_estatus_doc'=>'Asignación',
                                         'ac_estatus'=>'Asignación',
                                         'cama_id'=> $value['cama_id'],
                                     ));
-                                    $InfoPaciente = $this->config_mdl->_query("SELECT * FROM os_triage, os_areas_pacientes, os_camas WHERE 
+                                    $InfoPaciente = $this->config_mdl->_query("SELECT * FROM os_triage, os_areas_pacientes, os_camas WHERE
                                                     os_areas_pacientes.triage_id=os_triage.triage_id AND
                                                     os_areas_pacientes.cama_id=os_camas.cama_id AND os_triage.triage_id=".$value['cama_id']);
-                                    
+
                                     if(!empty($sqlPaciente)){
                                         $Estado='<span class="label red">Cama Asignada</span>';
                                     }else{
@@ -139,7 +136,7 @@ class AdmisionHospitalaria extends Config{
                                                             </ul>
                                                         </li>
                                                     </ul>';
-                                    
+
                                     if($value['cama_status']=='Disponible'){
                                         $CamaStatus='blue';
                                         if(empty($sqlPaciente)){
@@ -158,8 +155,8 @@ class AdmisionHospitalaria extends Config{
                                             $Paciente='<b>PACIENTE:</b>'.$TriageNombre;
                                             $Enfermera='<b>ENF.:</b>'.$EnfermeraNombre;
                                         }
-                                        
-                                    
+
+
                                     }else if($value['cama_status']=='En Mantenimiento'){
                                         $CamaStatus='red';
                                     }else if($value['cama_status']=='Descompuesta'){
@@ -173,9 +170,9 @@ class AdmisionHospitalaria extends Config{
                                             $Paciente='<b>PACIENTE:</b>'.$TriageNombre;
                                             $Enfermera='<b>ENF.:</b>'.$EnfermeraNombre;
                                         }
-                                        
+
                                     }else if($value['cama_status']=='En Espera'){
-                                        $CamaStatus='blue-grey-700';    
+                                        $CamaStatus='blue-grey-700';
                                     }
 
     /* DIBUJA CUADRO DE CAMAS */
@@ -203,8 +200,8 @@ class AdmisionHospitalaria extends Config{
                                                 <p style="margin-top: -7px;font-size: 10px;margin-bottom: 5px;">'.$Enfermera.'</p>
                                             </div>
                                         </div>
-                                    </div>';      */  
-                                
+                                    </div>';      */
+
         $Col.=' <div class="col-md-2" style="padding: 3px; margin-bottom:-10px">
                     <div class="card '.$CamaStatus.' color-white" style="border-radius:5px">
                         <div style="position:relative">
@@ -215,31 +212,31 @@ class AdmisionHospitalaria extends Config{
                         </div>
                         <div class="row">
                             <div class="col-md-12" style="margin-left: -21px;margin-top:-21px">
-                                <small style="opacity: 1;font-size: 10px"> 
+                                <small style="opacity: 1;font-size: 10px">
                                     <b class="text-right pull-right">12/12/2018</b>
                                 </small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="card-body" style="margin-top:-5px;margin-left:-3px;padding:0px 24px 3px;">
-                                <p style="font-size: 10px;">'.$Paciente.'</p> 
+                                <p style="font-size: 10px;">'.$Paciente.'</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12" style="margin-left: 6px;margin-top:-6px">
-                                <small style="opacity: 1;font-size: 11px"> 
+                                <small style="opacity: 1;font-size: 11px">
                                     <b class="text-left">699 dias 23 hrs 36 min</b>
                                 </small>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12" style="margin-left: 6px;margin-top:-6px">
-                                <small style="opacity: 1;font-size: 10px"> 
+                                <small style="opacity: 1;font-size: 10px">
                                     <b class="text-left">CIRUGIA DE CABEZA Y CUELLO</b>
                                 </small>
                             </div>
                         </div>
-                        
+
                         <div class="card-tools" style="right:2px;top:2px">'.$Accion.'</div>
                         <div class="card-heading" style="margin-top:-10px">
                         <!--    <h5 class="font-thin color-white" style="font-size:19px!important;margin-left: -10px;margin-top: 0px;text-transform: uppercase">
@@ -248,16 +245,16 @@ class AdmisionHospitalaria extends Config{
                         </div>
                         <div class="card-body" style="margin-top:-21px;margin-left:-17px;padding:0px 24px 3px;">
                             <p style="margin-top: -7px;font-size: 10px;margin-bottom: 5px;">Médico:</p>
-                            <p style="margin-top: -7px;font-size: 10px;margin-bottom: 5px;">'.$Enfermera.'</p> 
+                            <p style="margin-top: -7px;font-size: 10px;margin-bottom: 5px;">'.$Enfermera.'</p>
                         </div>
                     </div>
                 </div>';
-                                
+
         }
 
 
 
-                                
+
             $Col.='             </div>
                             </div>
                         </div>
@@ -287,7 +284,22 @@ class AdmisionHospitalaria extends Config{
         $sql['info']= $this->config_mdl->sqlGetDataCondition('os_triage',array(
             'triage_id'=>$_GET['triage_id']
         ))[0];
+        $sql['info_43051'] = $this->config_mdl->sqlGetDataCondition("doc_43051", array(
+          'triage_id' => $_GET['triage_id']
+        ))[0];
+        $sql['Responsable'] = $this->config_mdl->sqlGetDataCondition("paciente_info", array(
+          'triage_id' => $_GET['triage_id']
+        ))[0];
         $this->load->view('AsignarCama',$sql);
+    }
+    public function AjaxDireccionPaciente(){
+      $triage_id = $_GET['triage_id'];
+
+      $sql = $this->config_mdl->_query("SELECT directorio_cp, directorio_cn, directorio_colonia,
+                                                     directorio_municipio, directorio_municipio,directorio_estado
+                                                     FROM os_triage_directorio
+                                                     WHERE triage_id = ".$triage_id);
+      $this->setOutput(array('Direccion'=>$sql[0]));
     }
     public function AjaxAsignarCama_v2() {
         $sqlEmpleado= $this->config_mdl->sqlGetDataCondition('os_empleados',array(
@@ -295,7 +307,7 @@ class AdmisionHospitalaria extends Config{
         ),'empleado_id');
         if(!empty($sqlEmpleado)){
             $this->AccesosUsuarios(array('acceso_tipo'=>'Admisión Hospitalaria AC','triage_id'=>$this->input->post('triage_id'),'areas_id'=>0));
-            $this->config_mdl->_insert('doc_43051',array(
+            $this->config_mdl->_update_data('doc_43051',array(
                 'ac_estatus'=>'Asignación',
                 'ac_estatus_doc'=>'Asignación',
                 'ac_fecha'=> date('Y-m-d H:i:s'),
@@ -311,6 +323,8 @@ class AdmisionHospitalaria extends Config{
                 'cama_id'=> $this->input->post('cama_id'),
                 'empleado_id'=> $sqlEmpleado[0]['empleado_id'],
                 'triage_id'=> $this->input->post('triage_id')
+            ),array(
+              'triage_id' => $this->input->post('triage_id')
             ));
             Modules::run('Triage/TriagePacienteDirectorio',array(
                 'directorio_tipo'=>'Familiar',
@@ -322,9 +336,9 @@ class AdmisionHospitalaria extends Config{
                 'directorio_telefono'=> '',
                 'triage_id'=>$this->input->post('triage_id')
             ));
-            
+
             $this->setOutput(array('accion'=>'1'));
-        
+
         }else{
             $this->setOutput(array('accion'=>'2'));
         }
@@ -334,7 +348,7 @@ class AdmisionHospitalaria extends Config{
             'triage_id'=> $this->input->post('triage_id'),
             'cama_id'=> $this->input->post('cama_id'),
         ));
-        
+
         $this->setOutputV2(array('accion'=>'1'));
     }
     public function AjaxLiberarCama43051() {
@@ -400,9 +414,9 @@ class AdmisionHospitalaria extends Config{
         $data = base64_decode($data);
         $familiar_perfil = $url_save.$this->input->post('familiar_id').'_'.$this->input->post('triage_id').'.jpeg';
         file_put_contents($familiar_perfil, $data);
-        $data = base64_decode($data); 
+        $data = base64_decode($data);
         $source_img = imagecreatefromstring($data);
-        $rotated_img = imagerotate($source_img, 90, 0); 
+        $rotated_img = imagerotate($source_img, 90, 0);
         $familiar_perfil = $url_save.$this->input->post('familiar_id').'_'.$this->input->post('triage_id').'.jpeg';
         imagejpeg($rotated_img, $familiar_perfil, 10);
         imagedestroy($source_img);

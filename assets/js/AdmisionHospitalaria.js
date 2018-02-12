@@ -30,7 +30,7 @@ $(document).ready(function () {
                 'input2':'directorio_estado',
                 'input3':'directorio_colonia'
             })
-        }   
+        }
     })
     $('body').on('click','.btn-paciente-agregar',function () {
         var cama_id=$(this).attr('data-cama');
@@ -52,7 +52,7 @@ $(document).ready(function () {
                         bootbox.hideAll();
                         if(data.accion=='1'){
                             msj_error_noti('EL PACIENTE ACTUALMENTE TIENE UNA SOLICITUD DE ASIGNACIÓN DE CAMA');
-                            
+
                         }if(data.accion=='2'){
                             var empleado_matricula=prompt('CONFIRMAR MATRICULA','');
                             if(empleado_matricula!=null && empleado_matricula!=''){
@@ -60,7 +60,7 @@ $(document).ready(function () {
                             }else{
                                 msj_error_noti('CONFIRMACIÓN DE MATRICULA REQUERIDA');
                             }
-                            
+
                         }
                     },error: function (e) {
                         bootbox.hideAll();
@@ -88,7 +88,7 @@ $(document).ready(function () {
                 if(data.accion=='1'){
                     AbrirDocumentoMultiple(base_url+'Inicio/Documentos/DOC43051/'+$('input[name=triage_id]').val(),'DOC43051');
                     ActionCloseWindowsReload();
-                    
+
                 }if(data.accion=='2'){
                     ActionCloseWindows();
                     msj_error_noti('LA MATRICULA ESPECIFICADA NO EXISTE')
@@ -106,7 +106,7 @@ $(document).ready(function () {
                 $('input[name=ac_ingreso_medico]').val(response.empleado_nombre+' '+response.empleado_apellidos)
             },$(this).val())
         }
-        
+
     })
     $('body input[name=ac_salida_matricula]').blur(function () {
         if($(this).val()!=''){
@@ -226,3 +226,22 @@ $(document).ready(function () {
         })
     }
 })
+function DireccionResponsable(folio) {
+    $.ajax({
+            url: base_url+"AdmisionHospitalaria/AjaxDireccionPaciente",
+            type: 'GET',
+            dataType: 'json',
+            data:{
+                'triage_id':folio
+            },success: function (data, textStatus, jqXHR) {
+                $('input[name=directorio_cp]').val(data.Direccion.directorio_cp);
+                $('input[name=directorio_cn]').val(data.Direccion.directorio_cn);
+                $('input[name=directorio_colonia]').val(data.Direccion.directorio_colonia);
+                $('input[name=directorio_municipio]').val(data.Direccion.directorio_municipio);
+                $('input[name=directorio_estado]').val(data.Direccion.directorio_estado);
+            },error: function (e) {
+              alert("holad"+ e);
+                console.log(e);
+            }
+        })
+}

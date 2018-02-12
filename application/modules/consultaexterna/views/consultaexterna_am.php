@@ -256,16 +256,15 @@
                                       </select>
                                     </div>
                                   </div>
+
                                   <div class="col-md-4">
-                                    <div class="form-group">
-                                      <label style="text-transform: uppercase;font-weight: bold">Fecha de Ingreso</label>
-                                      <div class="input-group">
-                                        <input class="form-control dd-mm-yyyy" required name="ac_fecha" placeholder="06/10/2016" value="<?=$Doc43051['ac_fecha']?>">
-                                        <span class="input-group-btn">
-                                          <button target="_blank"  data-original-title="Dar click para asignar fecha y hora" type="button" class="btn btn-secondary tip" id="btnFecha" ><i class="glyphicon glyphicon-calendar"></i></button>
-                                        </span>
+                                      <label style="text-transform: uppercase;font-weight: bold">Fecha y Hora de Ingreso</label>
+                                      <div class="col-md-6" style="padding:0">
+                                          <input class="form-control dd-mm-yyyy" required name="ac_fecha" placeholder="06/10/2016" value="<?=$Doc43051['ac_fecha']?>">
                                       </div>
-                                    </div>
+                                      <div class="col-md-6" style="padding:0">
+                                          <input class="form-control clockpicker" required name="ac_hora" placeholder="3:45" value="<?=$Doc43051['ac_hora']?>">
+                                      </div>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group" >
@@ -321,6 +320,7 @@
         </div>
     </div>
 <input type="hidden" name="ConfigHojaInicialAsistentes" value="<?=CONFIG_AM_HOJAINICIAL?>">
+<input type="hidden" name="Area" value="<?= $this->UMAE_AREA?>">
 <input type="hidden" name="CONFIG_AM_INTERACCION_LT" value="<?=CONFIG_AM_INTERACCION_LT?>">
 <?= modules::run('Sections/Menu/footer'); ?>
 <script type="text/javascript" src="<?= base_url()?>assets/libs/light-bootstrap/shieldui-all.min.js"></script>

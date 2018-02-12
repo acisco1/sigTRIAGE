@@ -56,6 +56,7 @@ class Consultaexterna extends Config{
         $sql['Medico'] = $this->config_mdl->_query("SELECT empleado_matricula,empleado_nombre,empleado_apellidos
                                                     FROM os_empleados
                                                     ORDER BY empleado_nombre;");
+         
 
         $this->load->view('consultaexterna_am',$sql);
     }
@@ -154,9 +155,11 @@ class Consultaexterna extends Config{
           'ac_ingreso_matricula' => $query['Empleado'][0]['empleado_matricula'],
           'ac_diagnostico' => $this->input->post('ac_diagnostico'),
           'ac_procedimiento' => $this->input->post('ac_procedimiento'),
-
+          'ac_hora' => $this->input->post('ac_hora'),
           'empleado_id' => $this->UMAE_USER
         );
+        /*Si se encuentra almenos un resultado la informacion se modificara,
+        de lo contrario insertara los datos*/
         if(count($query[$Id43051][0]['ac_id']) == 1){
           $this->config_mdl->_update_data("doc_43051",$dataDoc_43051,
           array('ac_id' => $query[$Id43051][0]['ac_id'] ));

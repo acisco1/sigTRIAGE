@@ -51,51 +51,24 @@
                             </div>
                         </div>
                         <div class="row-sm">
-                            <div class="col-sm-12 back-imss" >
-                              <div class="row-sm">
-                                  <div class="col-sm-11">
-                                      <div style="padding: 10px"  >
-                                          <b>DIRECCIÓN DEL RESPONSABLE</b>
-                                      </div>
-                                  </div>
-                                  <div class="col-sm-1">
-                                    <div class="form-group" >
-                                        <a class="btn btn-default tip" onclick="DireccionResponsable(<?=$_GET['triage_id']?>)" id="btnBuscarDireccion" value="2" data-original-title="Ingresa direccion del paciente" >
-                                          <i class="glyphicon glyphicon-user"></i>
-                                        </a>
-                                    </div>
-                                  </div>
-                              </div>
+                            <div class="col-sm-12">
+                                <div style="padding: 8px" class="back-imss" >
+                                    <b>DIRECCIÓN DEL RESPONSABLE</b>
+                                </div>
                             </div>
                         </div>
-                        <br/>
                         <div class="row-sm">
-                          <div class="col-sm-4">
-                              <div class="form-group">
-                                  <br><input type="text" name="responsable_nombre" value="<?=$Responsable['pic_responsable_nombre']?>" class="form-control" placeholder="Nombre">
-                              </div>
-                          </div>
-                          <div class="col-sm-4">
-                              <div class="form-group">
-                                  <br><input type="text" name="responsable_parenteso" value="<?=$Responsable['pic_responsable_parentesco']?>" class="form-control" placeholder="Parentesco">
-                              </div>
-                          </div>
-                          <div class="col-sm-4">
-                              <div class="form-group">
-                                  <br><input type="text" name="responsable_telefono" value="<?=$Responsable['pic_responsable_telefono']?>" class="form-control" placeholder="Telefono">
-                              </div>
-                          </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4"><br>
                                 <div class="form-group">
-                                    <input type="text" name="directorio_cp" value="" class="form-control" placeholder="Código Postal">
+                                    <input type="text" name="directorio_cp" class="form-control" placeholder="Código Postal">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4"><br>
                                 <div class="form-group">
-                                    <input type="text" name="directorio_cn" value="" class="form-control" placeholder="Calle y Numero">
+                                    <input type="text" name="directorio_cn" class="form-control" placeholder="Calle y Numero">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4"><br>
                                 <div class="form-group" id="the-basics">
                                     <input type="text" name="directorio_colonia" class="form-control" autocomplete="off" placeholder="Colonia">
                                 </div>
@@ -117,7 +90,7 @@
                                     <input type="hidden" name="empleado_matricula" value="<?=$_GET['empleado_matricula']?>">
                                     <input type="hidden" name="ac_cama_estatus" value="<?=$_GET['cama_estatus']?>">
                                     <input type="hidden" name="csrf_token">
-                                    <button class="btn back-imss btn-block" id="btnGu" >Guardar</button>
+                                    <button class="btn back-imss btn-block" >Guardar</button>
                                 </div>
                             </div>
                         </div>

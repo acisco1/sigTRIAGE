@@ -33,13 +33,14 @@
         <link href="<?=  base_url()?>assets/styles/style.css?time=<?= sha1(microtime())?>" rel="stylesheet" type="text/css" />
         <link href="<?=  base_url()?>assets/img/imss.png" rel="icon" type="image/png">
 
+
     </head>
     <body>
         <div class="app">
             <aside id="aside" class="app-aside modal  " role="menu">
                 <div class="left ">
                     <div class="box back-imss">
-                        <?php 
+                        <?php
                         if($this->UMAE_AREA=='Administrador'){
                             $Fondo='back-imss-all';
                             $Fondo2='back-imss-all color-white';
@@ -56,7 +57,7 @@
                             <br>
                             <span class="h2 " style="font-size: 13px;"><?= substr($this->UM_TIPO, 0,40)?></span>
                         </div>
-                        
+
                         <div class="box-row">
                             <div class="box-cell scrollable ">
                                 <div class="box-inner ">
@@ -85,7 +86,7 @@
                                                         <span class="font-normal color-white" style="margin-left: -15px;">Inicio</span>
                                                     </a>
                                                 </li>
-                                                <?=  Modules::run('menu/ObtenerMenu')?> 
+                                                <?=  Modules::run('menu/ObtenerMenu')?>
                                                 <br><br>
                                             </ul>
                                         </nav>
@@ -114,14 +115,14 @@
                         <ul class="nav nav-sm navbar-tool pull-left" style="padding-left: 5px;">
                             <li>
                                 <p class="time" style="font-size: 40px;margin: 0px 0px 0px 0px">
-                                    <b class="hora" ><?= date('H')?></b>:<b class="minuto"><?= date('i')?></b>:<b class="segundo"><?= date('s')?></b> 
+                                    <b class="hora" ><?= date('H')?></b>:<b class="minuto"><?= date('i')?></b>:<b class="segundo"><?= date('s')?></b>
                                 </p>
                                 <p style="text-transform: uppercase;font-size: 9px;margin: -5px 0px 0px 0px">
-                                <b class="fecha" ></b> 
+                                <b class="fecha" ></b>
                                 </p>
                             </li>
-                            <li class=""> 
-                                
+                            <li class="">
+
                             </li>
                         </ul>
                         <ul class="nav nav-sm navbar-tool pull-right">
@@ -131,7 +132,7 @@
                                     <b class="badge bg-danger up notificaciones-total" ></b>
                                 </a>
                             </li>
-                            
+
                             <li>
                                 <div style="width: 30px;height: 30px;margin-top: 16px;border-radius: 100px!important">
                                     <a href="#">
@@ -139,7 +140,7 @@
                                     </a>
                                 </div>
                             </li>
-                            
+
                             <li class="dropdown">
                                 <a md-ink-ripple data-toggle="dropdown">
                                     <i class="mdi-navigation-more-vert i-24"></i>
@@ -168,4 +169,3 @@
                             </li>
                         </ul>
                     </div>
-                    

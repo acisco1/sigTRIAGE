@@ -25,6 +25,16 @@ $(document).ready(function () {
       $('#medicoMatricula').val(matricula);
     });
     $('.solicitud-am-consultaexterna').submit(function (e){
+        var area = $('input[name=Area]').val();
+        var destino = "";
+        //El area determina el destino que se mostrara al finalizar
+        if(area == "Asistente Médica"){
+          destino = "Sections/Pacientes";
+        }else if(area == "Admisión Hospitalaria"){
+          destino = "Consultaexterna";
+        }
+
+        var confirmacion = confirm("¿Quiere imprimir el documento?");
 
         e.preventDefault();
         $.ajax({
@@ -37,13 +47,13 @@ $(document).ready(function () {
             },success: function (data, textStatus, jqXHR) {
                 bootbox.hideAll();
                 if(data.accion=='1'){
+                  if(confirmacion){
                     AbrirDocumentoMultiple(base_url+'inicio/documentos/DOC43051/'+$('input[name=triage_id]').val(),'HojaFrontal',100);
                     if($('select[name=triage_paciente_accidente_lugar]').val()=='TRABAJO'){
                         AbrirDocumentoMultiple(base_url+'inicio/documentos/ST7/'+$('input[name=triage_id]').val(),'ST7',300);
                     }
-
-                    window.location.href=base_url+'Consultaexterna/';
-
+                  }
+                  window.location.href=base_url+destino;
                 }
             },error: function (e) {
                 msj_error_serve();

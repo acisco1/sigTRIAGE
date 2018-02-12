@@ -46,6 +46,7 @@
         <script src="<?=  base_url()?>assets/js/bootbox.min.js"></script>
         <script src="<?=  base_url()?>assets/libs/md5.js"></script>
         <script src="<?=  base_url()?>assets/js/jquery.cookie.js"></script>
+        
         <script src="<?=  base_url()?>assets/js/Mensajes.js?time=<?= sha1(microtime())?>" type="text/javascript"></script>
 	<script type="text/javascript">
             Pace.options={

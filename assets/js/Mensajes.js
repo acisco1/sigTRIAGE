@@ -2,13 +2,13 @@ jQuery('body input[type=text],input[type=text] .md-input').keypress(function(tec
     if(tecla.charCode == 60 || tecla.charCode == 62){
         msj_error_noti('CARACTER NO PERMITIDO');
         return false;
-    } 
+    }
 });
 jQuery('body .md-input, input.form-control').keypress(function(tecla) {
     if(tecla.charCode == 60 || tecla.charCode == 62){
         msj_error_noti('CARACTER NO PERMITIDO');
         return false;
-    } 
+    }
 });
 jQuery('body textarea').keypress(function(tecla) {
     if(tecla.charCode == 60 || tecla.charCode == 62) {
@@ -96,8 +96,8 @@ $('body').on('click','.ver-texto',function () {
 });
 
 var AbrirDocumento=function(url){
-    coordx= screen.width ? (screen.width-200)/2 : 0; 
-    coordy= screen.height ? (screen.height-150)/2 : 0; 
+    coordx= screen.width ? (screen.width-200)/2 : 0;
+    coordy= screen.height ? (screen.height-150)/2 : 0;
     window.open(url,'Documento','width=800,height=600,top=30,right='+coordx+',left='+coordy);
 }
 var AbrirVista=function(url,width=800,height=600){
@@ -106,8 +106,8 @@ var AbrirVista=function(url,width=800,height=600){
     window.open(url,'Documento','width='+width+',height='+height+',top='+y+',left='+x);
 }
 var AbrirDocumentoMultiple=function(url,nombre,left){
-    coordx= screen.width ? (screen.width-200)/2 : 0; 
-    coordy= screen.height ? (screen.height-150)/2 : 0; 
+    coordx= screen.width ? (screen.width-200)/2 : 0;
+    coordy= screen.height ? (screen.height-150)/2 : 0;
     window.open(url,nombre,'width=800,height=600,top=30,right='+coordx+',left='+(left==undefined ? coordy : left));
 }
 var msj_error_noti=function (msj){
@@ -115,21 +115,21 @@ var msj_error_noti=function (msj){
         message: msj,
         type: 'error',
         showCloseButton: true
-    }); 
+    });
 }
 var msj_error_serve=function (error){
     Messenger().post({
         message: 'Error al procesar la petición al servidor ',
         type: 'error',
         showCloseButton: true
-    }); 
+    });
     (error==undefined ? '' :  console.log(error))
 }
 var  msj_success_noti=function (msj){
     Messenger().post({
         message: msj,
         showCloseButton: true
-    }); 
+    });
 }
 var BuscarCodigoPostal=function(input) {
     $.ajax({
@@ -157,24 +157,24 @@ var BuscarCodigoPostal=function(input) {
         })
 }
 var get_fecha=function (){
-    var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"); 
-    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"); 
-    var f=new Date(); 
+    var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+    var f=new Date();
     return diasSemana[f.getDay()] + " " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
 }
-var fecha_yyyy_mm_dd=function (){        
+var fecha_yyyy_mm_dd=function (){
     var hoy = new Date();
     var dd = hoy.getDate();
     var mm = hoy.getMonth()+1; //hoy es 0!
     var yyyy = hoy.getFullYear();
     if(dd<10) {
         dd='0'+dd;
-    } 
+    }
     if(mm<10) {
         mm='0'+mm;
-    } 
+    }
     return yyyy+'/'+mm+'/'+dd;
-}    
+}
 var fecha_dd_mm_yyyy=function (){
     var hoy = new Date();
     var dd = hoy.getDate();
@@ -182,10 +182,10 @@ var fecha_dd_mm_yyyy=function (){
     var yyyy = hoy.getFullYear();
     if(dd<10) {
         dd='0'+dd;
-    } 
+    }
     if(mm<10) {
         mm='0'+mm;
-    } 
+    }
     return dd+'/'+mm+'/'+yyyy;
 }
 var hora_actual=function (e){
@@ -231,7 +231,7 @@ var ActionWindowsReload=function () {
         location.reload();
     },1000)
 }
-$('body #example_length ,.DTTT ').addClass('hidden');  
+$('body #example_length ,.DTTT ').addClass('hidden');
 $('#retrievingfilename').html5imageupload({
     onAfterProcessImage: function() {
             $('#filename').val($(this.element).data('name'));
@@ -249,7 +249,8 @@ $('.fecha-calendar,.fecha_calendar').datepicker({
 $('.dd-mm-yyyy').datepicker({
     autoclose: true,
     format: 'dd/mm/yyyy',
-    todayHighlight: true
+    todayHighlight: true,
+    language: 'es'
 });
 $('.dp-yyyy-mm-dd').datepicker({
     autoclose: true,
@@ -262,6 +263,7 @@ $('.d-m-y').datepicker({
 });
 $('.clockpicker').clockpicker({
     placement: 'top',
+    twelvehour: true,
     autoclose: true
 });
 $('.clockpicker-bottom').clockpicker({
@@ -281,9 +283,9 @@ $('body .fileinput-upload').hide();
 
 $('body .fecha').html(fechaActual());
 function fechaActual(){
-    var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"); 
-    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"); 
-    var f=new Date(); 
+    var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+    var f=new Date();
     return diasSemana[f.getDay()] + " " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
 }
 setInterval(function() {
@@ -303,7 +305,7 @@ var ExperiredSession=function() {
 }
 var ActualizarPorCambio=function() {
 
-} 
+}
 $('body .tip').tooltip();
 var CerrarSesion=function() {
     $.ajax({
@@ -343,7 +345,7 @@ var AjaxBuscarEmpleado=function (result,Matricula) {
         },error: function (e) {
             console.log(e);
         }
-        
+
     });
     //return data;
 }
@@ -363,7 +365,7 @@ var SendAjax=function (data,url,response,LoadingMsj='',Loading="Si") {
             MsjError();
             console.log(e);
         }
-        
+
     });
 }
 var ViewImage=function (src,size) {
@@ -402,7 +404,7 @@ var MsjLoading=function (size='Si'){
             'margin-top':y+'px',
         })
     }
-    
+
 };
 var SendAjaxPost=function (Data,Url,Response,Loading="Si",Size) {
     $.ajax({
@@ -413,7 +415,7 @@ var SendAjaxPost=function (Data,Url,Response,Loading="Si",Size) {
         beforeSend: function (xhr) {
             if(Loading=='Si'){
                 MsjLoading(Size);
-            }  
+            }
         },success: function (result, textStatus, jqXHR) {
             bootbox.hideAll();
             Response(result);
@@ -422,7 +424,7 @@ var SendAjaxPost=function (Data,Url,Response,Loading="Si",Size) {
             MsjError();
             console.log(e);
         }
-        
+
     });
 }
 var SendAjaxGet=function (Url,Response,Loading="Si",Size) {
@@ -432,7 +434,7 @@ var SendAjaxGet=function (Url,Response,Loading="Si",Size) {
         beforeSend: function (xhr) {
             if(Loading=='Si'){
                 MsjLoading(Size);
-            }  
+            }
         },success: function (result, textStatus, jqXHR) {
             bootbox.hideAll();
             Response(result);
@@ -441,7 +443,7 @@ var SendAjaxGet=function (Url,Response,Loading="Si",Size) {
             MsjError();
             console.log(e);
         }
-        
+
     });
 }
 var Total_Msj=0;

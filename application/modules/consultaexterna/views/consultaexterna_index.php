@@ -13,7 +13,6 @@
                     </a>
                 </div>
                 <div class="panel-body b-b b-light">
-
                     <div class="row" style="margin-top: 0px">
                         <div class="col-sm-12">
                           <div class="row">
@@ -37,7 +36,6 @@
                                           <input type="text" name="inputSearch" class="form-control" autocomplete="off" placeholder="Ingresar N° de Paciente">
                                       </div>
                                   </div>
-
                                   <div class="col-md-3" style="padding-left: 0px">
                                       <div class="form-group">
                                           <input type="hidden" name="csrf_token">
@@ -80,7 +78,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
