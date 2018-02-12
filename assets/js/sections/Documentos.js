@@ -1,12 +1,20 @@
 $(document).ready(function () {
     $('.select2').select2();
-    $('textarea[name=cpr_nota]').wysihtml5();
+    //$('textarea[name=cpr_nota]').wysihtml5();
     $('.hf_motivo_abierto').wysihtml5();
-    $('.hf_antecedentes_abierto').wysihtml5();
-    $('.hf_padecimientoa_abierto').wysihtml5();
+    $('.hf_antecedentes').wysihtml5();
+    //$('.hf_padecimientoa_abierto').wysihtml5();
     $('.hf_exploracionf_abierto').wysihtml5();
     $('.hf_textarea').wysihtml5();
-    $('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2();
+    $('.hf_ayuno').wysihtml5();
+    $('.hf_signosycuidados').wysihtml5();
+    $('.hf_cuidadosenfermeria').wysihtml5();
+    $('.hf_solucionesp').wysihtml5();
+    $('.hf_medicamentos').wysihtml5();
+    $('.hf_diagnosticos').wysihtml5();
+    $('textarea[name=nota_interrogatorio]').wysihtml5();
+    $('.hf_diagnosticos_abierto').wysihtml5();
+    //$('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2();
 
     /*if($('input[name=accion]').val()!=undefined){
         $('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2(); //divide cada seleccinado
@@ -265,7 +273,6 @@ $(document).ready(function () {
             }
         })
     }
-    $('textarea[name=nota_interrogatorio]').wysihtml5();
     // Hoja de Notas parte de riesgo de caida
     $('input[name=hf_riesgo_caida][value="'+$('input[name=hf_riesgo_caida]').data('value')+'"]').prop("checked",true);
     $('input[name=nota_estadosalud][value="'+$('input[name=nota_estadosalud]').data('value')+'"]').prop("checked",true);
@@ -490,7 +497,6 @@ $(document).ready(function () {
         })
     })
     /*Documento de Hoja Frontal Formato Abierto*/
-    $('.hf_diagnosticos_abierto').wysihtml5();
     $('.guardar-solicitud-hi-abierto').submit(function (e){
         e.preventDefault();
         $.ajax({
@@ -588,8 +594,6 @@ $(document).ready(function () {
           $('.medico_residente').addClass('hidden');
       }
     });
-
-
 
     $('input[name=residente][value="'+$('input[name=residente]').data('value')+'"]').prop("checked",true);
 

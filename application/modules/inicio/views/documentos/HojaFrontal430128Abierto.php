@@ -104,36 +104,36 @@
                 <b>CLASIFICACIÓN:</b> <?=$info['triage_color']?>
             </div>
             <div style="position: absolute;margin-top:237px;margin-left: 360px ">:[[page_cu]]/[[page_nb]]</div>
-            <!-- fecha de  creacion del cocumento -->
-            <div style="position: absolute;margin-left: 45px;margin-top: 276px;width: 150px;font-size: 7px;text-align: center;">
+            <!-- fecha de  creacion del documento -->
+            <div style="position: absolute;margin-left: 20px;margin-top: 276px;width: 150px;font-size: 7px;text-align: center;">
                 <h5><?=$hoja['hf_fg']?> <?=$hoja['hf_hg']?></h5>
             </div>
-            <div style="position: absolute;margin-left: 66px;margin-top: 310px;width: 110px;font-size: 12px;text-align: center">
+            <div style="position: absolute;margin-left: 30px;margin-top: 310px;width: 110px;font-size: 12px;text-align: center">
                 <h5>Tensión Arterial</h5>
-                <h4 style="margin-top: -10px"><?=$SignosVitales['sv_ta']?> mmHg</h4>
+                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_ta']?> mmHg</h5>
                 <h5 style="margin-top: -5px">Temperatura</h5>
-                <h4 style="margin-top: -10px"><?=$SignosVitales['sv_temp']?> °C</h4>
+                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_temp']?> °C</h5>
                 <h5 style="margin-top: -5px">Frecuencia Cardiaca</h5>
-                <h4 style="margin-top: -10px"><?=$SignosVitales['sv_fc']?> (lpm)</h4>
+                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_fc']?> (lpm)</h5>
                 <h5 style="margin-top: -5px">Frecuencia Respiratoria</h5>
-                <h4 style="margin-top: -10px"><?=$SignosVitales['sv_fr']?> (rpm)</h4>
+                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_fr']?> (rpm)</h5>
                 <?php if($SignosVitales['sv_oximetria']!=''){?>
                 <h5 style="margin-top: -5px">Oximetria</h5>
-                <h4 style="margin-top: -10px"><?=$SignosVitales['sv_oximetria']?> (%SpO2)</h4>
+                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_oximetria']?> (%SpO2)</h5>
                 <?php }?>
                 <?php if($SignosVitales['sv_dextrostix']!=''){?>
                 <h5 style="margin-top: -5px">Glucometría</h5>
-                <h4 style="margin-top: -10px"><?=$SignosVitales['sv_dextrostix']?> (mg/dl)</h4>
+                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_dextrostix']?> (mg/dl)</h5>
                 <?php }?>
                 <h5 style="margin-top: -5px">Escala de dolor (EVA):</h5>
-                <h4 style="margin-top: -10px"><?=$hoja['hf_eva']?></h4>
+                <h5 style="margin-top: -10px"><?=$hoja['hf_eva']?></h5>
                 <h5 style="margin-top: -5px">Riesgo de caída:</h5>
-                <h4 style="margin-top: -10px"><?=$hoja['hf_riesgocaida']?></h4>
+                <h5 style="margin-top: -10px"><?=$hoja['hf_riesgocaida']?></h5>
                 <h5 style="margin-top: -5px">Riesgo de trombosis:</h5>
-                <h4 style="margin-top: -10px"><?=$hoja['hf_riesgo_trombosis']?></h4>
+                <h5 style="margin-top: -10px"><?=$hoja['hf_riesgo_trombosis']?></h5>
             </div>
-            <div style="rotate: 90; position: absolute;margin-left: 50px;margin-top: 336px;text-transform: uppercase;font-size: 12px;">
-                <?=$Enfermera['empleado_nombre']?> <?=$Enfermera['empleado_apellidos']?> <?=$info['triage_fecha']?> <?=$info['triage_hora']?><br><br><br>
+            <div style="rotate: 90; position: absolute;margin-left: 13px;margin-top: 336px;text-transform: uppercase;font-size: 12px;">
+                ENF:<?=$Enfermera['empleado_nombre']?> <?=$Enfermera['empleado_apellidos']?> <?=$info['triage_fecha']?> <?=$info['triage_hora']?>
             </div>
             <div style="position: absolute;top: 910px;left: 215px;width: 240px;font-size: 9px;text-align: center">
                 <?=$Medico['empleado_nombre']?> <?=$Medico['empleado_apellidos']?><br>
@@ -153,80 +153,76 @@
             <div style="margin-left: 280px;margin-top: 980px">
                 <barcode type="C128A" value="<?=$info['triage_id']?>" style="height: 40px;" ></barcode>
             </div>
-            
-        </div>   
-        
+        </div>         
     </page_header>
+       <div style="position:absolute; left: -35px;margin-top: -10px; font-size: 13px;">
         <span style="text-align: justify">
         <?php if($hoja['hf_motivo']!=''){?>
-        <h4 style="margin-bottom: -6px">MOTIVO DE CONSULTA</h4>
+        <h5 style="margin-bottom: -6px">MOTIVO DE CONSULTA</h5>
         <?=$hoja['hf_motivo']?>
         <br>
         <?php }?>
         <?php if($hoja['hf_antecedentes']!=''){?>
-        <h4 style="margin-bottom: -6px">ANTECEDENTES</h4>
+        <h5 style="margin-bottom: -6px">ANTECEDENTES</h5>
         <?=$hoja['hf_antecedentes']?>
         <br>
         <?php }?>
         <?php if($hoja['hf_padecimientoa']!=''){?>
-        <h4 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h4>
+        <h5 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h5>
         <?=$hoja['hf_padecimientoa']?>
         <br>
         <?php }?>
         <?php if($hoja['hf_exploracionfisica']!=''){?>
-        <h4 style="margin-bottom: -6px">EXPLORACIÓN FISICA</h4>
+        <h5 style="margin-bottom: -6px">EXPLORACIÓN FISICA</h5>
         <?=$hoja['hf_exploracionfisica']?>
         <br>
         <?php }?>
-        <h5 style="margin-bottom: -5px">ESCALA DE GLASGOW: <?=$hoja['hf_escala_glasgow']?></h5>
+        <?php if($hoja['hf_escala_glasgow']!=''){?>
+        <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$hoja['hf_escala_glasgow']?></h5>
+        <?php }?>
         <?php if($hoja['hf_auxiliares']!=''){?>
-        <h4 style="margin-bottom: -6px">AUXILIARES DE DIAGNÓSTICO</h4>
+        <h5 style="margin-bottom: -6px">AUXILIARES DE DIAGNÓSTICO</h5>
         <?=$hoja['hf_auxiliares']?>
         <br>
         <?php }?>
-        <h4 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h4>
+        <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
         <?=$hoja['hf_diagnosticos_lechaga']?>
-        <br>
+        
         <?php if($hoja['hf_diagnosticos']!=''){?>
-        <h4 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h4>
+        <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
         <?=$hoja['hf_diagnosticos']?>
-        <br>
         <?php }?>
-        <h4 style="margin-bottom: -6px">INDICACIONES Y ORDENES MÉDICAS</h4>
+        <h5 style="margin-bottom: -6px">INDICACIONES Y ORDENES MÉDICAS</h5>
         <?php if($hoja['hf_ayuno']!=''){?>
-        DIETA: <?=$hoja['hf_ayuno']?><BR>
-        <br>
+        DIETA:<?=$hoja['hf_ayuno']?>
         <?php }?>
         <?php if($hoja['hf_signosycuidados']!=''){?>
-        SIGNOS:  <?=$hoja['hf_signosycuidados']?><BR>
-        <br>
+        SIGNOS:<?=$hoja['hf_signosycuidados']?><BR>
         <?php }?>
         <?php if($hoja['hf_cuidadosenfermeria']!=''){?>
-        CUIDADOS ESPECIFICOS DE ENFERMERIA: <?=$hoja['hf_cuidadosenfermeria']?><BR>
-        <br>
+        CUIDADOS ESPECIFICOS DE ENFERMERIA: <?=$hoja['hf_cuidadosenfermeria']?>
         <?php }?>
         <?php if($hoja['hf_solucionesp']!=''){?>
-        SOLUCIONES PARENTERALES: <?=$hoja['hf_solucionesp']?><BR>
-        <br>
+        SOLUCIONES PARENTERALES:<?=$hoja['hf_solucionesp']?>
         <?php }?>
         <?php if($hoja['hf_medicamentos']!=''){?>
-        MEDICAMENTOS: <?=$hoja['hf_medicamentos']?><BR> 
+        MEDICAMENTOS:<?=$hoja['hf_medicamentos']?>
         <?php }?>
-         <?php if($hoja['hf_indicaciones']!=''){?>  
-        <h4 style="margin-bottom: -6px">PRONÓSTICO</h4>
-        <?=$hoja['hf_indicaciones']?><?php }?>
-        <br>
+        <?php if($hoja['hf_indicaciones']!=''){?>  
+        <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
+        <?=$hoja['hf_indicaciones']?>
+        <?php }?>
          <?php if($hoja['hf_interpretacion']!=''){?>
-        <h4 style="margin-bottom: -6px">ESTADO DE SALUD</h4>
+        <h5 style="margin-bottom: -6px">ESTADO DE SALUD</h5>
         <?=$hoja['hf_interpretacion']?>
         <br>
         <?php }?>
-        <h4 style="margin-bottom: -6px">ACCIÓN: <?=$hoja['hf_alta']?></h4>
-        <br>
+        <h5 style="margin-bottom: -6px">ACCIÓN:<?=$hoja['hf_alta']?></h5>
          <?php if($hoja['hf_interconsulta']!=''){?>
-        <h4 style="margin-bottom: -6px">VALORACION POR: <?=$hoja['hf_interconsulta']?></h4>
+        <h5 style="margin-bottom: -6px">VALORACION POR: <?=$hoja['hf_interconsulta']?></h5>
         <?php }?>
-    </span>
+       </span>
+    </div>
     <page_footer>
 
     </page_footer>

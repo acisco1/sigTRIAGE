@@ -1,9 +1,56 @@
-<?= modules::run('Sections/Menu/index'); ?> 
+<?= modules::run('Sections/Menu/index'); ?>
 <link rel="stylesheet" type="text/css" href="<?= base_url()?>assets/libs/light-bootstrap/all.min.css" />
 <div class="box-row">
     <div class="box-cell">
         <div class="col-md-11 col-centered" style="margin-top: 10px ">
-            <div class="box-inner ">
+            <div class="box-inner">
+               <style type="text/css">
+                fieldset.scheduler-border {
+                border: solid 1px #DDD !important;
+                padding: 0 10px 10px 10px;
+                border-bottom: none;
+            }
+
+            legend.scheduler-border {
+                width: auto !important;
+                border: none;
+            font-size: 14px;
+            }
+              .text-on-pannel {
+              background: #fff none repeat scroll 0 0;
+              height: auto;
+              margin-left: 20px;
+              padding: 3px 5px;
+              position: absolute;
+              margin-top: -47px;
+              border: 1px solid #337ab7;
+              border-radius: 8px;
+            }
+
+            /*    .panel {
+            /* for text on pannel 
+            margin-top: 27px !important;
+            } */
+
+            .panel-body {
+            padding-top: 30px !important;
+            }
+
+            .scroll-box {
+            position: relative;
+            }
+            .scrollspy-body {
+                position: relative;
+                overflow-y: scroll;
+                height: 520px;
+            }
+                #modalTamanioT {
+                    width: 80% !important;
+                }
+                #modalTamanioG {
+                    width: 67% !important;
+                }
+            </style>
                 <?php if($SignosVitales['sv_ta']==''){?>
                 <div class="row " style="margin-top: -10px;padding: 16px;">
                     <div class="col-md-12 col-centered back-imss" style="padding:10px;margin-bottom: -7px;">
@@ -76,8 +123,7 @@
                 </div>
                 <?php }?>
                 
-                <div class="panel panel-default " style="margin-top: -16px">
-                    
+                <div class="panel panel-default " style="margin-top: -16px">                    
                     <div class="col-md-2 text-center back-imss" style="padding-left: 0px;padding: 5px;">
                         <h5 class=""><b>P.A</b></h5>
                         <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?></h4>
@@ -117,222 +163,285 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label><b>MOTIVO DE CONSULTA</b></label>
-                                            <textarea class="form-control hf_motivo_abierto" rows="5" name="hf_motivo" placeholder="Escriba aquí el Motivo de la consulta"><?=$hojafrontal[0]['hf_motivo']?>
+                                      <div class="form-group">
+                                       <h4><span class = "label back-imss border-back-imss">MOTIVO DE CONSULTA</span></h4>                      <textarea class="form-control hf_motivo_abierto" rows="5" name="hf_motivo" placeholder="Escriba aquí el Motivo de la consulta"><?=$hojafrontal[0]['hf_motivo']?>
                                             </textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label><b>ANTECEDENTES</b></label>
-                                            <textarea class="form-control" rows="6" name="hf_antecedentes" placeholder="Escriba aquí los antecedentes"><?=$hojafrontal[0]['hf_antecedentes']?></textarea>
+                                           <h4><span class = "label back-imss border-back-imss">ANTECEDENTES</span></h4>
+                                            <textarea class="form-control hf_antecedentes" rows="6" name="hf_antecedentes" placeholder="Escriba aquí los antecedentes"><?=$hojafrontal[0]['hf_antecedentes']?></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label><b>PADECIMIENTO ACTUAL</b></label>
+                                            <h4><span class = "label back-imss border-back-imss">PADECIMIENTO ACTUAL</span></h4>
                                             <textarea class="form-control" rows="5" name="hf_padecimientoa" placeholder="Escriba aquí el/los pacedimiento actual"><?=$hojafrontal[0]['hf_padecimientoa']?></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label><b>EXPLORACION FISICA</b></label>
+                                            <h4><span class = "label back-imss border-back-imss">EXPLORACIÓN FISICA</span></h4>
                                             <textarea class="form-control" rows="8" name="hf_exploracionfisica"><?=$hojafrontal[0]['hf_exploracionfisica']?></textarea>
-                                        </div>
-                                         
-                                        <label><b>ESCALA DE GLASGOW</b></label><br>
+                                        </div>  
+                                    </div> 
+                                </div> 
+                    <div class="row">                                    
+                    <div class="col-md-3">
+<!-- Glasgow -->      <label><b>ESCALA DE GLASGOW</b></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" data-toggle="modal" data-target='#myModal1' placeholder="Clic para valor" name="hf_escala_glasgow" value="<?=$hojafrontal[0]['hf_escala_glasgow']?>">
+                                <span class="input-group-addon">Puntos</span>
+                            </div>
+                    </div>
 
-                                        APERTURA OCULAR:
-                                        <div class="form-group">
-                                           <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_expontanea" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_expontanea']?>" class="has-value"><i class="indigo"></i>Espontánea</label>&nbsp;&nbsp;
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_hablar" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_hablar']?>" class="has-value"><i class="indigo"></i>Hablar</label>&nbsp;&nbsp;
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_dolor" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_dolor']?>" class="has-value"><i class="indigo"></i>Dolor</label>&nbsp;&nbsp;
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_ausente" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausente']?>" class="has-value"><i class="indigo"></i>Ausente</label>
-                                        </div> 
-                                      
-                                            RESPUESTA MOTORA:
-                                        <div class="form-group">
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_obedece" value="6" data-value="<?=$hojafrontal[0]['hf_glasgow_obedece']?>" class="has-value"><i class="indigo"></i>Obedece</label>&nbsp;&nbsp; 
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_localiza" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_localiza']?>" class="has-value"><i class="indigo"></i>Localiza</label>&nbsp;&nbsp;
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_retira" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_retira']?>" class="has-value"><i class="indigo"></i>Retira</label>
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_flexion" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_flexion']?>" class="has-value"><i class="indigo"></i>Flexión normal</label>&nbsp;&nbsp;
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_extension" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_extension']?>" class="has-value"><i class="indigo"></i>Extensión anormal</label>&nbsp;&nbsp;
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_ausencia" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausencia']?>" class="has-value"><i class="indigo"></i>Ausencia de repuesta</label>
-                                        </div>
-                                        
-                                            REPUESTA VERBAL:
-                                        <div class="form-group">
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_orientado" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_orientado']?>" class="has-value"><i class="indigo"></i>Orientado&nbsp;&nbsp;</label> 
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_confuso" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_confuso']?>" class="has-value"><i class="indigo"></i>Confuso&nbsp;&nbsp;</label> 
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_incoherente" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_incoherente']?>" class="has-value"><i class="indigo"></i>Incoherente&nbsp;&nbsp;</label> 
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_sonidos" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_sonidos']?>" class="has-value"><i class="indigo"></i>Sonidos Incomprensibles&nbsp;&nbsp;</label>  
-                                            <label class="md-check">
-                                            <input type="checkbox" class='sum' name="hf_glasgow_arespuesta" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_arespuesta']?>" class="has-value"><i class="indigo"></i>Ausencia de respuesta</label> 
-                                        </div>
+ <!-- Modal Escala de glasgow -->
 
-                                    <div class="form-group">PUNTUACIÓN TOTAL: &nbsp;<input type="text" name="hf_escala_glasgow" size="3" data-value="<?=$hojafrontal[0]['hf_escala_glasgow']?>" disable></div>
-                                    
-                                    <div class="col-md-4">
-                                        <div class="form-group">
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" id="modalTamanioG">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Puntuación de la Escala de Glasgow</h4>
+      </div>
+      <div class="modal-body">
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border"><b>APERTURA OCULAR</b></legend>
+                <div class="form-group">
+                    <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_expontanea" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_expontanea']?>" class="has-value"><i class="indigo"></i>Espontánea</label>&nbsp;&nbsp;
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_hablar" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_hablar']?>" class="has-value"><i class="indigo"></i>Hablar</label>&nbsp;&nbsp;
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_dolor" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_dolor']?>" class="has-value"><i class="indigo"></i>Dolor</label>&nbsp;&nbsp;
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_ausente" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausente']?>" class="has-value"><i class="indigo"></i>Ausente</label>
+                </div>
+        </fieldset>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border"><B>RESPUESTA MOTORA</B></legend>
+                <div class="form-group">
+                    <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_obedece" value="6" data-value="<?=$hojafrontal[0]['hf_glasgow_obedece']?>" class="has-value"><i class="indigo"></i>Obedece</label>&nbsp;&nbsp;
+                        <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_localiza" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_localiza']?>" class="has-value"><i class="indigo"></i>Localiza</label>&nbsp;&nbsp;
+                        <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_retira" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_retira']?>" class="has-value"><i class="indigo"></i>Retira</label>
+                        <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_flexion" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_flexion']?>" class="has-value"><i class="indigo"></i>Flexión normal</label>&nbsp;&nbsp;
+                        <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_extension" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_extension']?>" class="has-value"><i class="indigo"></i>Extensión anormal</label>&nbsp;&nbsp;
+                        <label class="md-check">
+                        <input type="checkbox" class='sum' name="hf_glasgow_ausencia" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausencia']?>" class="has-value"><i class="indigo"></i>Ausencia de repuesta</label>
+                </div>
+        </fieldset>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border"><b>RESPUESTA VERBAL</b></legend>
+                <div class="form-group">
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_orientado" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_orientado']?>" class="has-value"><i class="indigo"></i>Orientado&nbsp;&nbsp;</label>
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_confuso" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_confuso']?>" class="has-value"><i class="indigo"></i>Confuso&nbsp;&nbsp;</label>
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_incoherente" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_incoherente']?>" class="has-value"><i class="indigo"></i>Incoherente&nbsp;&nbsp;</label>
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_sonidos" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_sonidos']?>" class="has-value"><i class="indigo"></i>Sonidos Incomprensibles&nbsp;&nbsp;</label>
+                    <label class="md-check">
+                    <input type="checkbox" class='sum' name="hf_glasgow_arespuesta" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_arespuesta']?>" class="has-value"><i class="indigo"></i>Ausencia de respuesta</label>
+                </div>
+
+                    <div class="form-group">PUNTUACIÓN TOTAL: &nbsp;<input type="text" name="hf_escala_glasgow" size="3" data-value="<?=$hojafrontal[0]['hf_escala_glasgow']?>" disable></div>
+        </fieldset>
+    </div> <!-- div del cuerpo del modal -->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+    </div>
+  </div>
+ </div>
+</div>
+<!-- Riesgo caida -->        <div class="col-md-3">
+                        <div class="form-group">
                                             <b>RIESGO DE CAÍDA</b><br>
                                             <label class="md-check">
                                             <input type="radio" name="hf_riesgocaida" data-value="<?=$hojafrontal[0]['hf_riesgocaida']?>" value="Alta" class="has-value"><i class="red"></i>Alta
                                             </label>&nbsp;&nbsp;&nbsp;
-                                            <label class="md-check">    
+                                            <label class="md-check">
                                             <input type="radio" name="hf_riesgocaida" data-value="<?=$hojafrontal[0]['hf_riesgocaida']?>" value="Media" class="has-value"><i class="red"></i>Media
-                                            </label>&nbsp;&nbsp;&nbsp;
+                                            </label>&nbsp;&nbsp;
                                             <label class="md-check">
                                             <input type="radio" name="hf_riesgocaida" data-value="<?=$hojafrontal[0]['hf_riesgocaida']?>" value="Baja" class="has-value"><i class="red"></i>Baja
                                             </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label><b>ESCALA DE DOLOR (EVA)</b></label><br>
-                                            <input type="range" name="hf_eva" min="0" max="10" value="0"><output name="x" for="hf_eva">=</output>
-                                        </div>
-                                   </div>
-<!--
-                                <div class="col-md-4">                             
-                                    <div class="form-group">
-                                        <label><b>RIESGO DE TROMBOSIS</b></label>
-                                        <input type="text" value="<?=$hojafrontal[0]['hf_riesgo_trombosis']?>" class="form-control">
-                                    </div>
-                                </div> -->
-    <!--
-    <div class="col-md-4">
-        <label><b>EDAD</b></label><br>
-        <input type="checkbox" name="rt1" value="1">&nbsp;Edad: 40-60 años<br>
-        <input type="checkbox" name="rt2" value="2">&nbsp;Edad: 61-74 años<br>
-        <input type="checkbox" name="rt3" value="3">&nbsp;Edad: 75 años o más
+                        </div>
+                    </div>
+<!-- EVA -->                 <div class="col-md-3">
+                        <div class="form-group">
+                            <label><b>ESCALA DE DOLOR (EVA)</b></label><br>
+                            <div class="row">
+                            <div class="col-sm-6">
+                             <input type="range" name="hf_eva" value="<?=$hojafrontal['hf_eva']?>" min="0" max="10" value="0">
+                            </div>
+                            <div class="col-sm-6" style="width:10px;height:30px;border:1px solid blue;">
+                                <output name="x" for="hf_eva"><?=$hojafrontal['hf_eva']?></output>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+<!-- Riesgo de trombosis --> <div class="col-md-3">
+                        <label><b>RIESGO DE TROMBOSIS</b></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" data-toggle="modal" data-target='#myModal2' placeholder="Clic para colocar valor" name="hf_riesgo_trombosis" id="puntos_rt" value='<?=$hojafrontal[0]['hf_riesgo_trombosis']?>'>
+                            </div>
+                    </div>
+
+    <!-- Modal Riesgo de Trombosis -->
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" id="modalTamanioT">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title" id="myModalLabel">Escala Para Evaluar El Riesgo de Trombosis</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                        <div class="col-md-4">
+                            <label><b>SELECCIONAR SEXO</b></label>
+                            <div class="radio">
+                                <label><input type="radio" name="rt_sexo" value="m">Masculino</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label><input type="radio" name="rt_sexo" value="f">Femenino</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                        <label><b>EDAD</b></label>
+                        <div class="radio"><label><input type="radio" class="suma_rt" name="rt_edad" value="1">Entre 40-60 años. <b>(1 pto).</b></label></div>
+                        <div class="radio"><label><input type="radio" class="suma_rt" name="rt_edad" value="2">Entre 61-74 años. <b>(2 ptos).</b></label></div>
+                        <div class="radio"><label><input type="radio" class="suma_rt" name="rt_edad" value="3">75 años o más. <b>(3 ptos).</b></label></div>
+                        </div>
+                        <div class="col-md-4 col-mujer hidden">
+                            <div class="checkbox">
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt4" value="1">Uso de terapia de remplazo hormonal. <b>(1 pto)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt5" value="1">Embarazo o parto en el último mes. <b>(1 pto)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt6" value="1">Historia de muerte inexplicable de recién nacidos, abortos expontáneos (más de 3), hijos prematuros o con restricción del crecimento. <b>(1 pto)</b></label>
+                            </div>
+                        </div>
+                    <div class="col-md-4">
+                        <label><b>CIRUGÍAS</b></label>
+                        <div class="checkbox">
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt7" value="1">Cirugía menor prevista (≤ 45 minutos). <b>(1 pto)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt8"  value="1">Antecedentes de cirugía mayor (≥ 45 minutos) en el último mes. <b>(1 pto)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt9" value="2">Cirugía mayor a 45 minutos (incluyendo laparoscopía o artroscopia). <b>(2 ptos)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt10" value="5">Cirugía de remplazo de cadera o rodilla. <b>(5 ptos)</b></label></div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><b>HISTORIA DE...</b></label>
+                        <div class="checkbox">
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt11" value="3">Historia de trombosis, trombosis venosa profunda (TVP) o tromboembolia pulmonar (TEP). <b>(3 ptos)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt12" value="3">Historia familiar de trombosis. <b>(3 ptos)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt13" value="3">Historia familiar o personal de pruebas de sangre positivas que indican incremento en el riesgo de trombosis. <b>(3 ptos)</b></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><b>ANTECEDENTES CON MENOS DE 1 MES</b></label>
+                        <div class="checkbox">
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt14" value="1">Infarto de miocardio ( ≤ 1 mes). <b>(1 pto)</b></label>
+                        <label style="TEXT-ALIGN:left"><input type="checkbox" class="suma_rt" name="rt15" value="1">Insuficiencia cardiaca congestiva ( ≤ 1 mes). <b>(1 pto)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt16" value="1">Infección grave (neumonía) ( ≤ 1 mes). <b>(1 pto)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt17" value="1">Enfermedad pulmonar (Enfisema o EPOC). ( ≤ 1 mes) <b>(1 pto)</b></label>
+                        <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt18" value="1">Transfusión  sanguínea ( ≤ 1 mes). <b>(1 pto)</b></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><b>COMORBILIDADES</b></label>
+                        <div class="checkbox">
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt19" value="1">Historia de enfermedad inflamatoria intestinal (CUCI o Crohn). <b>(1 pto)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt20" value="2">Antecedente de cáncer (excluyendo cáncer de piel, no melanoma). <b>(2 ptos)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt21" value="1">Obesidad (índice de masa corporal ≥ de 30 y ≤ de 40). <b>(1 pto)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt22" value="2">Obesidad mórbida (índice de masa corporal mayor a 40). <b>(2 ptos)</b></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                    <label><b>ORTOPEDIA Y TRAUMATISMOS</b></label>
+                        <div class="checkbox">
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt23" value="5">Fractura de cadera pelvis o pierna. <b>(5 ptos)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt24" value="5">Traumatismo grave (accidente automovilístico, fracturas múltiples). <b>(5 ptos)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt25" value="5">Lesión de la médula espinal con parálisis. <b>(5 ptos)</b></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><b>EXPLORACIÓN</b></label>
+                        <div class="checkbox">
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt26" value="1">Venas varicosas visibles. <b>(1 pto)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt27" value="1">Edema de piernas. <b>(1 pto)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt28" value="2">Inmovilizador o yeso en miembros inferiores que no permite movilización en el último mes. <b>(2 ptos)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt29" value="2">Catéter en vasos sanguíneos del cuello o tórax que lleva sangre o medicamentos al corazón en el último mes. <b>(2 ptos)</b></label>
+                            <label style="TEXT-ALIGN:justify"><input type="checkbox" class="suma_rt" name="rt30" value="2">Confinado en cama por  72 horas o más. <b>(2 ptos)</b></label>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- modal-body  de riesgo de trombosis-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
     </div>
 </div>
-<div class="form-group"> 
-    <div class="col-md-4">
-        <b>PARA MUJERES SOLAMENTE</b><br>
-        <input type="checkbox" name="rt4" value="1">&nbsp;Uso de terapia de remplazo hormonal<br>
-        <input type="checkbox" name="rt5" value="2">&nbsp;Embarazo o parto en el último mes<br>
-        <p><input type="checkbox" name="rt6" value="3"><span>&nbsp;Historia de muerte inexplicable de recién nacidos, abortos expontáneos (más de 3), hijos prematuros o con restricción del crecimento</p></span>
-    </div>
-</div>
-    <div class="col-md-4">
-        <label><b>CRUGÍA</b></label><br>
-        <input type="checkbox" name="rt7" value="1">&nbsp;Cirugía menor prevista (≤ 45 minutos)<br>
-        <input type="checkbox" name="rt8" value="2">&nbsp;Antecedentes de cirugía mayor (≥ 45 minutos) en el último mes<br>
-        <input type="checkbox" name="rt9" value="3">&nbsp;Cirugía mayor a 45 minutos (incluyendo laparoscopía o artroscopia)<br>
-        <input type="checkbox" name="rt10" value="3">&nbsp;Cirugía de remplazo de cadera o rodilla
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-md-4">
-        <label><b>HISTORIA DE...</b></label><br>
-        <input type="checkbox" name="rt11" value="1">&nbsp;Historia de trombosis, trombosis venosa profunda (TVP) o tromboembolia pulmonar (TEP)<br>
-        <input type="checkbox" name="rt12" value="1">&nbsp;Historia familiar de trombosis<br>
-        <input type="checkbox" name="rt13" value="1">&nbsp;Historia familiar o personal de pruebas de sangre positivas que indican incremento en el riesgo de trombosis
-    </div>
-    <div class="col-md-4">
-        <label><b>ANTECEDENTES CON MENOS DE UN MES</b></label><br>
-        <input type="checkbox" name="rt14" value="1">&nbsp;Infarto de miocardio ( ≤ 1 mes)<br>
-        <input type="checkbox" name="rt15" value="1">&nbsp;Insuficiencia cardiaca congestiva ( ≤ 1 mes)<br>
-        <input type="checkbox" name="rt16" value="1">&nbsp;Infección grave (neumonía) ( ≤ 1 mes)<br>
-        <input type="checkbox" name="rt17" value="1">&nbsp;Enfermedad pulmonar (Enfisema o EPOC) ( ≤ 1 mes)<br>
-        <input type="checkbox" name="rt18" value="1">&nbsp;Transfusión  sanguínea ( ≤ 1 mes)
-    </div>
-    <div class="col-md-4">
-        <label><b>COMORBILIDADES</b></label><br>
-        <input type="checkbox" name="rt19" value="1">&nbsp;Historia de enfermedad inflamatoria intestinal (CUCI o Crohn)<br>
-        <input type="checkbox" name="rt20" value="1">&nbsp;Antecedente de cáncer (excluyendo cáncer de piel, no melanoma)<br>
-        <input type="checkbox" name="rt21" value="1">&nbsp;Obesidad (índice de masa corporal ≥ de 30 y ≤ de 40)<br>
-        <input type="checkbox" name="rt22" value="1">&nbsp;Obesidad mórbida (índice de masa corporal mayor a 40)
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <label><b>ORTOPEDIA Y TRAUMATISMOS</b></label><br>
-        <input type="checkbox" name="rt23" value="1">&nbsp;Fractura de cadera pelvis o pierna<br>
-        <input type="checkbox" name="rt24" value="1">&nbsp;Traumatismo grave (accidente automovilístico, fracturas múltiples)<br>
-        <input type="checkbox" name="rt25" value="1">&nbsp;Lesión de la médula espinal con parálisis
-    </div>
-    <div class="col-md-4">
-        <label><b>EXPLORACIÓN</b></label><br>
-        <input type="checkbox" name="rt26" value="1">&nbsp;Venas varicosas visibles<br>
-        <input type="checkbox" name="rt27" value="1">&nbsp;Edema de piernas<br>
-        <input type="checkbox" name="rt28" value="1">&nbsp;Inmovilizador o yeso en miembros inferiores que no permite movilización en el último mes<br>
-        <input type="checkbox" name="rt29" value="1">&nbsp;Catéter en vasos sanguíneos del cuello o tórax que lleva sangre o medicamentos al corazón en el último mes<br>
-        <input type="checkbox" name="rt30" value="1">&nbsp;Confinado en cama por  72 horas o más
-    </div>
-</div> -->
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label><b>MÉTODOS AUXILARES DE DIAGNÓSTICO</b></label>
-                                            <textarea class="form-control" rows="2" name="hf_auxiliares" placeholder="Anote los análisis clínicos de laboratorio, los estudios de gabinete radiológico y otros"><?=$hojafrontal[0]['hf_auxiliares']?></textarea>
-                                        </div>
-                                    
-                                        <div class="form-group">
-                                            <label><b>DIAGNÓSTICO DE INGRESO</b></label>
-                                            <textarea class="form-control hf_textarea" rows="3" name="hf_diagnosticos_lechaga" required><?=$hojafrontal[0]['hf_diagnosticos_lechaga']?></textarea>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label><b>DIAGNÓSTICOS SECUNDARIOS (COMORBILIDADES)</b> 
-                                                <i class="fa fa-plus-circle pointer plantilla-add icono-accion" onclick="AbrirDocumento(base_url+'Sections/Plantillas/SeleccionarContenido?plantilla=Diagnosticos&input=hf_diagnosticos&type=textarea')"></i>
-                                            </label>
-                                            <textarea class="form-control hf_diagnosticos hf_diagnosticos_abierto" rows="10" name="hf_diagnosticos">
-                                                <?=$hojafrontal[0]['hf_diagnosticos']?></textarea>
-                                        </div>
-                                       
-                                        <div class="form-group">        
-                                           
-                                           <label><b>PLAN Y ORDENES MÉDICAS</b></label>
-                                                <div>
-                                                   <label><b>a) Ayuno:</b></label>
-                                                   <input class="form-control" type="text" name="hf_ayuno" placeholder="Instrucciones de ayuno" value="<?=$hojafrontal[0]['hf_ayuno']?>"></div><br>
-                                                <div>
-                                                <label><b>b) Signos vitales y cuidados de enfermeria</b></label>
-                                                <input class="form-control" type="text" name="hf_signosycuidados" placeholder="Instrucciones de signos vitales y cuidados de enfermeria" value="<?=$hojafrontal[0]['hf_signosycuidados']?>">
-                                                </div>
-                                                <br>
-                                            <div>
-                                                <label><b>c) Indicaciones y cuidados de enfermeria</b></label>
-                                                <textarea class="form-control" name="hf_cuidadosenfermeria" placeholder="Cuidados especificos de enfermeria"><?=$hojafrontal[0]['hf_cuidadosenfermeria']?></textarea>
-                                            </div><br>
-                                            <div>
-                                            <label><b>d) Soluciones Parenterales</b></label>
-                                                <textarea class="form-control" name="hf_solucionesp" placeholder="Soluciones Parenterales"><?=$hojafrontal[0]['hf_solucionesp']?></textarea>
-                                            </div><br>
-                                            <div>
-                                            <label><b>e) Medicamentos</b></label>
-                                                <textarea class="form-control" name="hf_medicamentos" placeholder="Anote aquí los Medicamentos"><?=$hojafrontal[0]['hf_medicamentos']?></textarea>
-                                            </div>
-                                        </div>
-                                                                               
-                                        <div class="form-group">
-                                            <label><b>PRONÓSTICOS</b></label> <!-- tabla de hf_indicaciones en --> 
-                                            <textarea class="form-control" rows="3" name="hf_indicaciones"><?=$hojafrontal[0]['hf_indicaciones']?></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><b>ESTADO DE SALUD</b></label>
-                                            <textarea class="form-control" rows="4" name="hf_interpretacion"><?=$hojafrontal[0]['hf_interpretacion']?></textarea>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <?php if( $_GET['tipo']=='Consultorios'){?>
-                                        <div class="form-group">
+                </div> <!-- cierre de fila de escalas medicas -->
+                <div class="row">    
+                        <div class="col-md-12">
+                        <div class="form-group">
+                           <h4><span class = "label back-imss border-back-imss">MÉTODOS AUXILARES DE DIAGNÓSTICO</span></h4>
+                            <textarea class="form-control" rows="2" name="hf_auxiliares" placeholder="Anote los análisis clínicos de laboratorio, los estudios de gabinete radiológico y otros"><?=$hojafrontal[0]['hf_auxiliares']?></textarea>
+                        </div>
+                        <div class="form-group">
+                           <h4><span class = "label back-imss border-back-imss">DIAGNÓSTICO DE INGRESO</span></h4>
+                            <textarea class="form-control hf_textarea" rows="3" name="hf_diagnosticos_lechaga" required><?=$hojafrontal[0]['hf_diagnosticos_lechaga']?></textarea>
+                         </div>                 
+                        <div class="form-group">
+                            <h4><span class = "label back-imss border-back-imss">DIAGNÓSTICOS SECUNDARIOS (COMORBILIDADES)</span></h4>
+                            <i class="fa fa-plus-circle pointer plantilla-add icono-accion" onclick="AbrirDocumento(base_url+'Sections/Plantillas/SeleccionarContenido?plantilla=Diagnosticos&input=hf_diagnosticos&type=textarea')"></i>
+                            <textarea class="form-control hf_diagnosticos" rows="10" name="hf_diagnosticos"><?=$hojafrontal[0]['hf_diagnosticos']?></textarea>   
+                        </div>
+                        <div class="form-group">        
+                            <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4> 
+                                <div>
+                                  <label><b>a) Ayuno:</b></label>
+                                   <textarea class="form-control hf_ayuno" type="text" name="hf_ayuno" placeholder="Instrucciones de ayuno" rows="3"><?=$hojafrontal[0]['hf_ayuno']?></textarea>
+                                </div> 
+                                <br>
+                                <div>
+                                    <label><b>b) Signos vitales y cuidados de enfermeria</b></label>
+                                    <textarea class="form-control hf_signosycuidados" type="text" name="hf_signosycuidados" placeholder="Instrucciones de signos vitales y cuidados de enfermeria" rows="3"><?=$hojafrontal[0]['hf_signosycuidados']?></textarea>
+                                </div>
+                                <br>
+                                <div>
+                                    <label><b>c) Indicaciones y cuidados de enfermeria</b></label>
+                                    <textarea class="form-control hf_cuidadosenfermeria" name="hf_cuidadosenfermeria" placeholder="Cuidados especificos de enfermeria" rows="3"><?=$hojafrontal[0]['hf_cuidadosenfermeria']?></textarea>
+                                </div>
+                                <br>
+                                <div>
+                                    <label><b>d) Soluciones Parenterales</b></label>
+                                    <textarea class="form-control hf_solucionesp" name="hf_solucionesp" placeholder="Soluciones Parenterales" rows="3"><?=$hojafrontal[0]['hf_solucionesp']?></textarea>
+                                </div>
+                                <br>
+                                <div>
+                                    <label><b>e) Medicamentos</b></label>
+                                    <textarea class="form-control hf_medicamentos" name="hf_medicamentos" placeholder="Anote aquí los Medicamentos" rows="3"><?=$hojafrontal[0]['hf_medicamentos']?></textarea>
+                                </div>
+                        </div>                                                                             
+                        <div class="form-group">
+                            <h4><span class = "label back-imss border-back-imss">PRONÓSTICOS</span></h4>
+                            <!-- tabla de hf_indicaciones en --> 
+                            <textarea class="form-control" rows="3" name="hf_indicaciones"><?=$hojafrontal[0]['hf_indicaciones']?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <h4><span class = "label back-imss border-back-imss">ESTADO DE SALUD</span></h4>
+                            <textarea class="form-control" rows="3" name="hf_interpretacion"><?=$hojafrontal[0]['hf_interpretacion']?></textarea>
+                        </div>
+                    </div>
+            </div>        
+            <div class="row">
+                    <div class="col-md-6">
+                        <?php if( $_GET['tipo']=='Consultorios'){?>
+                            <div class="form-group">
                                             <?php if($ce[0]['ce_status']=='Salida'){?>
                                             <label><b>ALTA A :</b> </label> <?=$ce[0]['ce_hf']?>
                                             <?php }else{?>
-                                            <label><b>ACCIÓN: </b></label>
+                                            <h4><span class = "label back-imss border-back-imss">ACCIÓN: </span></h4>
                                             <select name="hf_alta" data-value="<?=$hojafrontal[0]['hf_alta']?>" class="form-control" required>
                                                 <option value="">Seleccione una acción</option>
                                                 <option value="Alta a Domicilio">Alta a Domicilio</option>
@@ -345,40 +454,48 @@
                                                 <option value="Otros">Otros</option>
                                             </select>
                                             <?php }?>
-                                        </div>
-                                        <?php }?>
+                            </div>
+                                    <?php }?>
+                        </div>
+                    <div class="col-md-6 hf_alta_otros hide">
+                        <div class="form-group">
+                            <label class="text-color-white"><b>ACCION</b></label>                         
+                            <input type="text" name="hf_alta_otros" placeholder="Indique otra acción" value="<?=$hojafrontal[0]['hf_alta_otros']?>" class="form-control">
+                        </div>
+                    </div>
+                        
+                    <div class="col-md-12">
+                        <div class="form-group">
+                           <h4><span class = "label back-imss border-back-imss">VALORACION POR:</span></h4>
+                <!--               <div class="input-group m-b">
+                                  <span class="input-group-addon back-imss border-back-imss"><i class="fa fa-user-plus"></i></span>
+                                    <select class="select2" multiple="" name="nota_interconsulta[]" id="nota_interconsulta" data-value="<?=$hojafrontal[0]['hf_interconsulta']?>" style="width: 100%">
+                                    <?php foreach ($Especialidades as $value) {?>
+                                   <option value="<?=$value['especialidad_id']?>"><?=$value['especialidad_nombre']?></option>
+                                    <?php }?>
+                                      </select>
+                                </div> -->                
+                            <input type="text" name="hf_interconsulta" placeholder="Indique si necesita interconsulta" value="<?=$hojafrontal[0]['hf_interconsulta']?>" class="form-control">
+                        </div>
+                    </div>
+                            
+                    <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label><b>MÉDICO TRATANTE</b></label>
+                                        <input type="text" name="asistentesmedicas_mt" value="<?=$INFO_USER[0]['empleado_nombre'].' '.$INFO_USER[0]['empleado_apellidos']?>" readonly="" class="form-control">
                                     </div>
-                                    <div class="col-md-6 hf_alta_otros hide">
-                                        <div class="form-group">
-                                            <label class="text-color-white">.</label>
-                                            <input type="text" name="hf_alta_otros" placeholder="Indique otra acción" value="<?=$hojafrontal[0]['hf_alta_otros']?>" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label><b>VALORACION POR:</b></label>
-                                            <input type="text" name="hf_interconsulta" placeholder="Indique si necesita interconsulta" value="<?=$hojafrontal[0]['hf_interconsulta']?>" class="form-control">
-                                        </div>
+                                    <div class="col-md-6">
+                                        <label><b>MATRICULA</b></label>
+                                        <input type="text" name="asistentesmedicas_mt_m" value="<?=$INFO_USER[0]['empleado_matricula']?>" readonly="" class="form-control">
                                     </div>
                                 </div>
-                                    <div class="col-md-12">
+                            </div>
+                    </div>
+            </div>
 
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <div class="col-md-6">
-                                                    <label><b>MÉDICO TRATANTE</b></label>
-                                                    <input type="text" name="asistentesmedicas_mt" value="<?=$INFO_USER[0]['empleado_nombre'].' '.$INFO_USER[0]['empleado_apellidos']?>" readonly="" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label><b>MATRICULA</b></label>
-                                                    <input type="text" name="asistentesmedicas_mt_m" value="<?=$INFO_USER[0]['empleado_matricula']?>" readonly="" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <input type="hidden" name="pia_lugar_accidente" value="<?=$PINFO['pia_lugar_accidente']?>">
+                    <input type="hidden" name="pia_lugar_accidente" value="<?=$PINFO['pia_lugar_accidente']?>">
                                     <div class="row col-hojafrontal-info hide" style="padding: 6px;">
                                         <div class="col-md-12 back-imss text-center">
                                             <h6>
@@ -587,7 +704,7 @@
 <?= modules::run('Sections/Menu/footer'); ?>
 <script type="text/javascript" src="<?= base_url()?>assets/libs/light-bootstrap/shieldui-all.min.js"></script>
 <script src="<?= base_url('assets/js/sections/CIE10.js?md5='). md5(microtime())?>" type="text/javascript"></script>
-<script src="<?= base_url('assets/js/sections/Documentos.js?md5='). md5(microtime())?>" type="text/javascript"></script>
-<script type="text/JavaScript">
+<script src="<?= base_url('assets/js/sections/Documentos.js?md5'). md5(microtime())?>" type="text/javascript"></script>
+
 
 
