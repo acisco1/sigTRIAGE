@@ -229,6 +229,9 @@
                                       <label class="mayus-bold">MEDICO TRATANTE:</label>
                                       <select class="select2 width100" required name="interConMedicoBase" id="divMedicos" data-value="<?=$Doc43051['ac_ingreso_matricula']?>">
                                         <option value="">SELECCIONAR MÉDICO TRATANTE</option>
+                                        <?php foreach($Medico as $value){ ?>
+                                          <option value="<?= $value['empleado_matricula']?>"><?php echo $value['empleado_nombre']." ".$value['empleado_apellidos'] ?></option>
+                                        <?php } ?>
                                       </select>
                                     </div>
                                   </div>
@@ -257,8 +260,7 @@
                                     <div class="form-group">
                                       <label style="text-transform: uppercase;font-weight: bold">Fecha de Ingreso</label>
                                       <div class="input-group">
-                                        <?php $ac_fecha = date("d/m/Y", strtotime($Doc43051['ac_fecha'])); ?>
-                                        <input class="form-control dd-mm-yyyy" id="fechaHora" required name="fecha_ingreso" placeholder="dd/mm/yyyy" value="<?=$ac_fecha ?>">
+                                        <input class="form-control dd-mm-yyyy" required name="ac_fecha" placeholder="06/10/2016" value="<?=$Doc43051['ac_fecha']?>">
                                         <span class="input-group-btn">
                                           <button target="_blank"  data-original-title="Dar click para asignar fecha y hora" type="button" class="btn btn-secondary tip" id="btnFecha" ><i class="glyphicon glyphicon-calendar"></i></button>
                                         </span>
@@ -278,16 +280,16 @@
                                   <div class="col-md-4">
                                     <div class="form-group" >
                                         <label style="text-transform: uppercase;font-weight: bold">Procedimiento:</label>
-                                        <input class="form-control" required name="ac_procedimiento" placeholder="" value="<?=$Doc43051['ac_procedimiento']?>">
+                                          <input class="form-control" required name="ac_procedimiento" placeholder="" value="<?=$Doc43051['ac_procedimiento']?>">
                                     </div>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group" >
                                         <label style="text-transform: uppercase;font-weight: bold">Documento:</label>
                                         <select name="pia_documento" required data-value="<?=$PINFO['pia_documento']?>" class="form-control">
-                                            <option value="">DOCUMENTO</option>
-                                            <option value="U4-30-8MF">4-30-8</option>
-                                            <option value="ESP">ESP</option>
+                                            <option value="" >DOCUMENTO</option>
+                                            <option value="U4-30-8MF" >4-30-8</option>
+                                            <option value="ESP" >ESP</option>
                                         </select>
                                     </div>
                                   </div>

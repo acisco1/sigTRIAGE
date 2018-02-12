@@ -39,6 +39,7 @@ class Pacientes extends Config{
             $sql=  $this->config_mdl->_query("SELECT triage_id, triage_horacero_f,CONCAT_WS(' ',TRIM(os_triage.triage_nombre_ap),TRIM(os_triage.triage_nombre_am),TRIM(os_triage.triage_nombre)) AS nombre_paciente
                 FROM os_triage
                 HAVING nombre_paciente LIKE '%$inputSearch%' LIMIT 200");
+
         }if($inputSelect=='POR_NSS'){
             $sql= $this->config_mdl->_query("SELECT os_triage.triage_id, os_triage.triage_horacero_f, CONCAT_WS(' ',triage_nombre_ap,triage_nombre_am,triage_nombre) AS nombre_paciente FROM os_triage, paciente_info WHERE
                                             paciente_info.triage_id=os_triage.triage_id AND
@@ -46,6 +47,7 @@ class Pacientes extends Config{
         }
         if(!empty($sql)){
             foreach ($sql as $value) {
+                
                 $triage_horacero_f = date("d/m/Y", strtotime($value['triage_horacero_f']));
                 $tr.='<tr>
                         <td>'.$value['triage_id'].'</td>

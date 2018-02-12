@@ -38,7 +38,12 @@ $(document).ready(function () {
 
         }
     })
-    /**/
+    /* El elemento select muestra el valor ingresado en su atributo data-value, con esto podemos mostrar
+    el valor tomado de la base de datos.*/
+    $('select[name=pia_documento]').val($('select[name=pia_documento]').data('value'));
+    $('select[name=empleado_servicio]').val($('select[name=empleado_servicio]').data('value'));
+    $('select[name=interConMedicoBase]').val($('select[name=interConMedicoBase]').data('value'));
+    $('select[name=pia_procedencia_hospital]').val($('select[name=pia_procedencia_hospital]').data('value'));
     $('select[name=triage_paciente_sexo]').val($('select[name=triage_paciente_sexo]').data('value'));
     $('select[name=triage_paciente_estadocivil]').val($('select[name=triage_paciente_estadocivil]').data('value'));
     $('select[name=pia_lugar_accidente]').val($('select[name=pia_lugar_accidente]').data('value'));
@@ -109,6 +114,16 @@ $(document).ready(function () {
         $('.omitir_st7').addClass('hide');
         $("input[name=asistentesmedicas_exectuar_st7][value='Si']").attr('checked',true);
     }
+    $('#buscarCP').click(function (e){
+        if($('input[name=directorio_cp]').val()!=''){
+            BuscarCodigoPostal({
+                'cp':$('input[name=directorio_cp]').val(),
+                'input1':'directorio_municipio',
+                'input2':'directorio_estado',
+                'input3':'directorio_colonia'
+            })
+        }
+    });
     $('input[name=directorio_cp]').blur(function (e){
         if($(this).val()!=''){
             BuscarCodigoPostal({
@@ -118,7 +133,7 @@ $(document).ready(function () {
                 'input3':'directorio_colonia'
             })
         }
-    })
+    });
     $('input[name=directorio_cp_2]').blur(function (e){
         if($(this).val()!=''){
             BuscarCodigoPostal({
@@ -563,6 +578,32 @@ $(document).ready(function () {
         $("input[name = pum_umf]").val('S/NA');
       }
     });
+    // Se toma el numero del paciente y se ingresa en el telefono del responssable
+    $('#btnTelefonoPaciente').click(function(){
+      var telefono = $("input[name = directorio_telefono]").val();
+      $("input[name = pic_responsable_telefono]").val(telefono);
+    });
+    /* Al seleccionar un servicio se manda llamar a la funcion AjaxMedicosByServicio
+    y obtener los medicos que pertenecen a este*/
+    $('#selectServicios').change(function(){
+      var servicio = $("select[name = empleado_servicio]").val();
+
+      $.ajax({
+        url : base_url+"Asistentesmedicas/AjaxMedicosByServicio/",
+        type : 'GET',
+        dataType : 'text',
+        data : {servicio : servicio},
+        success : function(data) {
+
+          $("#divMedicos").html(data);
+        },
+        error : function(data) {
+            alert('Error en el proceso de consulta: '+data);
+        }
+      });
+    });
+
+
 });
 /*
 Esta funcion toma los valores dentro de la tabla que muestra la vigencia del aseguro
@@ -607,7 +648,7 @@ function datosTablaVigencia(val){
   $("input[name = triage_nombre_am]").val(materno);
   $("input[name = triage_nombre]").val(nombre);
   $("input[name = triage_fecha_nac]").val(nacimiento);
-  $("input[name = triage_paciente_sexo]").val(sexo);
+  $("select[name = triage_paciente_sexo]").val(sexo);
   $("input[name = directorio_colonia]").val(colonia);
   $("input[name = directorio_cp]").val(cpostal);
 }

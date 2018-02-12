@@ -47,12 +47,15 @@ class Consultaexterna extends Config{
                                                             FROM um_especialidades
                                                             ORDER BY especialidad_nombre");
         $sql['Doc43051'] = $this->config_mdl->_get_data_condition("doc_43051",array(
-          'triage_id' => $Paciente,
+          'triage_id'=> $Paciente,
         ))[0];
         $sql['Medicos']= $this->config_mdl->_query("SELECT * FROM os_empleados, os_empleados_roles, os_roles WHERE
                                                     os_empleados_roles.empleado_id=os_empleados.empleado_id AND
                                                     os_empleados_roles.rol_id=os_roles.rol_id AND
                                                     os_roles.rol_id=2");
+        $sql['Medico'] = $this->config_mdl->_query("SELECT empleado_matricula,empleado_nombre,empleado_apellidos
+                                                    FROM os_empleados
+                                                    ORDER BY empleado_nombre;");
 
         $this->load->view('consultaexterna_am',$sql);
     }
@@ -140,17 +143,28 @@ class Consultaexterna extends Config{
         $query['Empleado'] = $this->config_mdl->_query("SELECT CONCAT(empleado_nombre,' ',empleado_apellidos)empleado,empleado_matricula
                                                         FROM os_empleados
                                                         WHERE empleado_matricula ='".$empleado_matricula."' ");
+        $query[$Id43051] = $this->config_mdl->_query("SELECT ac_id
+                                                      FROM doc_43051
+                                                      WHERE triage_id =".$this->input->post('triage_id'));
+
         $dataDoc_43051 = array(
-          'ac_fecha' => date('Y-m-d'),
+          'ac_fecha' => $this->input->post('ac_fecha'),
           'ac_ingreso_servicio' => $this->input->post('empleado_servicio'),
           'ac_ingreso_medico' => $query['Empleado'][0]['empleado'],
           'ac_ingreso_matricula' => $query['Empleado'][0]['empleado_matricula'],
           'ac_diagnostico' => $this->input->post('ac_diagnostico'),
           'ac_procedimiento' => $this->input->post('ac_procedimiento'),
-          'triage_id' => $this->input->post('triage_id'),
+
           'empleado_id' => $this->UMAE_USER
         );
-        $this->config_mdl->_insert("doc_43051",$dataDoc_43051);
+        if(count($query[$Id43051][0]['ac_id']) == 1){
+          $this->config_mdl->_update_data("doc_43051",$dataDoc_43051,
+          array('ac_id' => $query[$Id43051][0]['ac_id'] ));
+        }else{
+          $dataDoc_43051 += ['triage_id' => $this->input->post('triage_id')];
+          $this->config_mdl->_insert("doc_43051",$dataDoc_43051);
+        }
+
         Modules::run('Triage/TriagePacienteDirectorio',array(
             'directorio_tipo'=>'Paciente',
             'directorio_cp'=> $this->input->post('directorio_cp'),

@@ -19,11 +19,13 @@ $(document).ready(function () {
         });
     });
     $('input[name=triage_fecha_nac]').mask('99/99/9999');
+    $('input[name=ac_fecha]').mask('99/99/9999');
     $('select[name=interConMedicoBase]').change(function(){
       var matricula = $('select[name=interConMedicoBase]').val();
       $('#medicoMatricula').val(matricula);
     });
     $('.solicitud-am-consultaexterna').submit(function (e){
+
         e.preventDefault();
         $.ajax({
             url: base_url+'Consultaexterna/AjaxAsistenteMedica',
