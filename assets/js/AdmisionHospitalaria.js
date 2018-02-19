@@ -22,6 +22,7 @@ $(document).ready(function () {
             }
         })
     }
+
     $('input[name=directorio_cp]').blur(function (e){
         if($(this).val()!=''){
             BuscarCodigoPostal({
@@ -244,4 +245,17 @@ function DireccionResponsable(folio) {
                 console.log(e);
             }
         })
+}
+function ActualizarConteoCamas(idPiso){
+
+//  $('input[name=conteo]').val(idPiso);
+  $.ajax({
+    url: base_url+"AdmisionHospitalaria/AjaxActualizarConteoCamas",
+    type: 'GET',
+    dataType: 'json',
+    success:function(data, textStatus, jqXHR){
+      var conteo = data.Disponibles;
+      $('input[name=conteo]').val(data.Dat1.Disponibles);
+    }
+  });
 }

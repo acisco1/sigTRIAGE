@@ -53,10 +53,10 @@ class AdmisionHospitalaria extends Config{
                                 os_pisos.piso_id=".$value['piso_id']));
 
 /* Realiza el panel en los pisos */
-            $Col.=' <div class="panel panel-default">
+            $Col.=' <div class="panel panel-default" id="id'.$value['piso_id'].'">
                         <div class="panel-heading back-imss">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse_'.$value['piso_id'].'">
+                                <a data-toggle="collapse" data-parent="#accordion" onclick="ActualizarConteoCamas('.$value['piso_id'].')" href="#collapse_'.$value['piso_id'].'">
                                     <div class="row">
                                         <div class="col-md-2" style="padding: 0px;">
                                             <span style="text-transform:uppercase">'.$value['piso_nombre'].'</span>
@@ -68,7 +68,7 @@ class AdmisionHospitalaria extends Config{
                                             '.$Asignado.' Asignadas&nbsp;&nbsp;
                                             '.$Limpieza.' Limpieza&nbsp;&nbsp;
                                             '.$Mantenimiento.' Mantenimiento&nbsp;&nbsp;
-                                            '.$Contaminadas.' Contaminadas
+                                            '.$Contaminadas.' Contaminadas <input type="text" id="conteo" style="background-color: black;" name="conteo"/>
                                         </div>
                                         <div class="col-md-offset-2 col-md-10">
 
@@ -268,6 +268,27 @@ class AdmisionHospitalaria extends Config{
             'TotalMantenimiento'=>$TotalMantenimiento,
             'TotalAsignados'=>$TotalAsignados
         ));
+    }
+    public function AjaxActualizarConteoCamas(){
+      $Pisos= $this->config_mdl->_query("SELECT * FROM os_pisos");
+      $cont= count($this->config_mdl->_query("SELECT * FROM os_pisos"));
+      foreach ($Pisos as $value) {
+          $Camas= $this->config_mdl->_query("SELECT * FROM os_camas, os_areas, os_pisos, os_pisos_camas
+                                          WHERE os_areas.area_id=os_camas.area_id AND os_pisos_camas.cama_id=os_camas.cama_id AND
+                                          os_pisos_camas.piso_id=os_pisos.piso_id AND os_pisos.piso_id=".$value['piso_id']);
+          $Conteos['NumPisos'] = array('total' => $cont);
+          $Conteos['Dat'.$value['piso_id']]=array('Disponibles' => $this->TotalCamasEstatusPisos($value['piso_id'], 'Disponible'),
+                                            'Limpieza' => $this->TotalCamasEstatusPisos($value['piso_id'], 'En Limpieza'),
+                                            'Ocupado' => $this->TotalCamasEstatusPisos($value['piso_id'], 'Ocupado'),
+                                            'Mantenimiento' => $this->TotalCamasEstatusPisos($value['piso_id'], 'En Mantenimiento'),
+                                            'Asignado' => $this->TotalCamasEstatusPisos($value['piso_id'], 'Asignado'),
+                                            'TotalInfectados' => count($this->config_mdl->_query("SELECT os_areas_pacientes.ap_id FROM os_camas,os_areas_pacientes, os_pisos, os_pisos_camas WHERE
+                              os_camas.cama_id=os_areas_pacientes.cama_id AND
+                              os_pisos.piso_id=os_pisos_camas.piso_id AND
+                              os_camas.cama_id=os_pisos_camas.cama_id AND os_areas_pacientes.ap_infeccion='Infectado' AND
+                              os_pisos.piso_id=".$value['piso_id'])));
+      }
+      $this->setOutput($Conteos);
     }
     public function AjaxBuscarPaciente() {
         $sql= $this->config_mdl->sqlGetDataCondition('doc_43051',array(

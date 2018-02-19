@@ -594,7 +594,6 @@ $(document).ready(function () {
         dataType : 'text',
         data : {servicio : servicio},
         success : function(data) {
-
           $("#divMedicos").html(data);
         },
         error : function(data) {
