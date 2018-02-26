@@ -246,16 +246,28 @@ function DireccionResponsable(folio) {
             }
         })
 }
-function ActualizarConteoCamas(idPiso){
+function ActualizarCconteoAutomatico(){
+  ActualizarConteoCamas();
+  var t = setTimeout(function(){ ActualizarCconteoAutomatico() }, 5000);
+}
+function ActualizarConteoCamas(){
 
-//  $('input[name=conteo]').val(idPiso);
   $.ajax({
     url: base_url+"AdmisionHospitalaria/AjaxActualizarConteoCamas",
     type: 'GET',
     dataType: 'json',
     success:function(data, textStatus, jqXHR){
-      var conteo = data.Disponibles;
-      $('input[name=conteo]').val(data.Dat1.Disponibles);
+      var i = 0;
+      while(i < data.NumPisos.total){
+        i++;
+        $('#datoPisoDisponibles'+i).text(data[i].Disponibles);
+        $('#datoPisoOcupadas'+i).text(data[i].Ocupado);
+        $('#datoPisoAsignada'+i).text(data[i].Asignado);
+        $('#datoPisoLimpieza'+i).text(data[i].Limpieza);
+        $('#datoPisoMantenimiento'+i).text(data[i].Mantenimiento);
+        $('#datoPisoContaminadas'+i).text(data[i].TotalInfectados);
+      }
+
     }
   });
 }

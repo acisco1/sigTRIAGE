@@ -3,7 +3,7 @@
     <div class="box-cell">
         <div class="box-inner col-md-12">
             <!-- Boton de Actualización -->
-            <a href="#" class="md-btn md-fab md-fab-top-right pos-fix red ajax-load-camas" style="top: 75px">
+            <a href="#" class="md-btn md-fab md-fab-top-right pos-fix red " onclick="ActualizarCconteoAutomatico()" style="top: 75px">
                 <i class="fa fa-refresh i-24 text-color-white tip" ></i>
             </a>
             <div class="row " style="margin-top: 10px">
