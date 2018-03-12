@@ -58,7 +58,7 @@ class AdmisionHospitalaria extends Config{
             $Col.=' <div class="panel panel-default" id="id'.$value['piso_id'].'">
                         <div class="panel-heading back-imss">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion"  href="#collapse_'.$value['piso_id'].'">
+                                <a data-toggle="collapse" data-parent="#accordion" onclick=ActualizarEstadoCamasAutomatico('.$value['piso_id'].')  href="#collapse_'.$value['piso_id'].'">
                                     <div class="row">
                                         <div class="col-md-2" style="padding: 0px;">
                                             <span style="text-transform:uppercase">'.$value['piso_nombre'].'</span>
@@ -71,9 +71,10 @@ class AdmisionHospitalaria extends Config{
                                              Limpieza: <a href="#" id="datoPisoLimpieza'.$x.'">'.$Limpieza.'</a> &nbsp;&nbsp;
                                              Mantenimiento: <a href="#" id="datoPisoMantenimiento'.$x.'">'.$Mantenimiento.'</a> &nbsp;&nbsp;
                                              Contaminadas <a href="#" id="datoPisoContaminadas'.$x.'">'.$Contaminadas.'</a>
+                                             <a href="#" id="prueba1">hjhj</a>
+                                             <a href="#" id="prueba2">asdfasdf</a>
                                         </div>
                                         <div class="col-md-offset-2 col-md-10">
-
                                         </div>
                                     </div>
                                 </a>
@@ -83,7 +84,9 @@ class AdmisionHospitalaria extends Config{
                         <div id="collapse_'.$value['piso_id'].'" class="panel-collapse collapse ">
                             <div class="panel-body" style=" padding: 5px;">
                                 <div class="row">';
+
                                 foreach ($Camas as $value) {
+
                                     $InfectadoColor='';
                                     $Accion='';
                                     $Paciente='&nbsp;';
@@ -205,7 +208,7 @@ class AdmisionHospitalaria extends Config{
                                     </div>';      */
 
         $Col.=' <div class="col-md-2" style="padding: 3px; margin-bottom:-10px">
-                    <div class="card '.$CamaStatus.' color-white" style="border-radius:5px">
+                    <div class="card   color-white" id="card_'.$value['piso_id'].''.$value['cama_nombre'].'" style="border-radius:5px">
                         <div style="position:relative">
                             <div style="position: absolute;width: 10px;height: 81px;top: 25px;" class="'.$InfectadoColor.'"></div>
                         </div>
@@ -294,6 +297,24 @@ class AdmisionHospitalaria extends Config{
                                  os_pisos.piso_id=".$value['piso_id'])));
       }
       $this->setOutput($Conteos);
+    }
+    public function AjaxActualizarEstadoCamas(){
+      $piso_id=$_GET['piso_id'];
+      $Camas= $this->config_mdl->_query("SELECT * FROM os_camas, os_areas, os_pisos, os_pisos_camas
+                                      WHERE os_areas.area_id=os_camas.area_id AND os_pisos_camas.cama_id=os_camas.cama_id AND
+                                      os_pisos_camas.piso_id=os_pisos.piso_id AND os_pisos.piso_id=".$piso_id);
+
+      $x = 0;
+      $sql['TotalCamas'] = array("Total"=>count($Camas));
+      foreach($Camas as $value){
+        $x++;
+        $sql[$x] = array(
+          'Cama_nombre' => $value['cama_nombre'],
+          'Estado' => $value['cama_status']
+        );
+        $this->setOutput($sql);
+      }
+
     }
     public function AjaxBuscarPaciente() {
         $sql= $this->config_mdl->sqlGetDataCondition('doc_43051',array(

@@ -246,12 +246,20 @@ function DireccionResponsable(folio) {
             }
         })
 }
+/*
+Llama a la function ActualizarConteoCamas() para obtener conteo de camas, y asi
+llamarse a si mismo cada 5 segundos para actualizar los datos
+*/
 function ActualizarCconteoAutomatico(){
   ActualizarConteoCamas();
   var t = setTimeout(function(){ ActualizarCconteoAutomatico() }, 5000);
 }
+/*
+Obtiene el conteo de las camas disponibles o de algun otro estado.
+Asigna cada dato a una etiqueta html, el contador permite determinar
+el idetificador al que se le asignara el valor
+*/
 function ActualizarConteoCamas(){
-
   $.ajax({
     url: base_url+"AdmisionHospitalaria/AjaxActualizarConteoCamas",
     type: 'GET',
@@ -266,6 +274,42 @@ function ActualizarConteoCamas(){
         $('#datoPisoLimpieza'+i).text(data[i].Limpieza);
         $('#datoPisoMantenimiento'+i).text(data[i].Mantenimiento);
         $('#datoPisoContaminadas'+i).text(data[i].TotalInfectados);
+      }
+    }
+  });
+}
+function ActualizarEstadoCamasAutomatico(piso_id){
+
+  ActualizarEstadoCamas(piso_id)
+  var t = setTimeout(function(){ ActualizarEstadoCamasAutomatico(piso_id) }, 5000);
+}
+function ActualizarEstadoCamas(piso_id){
+  $.ajax({
+    url: base_url+"AdmisionHospitalaria/AjaxActualizarEstadoCamas",
+    type: 'GET',
+    dataType: 'json',
+    data:{'piso_id':piso_id},
+    success:function(data, textStatus, jqXHR){
+      var color = "";
+      var estado = "";
+      $('#prueba1').text("cama: "+piso_id+data[1].Cama_nombre);
+      $('#prueba2').text("cama: "+data.TotalCamas.Total);
+      for(var x = 1; x <= data.TotalCamas.Total; x++){
+        estado = data[x].Estado;
+        if(estado == "Disponible"){
+          color = "blue";
+        }else if(estado == "En Limpieza"){
+          color = "orange";
+        }else if(estado == "En Mantenimiento"){
+          color = "red";
+        }else if(estado == "Descompuesta"){
+          color = "yellow";
+        }else if(estado == "Ocupado"){
+          color = "green";
+        }else if(estado == "En Espera"){
+          color = "blue-grey-700";
+        }
+        $('#card_'+piso_id+data[x].Cama_nombre).addClass(color);
       }
 
     }
