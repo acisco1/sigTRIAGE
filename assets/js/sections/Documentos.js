@@ -671,3 +671,130 @@ function calcular() {
         $("#puntos_rt").val(tot.val() + ' ptos: ' + 'Riesgo Muy Alto');
     }
 }
+
+function asignarHorarioAplicacion(){
+  var frecuencia = $('#frecuencia').val();
+  var horaAplicacion = "";
+  if(frecuencia == 6){
+    horaAplicacion = "6:00 / 12:00 / 18:00 / 24:00";
+  }else if(frecuencia == 8){
+    horaAplicacion = "8:00 / 16:00 / 24:00";
+  }else if(frecuencia == 12){
+    horaAplicacion = "8:00 / 20:00";
+  }else if(frecuencia => 24){
+    horaAplicacion = "8:00";
+  }
+  $('#aplicacion').val(horaAplicacion);
+}
+
+function sumDias(fecha, numDias){
+  alert("fecha: "+fecha);
+  fecha.setDate(fecha.getDate() + numDias);
+  return fecha;
+}
+function mostrarFechaFin(){
+
+  var fechaInicio = $('#fechaInicio').val();
+  var duracion = $('#duracion').val();
+  var fechaFin = sumarfecha(duracion,fechaInicio);
+  if(duracion === ''){
+    $('#fechaFin').val(fechaInicio);
+  }else{
+    $('#fechaFin').val(fechaFin);
+  }
+
+}
+function revisarCamposVaciosPrescripcion(){
+  var medico = $('#select_medicamento').val();
+  var via = $('#via_administracion').val();
+  var frecuencia = $('#frecuencia').val();
+  var horaAplicacion = $('#aplicacion').val();
+  var fechaInicio = $('#fechaInicio').val();
+  var duracion = $('#duracion').val();
+  var fechaFin = $('#fechaFin').val();
+  var validacion = false;
+  if(medico === '0'){
+    $('#borderMedicamento').css("border","2px solid red");
+  }else if(via === '0'){
+    $('#borderVia').css("border","2px solid red");
+  }else if(frecuencia === '0'){
+    $('#borderFrecuencia').css("border","2px solid red");
+  }else if(horaAplicacion === ''){
+    $('#borderAplicacion').css("border","2px solid red");
+  }else if(fechaInicio === ''){
+    $('#borderFechaInicio').css("border","2px solid red");
+  }else if(duracion === ''){
+    $('#borderDuracion').css("border","2px solid red");
+  }else if(fechaFin === ''){
+    $('#borderFechaFin').css("border","2px solid red");
+  }else{
+    $('#borderMedicamento').css("border","2px solid white");
+    $('#borderVia').css("border","2px solid white");
+    $('#borderFrecuencia').css("border","2px solid white");
+    $('#borderAplicacion').css("border","2px solid white");
+    $('#borderFechaInicio').css("border","2px solid white");
+    $('#borderDuracion').css("border","2px solid white");
+    $('#borderFechaFin').css("border","2px solid white");
+    validacion = true;
+  }
+  return validacion;
+}
+function limpiarFormularioPrescripcion(){
+  $('#select_medicamento').val("0").trigger('change.select2');
+$('#via_administracion').val("0").trigger('change.select2');
+$('#frecuencia').val("0");
+  $('#aplicacion').val("");
+  $('#fechaInicio').val("");
+  $('#duracion').val("");
+  $('#fechaFin').val("");
+
+}
+function agregarPrescripcion(){
+  var validar = revisarCamposVaciosPrescripcion();
+  if (validar === true){
+
+    var d = new Date();
+    var medico = $('#select_medicamento').val();
+    var via = $('#via_administracion').val();
+    var frecuencia = $('#frecuencia').val();
+    var horaAplicacion = $('#aplicacion').val();
+    var fechaInicio = $('#fechaInicio').val();
+    var duracion = $('#duracion').val();
+    var fechaFin = $('#fechaFin').val();
+    var fila ="<tr>"+
+    "<td>"+d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()+"</td>"+
+    "<td>Servicio</td>"+
+    "<td>Gerardo Santillan Cruzado</td>"+
+    "<td>"+medico+"</td>"+
+    "<td>"+via+"</td>"+
+    "<td>"+frecuencia+"</td>"+
+    "<td>"+horaAplicacion+"</td>"+
+    "<td>"+fechaInicio+"</td>"+
+    "<td>"+duracion+"</td>"+
+    "<td>"+fechaFin+"</td>"+
+    "<td><a href='#'><i class='fa fa-pencil icono-accion' ></i></a></td>"+
+    "</tr>";
+    $('#tablaPrescripcion').append(fila);
+    limpiarFormularioPrescripcion();
+
+  }
+
+}
+
+function sumarfecha(d, fecha)
+{
+ var Fecha = new Date();
+ var sFecha = fecha || (Fecha.getDate() + "/" + (Fecha.getMonth() +1) + "/" + Fecha.getFullYear());
+ var sep = sFecha.indexOf('/') != -1 ? '/' : '-';
+ var aFecha = sFecha.split(sep);
+ var fecha = aFecha[2]+'/'+aFecha[1]+'/'+aFecha[0];
+ fecha= new Date(fecha);
+ fecha.setDate(fecha.getDate()+parseInt(d));
+ var anno=fecha.getFullYear();
+ var mes= fecha.getMonth()+1;
+ var dia= fecha.getDate();
+ mes = (mes < 10) ? ("0" + mes) : mes;
+ dia = (dia < 10) ? ("0" + dia) : dia;
+ var fechaFinal = dia+sep+mes+sep+anno;
+ return (fechaFinal);
+ }

@@ -724,10 +724,12 @@ class Documentos extends Config{
                                                            FROM os_empleados
                                                            WHERE empleado_id = '$this->UMAE_USER')"
                                                          );
-        $sql['Medicamentos'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos");
+        $sql['Medicamentos'] = $this->config_mdl->_query("SELECT CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento
+                                                          FROM catalogo_medicamentos");
         $sql['Residentes'] = $this->config_mdl->_query("SELECT notas_id,nombre_residente,apellido_residente,cedulap_residente
                                                            FROM um_notas_residentes
                                                            WHERE notas_id = $Nota");
+        $sql['Vias'] = array(IV,VO,IT,Enema,IM,Coliris,SC,Rectal,SB,IP,Tupilco,ID,Inhalatoria,Nasal,Otorrino,Ocular);
         $sql['MedicosBaseNota'] = $this->config_mdl->_query("SELECT empleado_nombre,empleado_apellidos,empleado_matricula
                                                              FROM os_empleados
                                                              WHERE empleado_id = (

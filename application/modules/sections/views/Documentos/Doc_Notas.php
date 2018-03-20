@@ -3,7 +3,22 @@
     <div class="box-cell">
         <div class="col-md-11 col-centered" style="margin-top: 10px">
         <div class="box-inner">
-            <style>hr.style-eight {border: 0;border-top: 4px double #8c8c8c;text-align: center;}hr.style-eight:after {content: attr(data-titulo);display: inline-block;position: relative;top: -0.7em;font-size: 1.2em;padding: 0 0.20em;background: white;}</style>
+            <style>
+            hr.style-eight{
+              border: 0;
+              border-top: 4px double #8c8c8c;
+              text-align: center;
+              }
+              hr.style-eight:after{
+                content: attr(data-titulo);
+                display: inline-block;
+                position: relative;
+                top: -0.7em;
+                font-size: 1.2em;
+                padding: 0 0.20em;
+                background: white;
+              }
+          </style>
             <style type="text/css">
                 fieldset.scheduler-border {
                 border: solid 1px #DDD !important;
@@ -50,6 +65,10 @@
                 #modalTamanioG {
                     width: 67% !important;
                 }
+            td,th{
+              text-align: center;
+              border-bottom: 1px solid #ddd;
+            }
             </style>
             <div class="panel panel-default ">
                 <div class="panel-heading p teal-900 back-imss text-center scroll-box" style="">
@@ -455,8 +474,149 @@
                                                 <textarea class="form-control" name="nota_solucionesp" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
                                             </div><br>
                                             <div>
-                                            <label><b>e) Medicamentos</b></label>
-                                                <textarea class="form-control" name="nota_medicamentos" placeholder="Anote aquí los Medicamentos"><?=$Nota['nota_medicamentos']?></textarea>
+                                            <label><b>e) Prescripcion: </b></label>
+
+                                                <button type="button" class="btn back-imss" onclick="agregarPrescripcion()"> Nueva </button>
+
+                                                <!-- <textarea class="form-control" name="nota_medicamentos" placeholder="Anote aquí los Medicamentos"><?=$Nota['nota_medicamentos']?></textarea> -->
+
+
+                                                <div class="row" id="contenedorFormularios">
+
+                                        <div class="col-sm-12">
+                                            <label><b>Medicamento</b></label>
+                                            <div id="borderMedicamento">
+                                              <select id="select_medicamento" class="form control select2 selectpicker" style="width: 100%" required>
+                                                  <option value="0">-Seleccionar-</option>
+                                                  <?php foreach ($Medicamentos as $value) {?>
+                                                  <option ><?=$value['medicamento']?></option>
+                                                  <?php } ?>
+                                              </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <label><b>Via Administración</b></label>
+                                            <div id="borderVia">
+                                            <select class="select2 selectpicker" id="via_administracion" style="width: 100%" required>
+                                                <option value="0">-Seleccionar-</option>
+                                                <?php foreach ($Vias as $value) {?>
+                                                <option ><?=$value?></option>
+                                                <?php } ?>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          <label><b>Frecuencia</b></label>
+                                          <div id="borderFrecuencia">
+                                          <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" required>
+                                            <option value="0">- Frecuencia -</option>
+                                            <option value="6">6 hrs</option>
+                                            <option value="8">8 hrs</option>
+                                            <option value="12">12 hrs</option>
+                                            <option value="24">24 hrs</option>
+                                            <option value="48">48 hrs</option>
+                                            <option value="72">72 hrs</option>
+                                          </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                          <label><b>Aplicacion</b></label>
+                                          <div id="borderAplicacion">
+                                          <input id="aplicacion" class="form-control" type="text" name="" value="12:00 / 18:00 / 24:00 / 6:00">
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          <label><b>Fecha Inicio</b></label>
+                                          <div id="borderFechaInicio">
+                                          <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy" required name="" placeholder="06/10/2016">
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-1">
+                                          <label><b>No. Dias</b></label>
+                                          <div id="borderDuracion">
+                                          <select id="duracion" onchange="mostrarFechaFin()" class="form-control">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                          </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                          <label><b>Fecha Fin</b></label>
+                                          <div id="borderFechaFin">
+                                          <input id="fechaFin"  required name="" >
+                                          </div>
+                                        </div>
+
+
+
+
+
+
+
+                                    </div>
+                                        </div>
+                                        <table style="width:100%;">
+                                          <thead >
+                                            <tr>
+                                              <th>Fecha</th>
+                                              <th>Servicio</th>
+                                              <th>Medico</th>
+                                              <th>Medicamento</th>
+                                              <th>Via</th>
+                                              <th>Frecuencia</th>
+                                              <th>Aplicacion</th>
+                                              <th>Fecha Inicio</th>
+                                              <th>Dias</th>
+                                              <th>Fecha Fin</th>
+                                              <th>Opciones  </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody id="tablaPrescripcion">
+                                          </tbody>
+                                        </table>
+                                                <!-- Modal prescripcion -->
+                                                <div class="modal fade" id="myModal3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" id="modalTamanioT">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header container-fluid">
+                                                                <div class="navbar-header">
+                                                                    <a class="navbar-brand modal-title" href="#">Prescripcion Medica</a>
+                                                                </div>
+                                                                <ul class="nav navbar-nav navbar-right">
+                                                                    <li>
+                                                                        <a class="btn btn-default btn-md" id="agregarFormulario">Agregar Prescripcion</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="close" data-dismiss="modal">&times;</a>
+                                                                    </li>
+                                                                </ul>
+
+                                                            </div>
+
+                                                            <div class="modal-body" data-spy="scroll" data-target="#myScrollspy" data-offset="20">
+
+                                                            </div> <!-- modal-body  de riesgo de trombosis-->
+                                                            <!-- Contenedor paral ingresar los nuevos formularios-->
+
+                                                                <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="obtenerDatosPrescripcion()">Aceptar</button>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
                                             </div>
                                     </div>
                                 <div class="form-group">
