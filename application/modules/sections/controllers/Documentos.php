@@ -724,7 +724,9 @@ class Documentos extends Config{
                                                            FROM os_empleados
                                                            WHERE empleado_id = '$this->UMAE_USER')"
                                                          );
-        $sql['Medicamentos'] = $this->config_mdl->_query("SELECT CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento
+        $sql['Medicamentos'] = $this->config_mdl->_query("SELECT medicamento_id,
+                                                                 CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,
+                                                                 interaccion_amarilla,interaccion_roja
                                                           FROM catalogo_medicamentos");
         $sql['Residentes'] = $this->config_mdl->_query("SELECT notas_id,nombre_residente,apellido_residente,cedulap_residente
                                                            FROM um_notas_residentes
@@ -774,6 +776,27 @@ class Documentos extends Config{
                 $this->config_mdl->_insert('um_notas_residentes',$datosResidente);
             }
           }
+
+
+
+          for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
+            $datosPrescripcion = array(
+              'empleado_id' => $this->UMAE_USER,
+              'triage_id' => $this->input->post('triage_id'),
+              'medicamento_id' => $this->input->post("idMedicamento[$x]"),
+              'fecha_prescripcion' => date('d-m-Y'),
+              'via_administracion' => $this->input->post("via_administracion[$x]"),
+              'frecuencia' => $this->input->post("frecuencia[$x]"),
+              'aplicacion' => $this->input->post("horaAplicacion[$x]"),
+              'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
+              'dias' => $this->input->post("duracion[$x]"),
+              'fecha_fin' => $this->input->post("fechaFin[$x]"),
+              'observacion' => $this->input->post("observacion_prescripcion")
+            );
+            $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
+          }
+
+
 
             $sqlMax= $this->config_mdl->_get_last_id('doc_notas','notas_id');
             $this->config_mdl->_insert('doc_nota',array(

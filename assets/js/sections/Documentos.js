@@ -674,21 +674,21 @@ function calcular() {
 
 function asignarHorarioAplicacion(){
   var frecuencia = $('#frecuencia').val();
-  var horaAplicacion = "";
-  if(frecuencia == 6){
+  var horaAplicacion = "8:00";
+  if(frecuencia == "6 hrs"){
     horaAplicacion = "6:00 / 12:00 / 18:00 / 24:00";
-  }else if(frecuencia == 8){
+  }else if(frecuencia == "8 hrs"){
     horaAplicacion = "8:00 / 16:00 / 24:00";
-  }else if(frecuencia == 12){
+  }else if(frecuencia == "12 hrs"){
     horaAplicacion = "8:00 / 20:00";
-  }else if(frecuencia => 24){
-    horaAplicacion = "8:00";
+  }else if( frecuencia == 0){
+    horaAplicacion = "Falta asignar frecuencia"
   }
   $('#aplicacion').val(horaAplicacion);
 }
 
 function sumDias(fecha, numDias){
-  alert("fecha: "+fecha);
+
   fecha.setDate(fecha.getDate() + numDias);
   return fecha;
 }
@@ -704,6 +704,8 @@ function mostrarFechaFin(){
   }
 
 }
+// Valida el llenado del formulario, indicando si
+// algun campo falta por llenar
 function revisarCamposVaciosPrescripcion(){
   var medico = $('#select_medicamento').val();
   var via = $('#via_administracion').val();
@@ -739,46 +741,188 @@ function revisarCamposVaciosPrescripcion(){
   }
   return validacion;
 }
+//Limpia el formulario despues de usarse
 function limpiarFormularioPrescripcion(){
   $('#select_medicamento').val("0").trigger('change.select2');
-$('#via_administracion').val("0").trigger('change.select2');
-$('#frecuencia').val("0");
+  $('#via_administracion').val("0").trigger('change.select2');
+  $('#frecuencia').val("0");
   $('#aplicacion').val("");
   $('#fechaInicio').val("");
   $('#duracion').val("");
   $('#fechaFin').val("");
 
 }
+// Arreglo donde se almacenara los datos de cada prescripcion
+var arrayPrescripcion = [];
+/* Almacena el Id del medicamento y las interacciones con las que se
+se relaciona*/
+var arrayInteracciones = [];
+
+function indicarInteraccion(){
+  var idMedicamento = $('#select_medicamento').val();
+  $('#interaccion_amarilla').val(idMedicamento).trigger('change');
+  $('#interaccion_roja').val(idMedicamento).trigger('change');
+}
+
+// Se almacenan los datos de la prescripcion en un arreglo
 function agregarPrescripcion(){
   var validar = revisarCamposVaciosPrescripcion();
   if (validar === true){
-
-    var d = new Date();
-    var medico = $('#select_medicamento').val();
+    // tomar valor del formulario y asignar variable
+    var idMedicamento = $('#select_medicamento').val();
+    var medicamento = $('#select_medicamento option:selected').text();
+    var interaccion_amarilla = $('#interaccion_amarilla option:selected').text();
+    var interaccion_roja = $('#interaccion_roja option:selected').text();
+    var arrayInteraccionAmarilla = interaccion_amarilla.split(',');
+    var arrayInteraccionRoja = interaccion_roja.split(',');
     var via = $('#via_administracion').val();
     var frecuencia = $('#frecuencia').val();
     var horaAplicacion = $('#aplicacion').val();
     var fechaInicio = $('#fechaInicio').val();
     var duracion = $('#duracion').val();
     var fechaFin = $('#fechaFin').val();
-    var fila ="<tr>"+
-    "<td>"+d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()+"</td>"+
-    "<td>Servicio</td>"+
-    "<td>Gerardo Santillan Cruzado</td>"+
-    "<td>"+medico+"</td>"+
-    "<td>"+via+"</td>"+
-    "<td>"+frecuencia+"</td>"+
-    "<td>"+horaAplicacion+"</td>"+
-    "<td>"+fechaInicio+"</td>"+
-    "<td>"+duracion+"</td>"+
-    "<td>"+fechaFin+"</td>"+
-    "<td><a href='#'><i class='fa fa-pencil icono-accion' ></i></a></td>"+
-    "</tr>";
-    $('#tablaPrescripcion').append(fila);
-    limpiarFormularioPrescripcion();
+    var arrayLongitud = arrayPrescripcion.length;
 
+
+    // verifica si el arreglo esta vacio y determinar si el registro es directo o inicia la comparacion
+    if(arrayLongitud > 0){
+      var interaccionA;
+      var interaccionB;
+      var comparaMedicamento;
+      var resultadoComparacion;
+      var x;
+      var longitudInteracciones;
+      for(x = 0; x < arrayLongitud; x++){
+        comparaMedicamento = arrayPrescripcion[x]['medicamento'];
+        longitudInteracciones = arrayInteracciones[x]['arrayInteraccionAmarilla'].length;
+        for (var y = 0; y < longitudInteracciones; y++){
+          interaccionA = arrayInteracciones[x]['arrayInteraccionAmarilla'][y];
+          if(arrayInteracciones[x]['arrayInteraccionAmarilla'][y] == idMedicamento ){
+            $('#fila'+x).css("background-color","rgb(252, 255, 124)");
+            alert(arrayPrescripcion[x]['medicamento']+" puede generar efectos adversos al aplicarse con el medicamento seleccionado. Favor de notificar a la Gefatura de Consulta Externa");
+            //break;
+          }
+        }
+        for (var y = 0; y < longitudInteracciones; y++){
+          interaccionA = arrayInteracciones[x]['arrayInteraccionRoja'][y];
+          if(arrayInteracciones[x]['arrayInteraccionRoja'][y] == idMedicamento ){
+            $('#fila'+x).css("background-color","rgb(255, 170, 170)");
+            alert(arrayPrescripcion[x]['medicamento']+" puede generar efectos"+
+            "adversos muy graves al aplicarse con el medicamento seleccionado. "+
+            "Favor de notificar a la Gefatura de Consulta Externa");
+            //break;
+          }
+        }
+        if(comparaMedicamento == medicamento){
+          alert("El medicamento ya fue ingresado, indique uno nuevo, modifque el existente o eliminelo");
+          resultadoComparacion = 1;
+          $('#fila'+x).css("border-bottom","2px solid rgb(42, 70, 255)");
+          break;
+        }else{
+          resultadoComparacion = 0;
+        }
+      }
+      if(resultadoComparacion == 0){
+        for(x = 0; x < arrayLongitud; x++){
+            $('#fila'+x).css("border-bottom","1px solid #ddd");
+        }
+        arrayInteracciones[arrayLongitud] = {
+          idMedicamento: idMedicamento,
+          arrayInteraccionAmarilla: arrayInteraccionAmarilla,
+          arrayInteraccionRoja: arrayInteraccionRoja
+        }
+        arrayPrescripcion[arrayLongitud] = {
+          idMedicamento:idMedicamento,
+          medicamento:medicamento,
+          via:via,
+          frecuencia:frecuencia,
+          horaAplicacion:horaAplicacion,
+          fechaInicio:fechaInicio,
+          duracion:duracion,
+          fechaFin:fechaFin
+        }
+        agregarFilaPrescripcion(arrayPrescripcion);
+      }
+    }else{
+      arrayInteracciones[arrayLongitud] = {
+        idMedicamento: idMedicamento,
+        arrayInteraccionAmarilla: arrayInteraccionAmarilla,
+        arrayInteraccionRoja: arrayInteraccionRoja
+      }
+      arrayPrescripcion[arrayLongitud] = {
+        idMedicamento:idMedicamento,
+        medicamento:medicamento,
+        via:via,
+        frecuencia:frecuencia,
+        horaAplicacion:horaAplicacion,
+        fechaInicio:fechaInicio,
+        duracion:duracion,
+        fechaFin:fechaFin
+      }
+      agregarFilaPrescripcion(arrayPrescripcion);
+    }
   }
 
+}
+//pinta la fila con los datos del arraglo 'arrayPrescripcion'
+function agregarFilaPrescripcion(arrayPrescripcion){
+  var arrayLongitud = arrayPrescripcion.length - 1;
+  var fila ="<tr id=fila"+arrayLongitud+" >"+
+  "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["idMedicamento"]+"' /></td>"+
+  "<td>"+arrayPrescripcion[arrayLongitud]["medicamento"]+"</td>"+
+  "<td><input type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
+  "<td><input type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["frecuencia"]+"' /></td>"+
+  "<td><input type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["horaAplicacion"]+"' /></td>"+
+  "<td><input type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaInicio"]+"' /></td>"+
+  "<td><input type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["duracion"]+"' /></td>"+
+  "<td><input type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaFin"]+"' /></td>"+
+  "<td><a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+arrayLongitud+") ></i></a>"+
+  "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+arrayLongitud+") ></i> </a></td>"+
+  "</tr>";
+  $('#tablaPrescripcion').append(fila);
+  limpiarFormularioPrescripcion();
+}
+// elimina la fila de la prescripcion con el indice enviado
+function EliminarFilaPrescripcion(fila){
+
+  $('#fila'+fila).remove();
+  arrayPrescripcion.splice(fila,1);
+}
+function actualizarPrescripcion(){
+  var indice = $('#indiceArrayPrescripcion').val();
+  EliminarFilaPrescripcion(indice);
+  agregarPrescripcion();
+  $('#tablaPrescripcion').empty();
+  var longitud = arrayPrescripcion.length
+
+  for(var x = 0; x < longitud; x++){
+    var fila ="<tr id=fila"+x+" >"+
+    "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[x]["idMedicamento"]+"' /></td>"+
+    "<td>"+arrayPrescripcion[x]["medicamento"]+"</td>"+
+    "<td><input type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["via"]+"' /></td>"+
+    "<td><input type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[x]["frecuencia"]+"' /></td>"+
+    "<td><input type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[x]["horaAplicacion"]+"' /></td>"+
+    "<td><input type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaInicio"]+"' /></td>"+
+    "<td><input type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[x]["duracion"]+"' /></td>"+
+    "<td><input type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaFin"]+"' /></td>"+
+    "<td><a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+x+") ></i></a>"+
+    "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+x+") ></i> </a></td>"+
+    "</tr>";
+    $('#tablaPrescripcion').append(fila);
+
+  }
+}
+function TomarDatosTablaPrescripcion(fila){
+  $('#btnActualizarPrescripcion').removeAttr("hidden");
+  $('#indiceArrayPrescripcion').val(fila);
+  $('#select_medicamento').select2('val',arrayPrescripcion[fila]["idMedicamento"]).select2();
+  $('#via_administracion').select2('val',arrayPrescripcion[fila]["via"]).select2();
+  $('#frecuencia').val(arrayPrescripcion[fila]["frecuencia"]);
+  $('#aplicacion').val(arrayPrescripcion[fila]["horaAplicacion"]);
+  $('#fechaInicio').val(arrayPrescripcion[fila]["fechaInicio"]);
+  $('#duracion').val(arrayPrescripcion[fila]["duracion"]);
+  $('#fechaFin').val(arrayPrescripcion[fila]["fechaFin"]);
+  revisarCamposVaciosPrescripcion();
 }
 
 function sumarfecha(d, fecha)
