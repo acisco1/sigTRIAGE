@@ -653,6 +653,18 @@ class Documentos extends Config{
             'triage_id'=>$sql['Nota']['triage_id'],
             'sv_tipo'=>$_GET['inputVia']
         ));
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
+                                                          CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,via_administracion,frecuencia,
+                                                          aplicacion, fecha_inicio, fecha_fin, estado,prescripcion.notas_id
+                                                          FROM prescripcion INNER JOIN os_empleados
+                                                          ON prescripcion.empleado_id = os_empleados.empleado_id
+                                                          INNER JOIN catalogo_medicamentos
+                                                          ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                          INNER JOIN doc_notas
+                                                          ON prescripcion.notas_id = doc_notas.notas_id
+                                                          WHERE prescripcion.triage_id = ".$sql['Nota']['triage_id']." AND prescripcion.notas_id = ".$Nota."
+                                                          ORDER BY fecha_prescripcion DESC");
+        $sql['valores'] = array($sql['Nota']['triage_id'], $Nota);
         if($sqlSV[0]['sv_temp']!='' && !empty($sqlSV)){
             $sql['SignosVitales']=$sqlSV[0];
         }else{
@@ -661,6 +673,7 @@ class Documentos extends Config{
                 'sv_tipo'=>'Triage'
             ))[0];
         }
+
         $this->load->view('documentos/Notas',$sql);
     }
     public function NotaConsultoriosEspecialidad($Nota) {

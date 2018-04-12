@@ -1,4 +1,9 @@
-<?= modules::run('Sections/Menu/index'); ?> 
+<?= modules::run('Sections/Menu/index'); ?>
+<style>
+  .li-hover:hover{
+    background-color: #14322D;
+  }
+</style>
 <div class="box-row">
     <div class="box-cell">
         <div class="box-inner col-md-12 col-centered">
@@ -9,6 +14,7 @@
                             <div style="top: 4px;position: absolute;height: 88px;width: 35px;left: -1px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
                         </div>
                         <div class="col-md-9" style="padding-left: 40px;">
+                          <input hidden type="text" id="folioPaciente" value="<?=$info['triage_id']?>">
                             <h4>
                                 <b>PACIENTE:  <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?> </b>
                             </h4>
@@ -16,7 +22,7 @@
                                 <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
                             </h4>
                             <h4 style="margin-top: -5px;text-transform: uppercase">
-                                <?php 
+                                <?php
                                     if($info['triage_fecha_nac']!=''){
                                         $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
                                         if($fecha->y<15){
@@ -35,7 +41,7 @@
                         <div class="col-md-3 text-right">
                             <h4><b>EDAD</b></h4>
                             <h4 style="margin-top: -10px">
-                                <?php 
+                                <?php
                                 if($info['triage_fecha_nac']!=''){
                                     $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
                                     echo $fecha->y.' <span style="font-size:22px">Años</span>';
@@ -46,8 +52,9 @@
                             </h4>
                         </div>
                     </div>
-                    
+
                     <div class="card-tools" style="margin-top: 55px">
+
                         <ul class="list-inline">
                             <li class="dropdown">
                                 <a md-ink-ripple data-toggle="dropdown" class="md-btn md-fab red md-btn-circle tip" data-original-title="Solicitar Documentos" data-placement="bottom">
@@ -74,7 +81,7 @@
                                         <a <?php if(empty($HojasFrontales)){?>href="<?= base_url()?>Sections/Documentos/HojaInicialAbierto?hf=0&a=add&folio=<?=$this->uri->segment(4)?>&tipo=<?=$_GET['tipo']?>" target="_blank" <?php }?>>Generar Inicial(Hoja Frontal)</a>
                                     </li>
                                     <?php }?>
-                                    
+
                                     <?php }?>
                                     <?php if(!empty($DocumentosNotas)){?>
                                     <li class="">
@@ -87,11 +94,31 @@
                         </ul>
                     </div>
                 </div>
+
                 <div class="panel-body b-b b-light">
                     <div class="row">
                         <div class="col-md-12" style="margin-top: 0px">
                             <style>th,td{padding-left: 5px!important;padding-right: 0px!important;}</style>
-                            <table class="table table-bordered table-hover footable"  >
+                            <!-- Inicio navegador para seleccion de tipo de documento -->
+                            <ul class="nav navbar-nav back-imss width100 table-hover">
+                              <li class="li-hover"><a href="#" id="btnNotasTriage">Notas Triage</a></li>
+                              <li class="li-hover"><a href="#">Hoja Clasificación</a></li>
+                              <li class="li-hover"><a href="#">Hoja Inicial</a></li>
+                              <li class="li-hover"><a href="#">Nota Medica</a></li>
+                              <li class="li-hover"><a href="#" id="btnExpedientePrescripcion">Prescripcion</a></li>
+                              <li class="li-hover"><a href="#">Imagenología</a></li>
+                              <li class="li-hover"><a href="#">Estudio de laboratorio</a></li>
+                            </ul>
+                            <!-- Tabla con el listado de documentos del paciente -->
+                            <table class="table table-bordered table-hover footable">
+                              <thead id="cabezaTablaExpediente">
+
+                              </thead>
+                              <tbody id="cuerpoTablaExpediente">
+
+                              </tbody>
+                            </table>
+                            <table  id="tablaNotasTriage" class="table table-bordered table-hover footable"  >
                                 <thead>
                                     <tr>
                                         <th style="width: 15%;" data-sort-ignore="true">FECHA & HORA</th>
@@ -119,7 +146,7 @@
                                             ),'empleado_nombre, empleado_apellidos')[0];?>
                                             <?=$sqlMedicoClass['empleado_nombre']?> <?=$sqlMedicoClass['empleado_apellidos']?>
                                         </td>
-                                        
+
                                         <td>
                                             <?php if($info['triage_color']!=''){?>
                                             <i class="fa fa-file-pdf-o icono-accion pointer tip" data-original-title='Generar Hoja de Clasificación' onclick="AbrirDocumento(base_url+'Inicio/Documentos/Clasificacion/<?=$this->uri->segment(4)?>/?via=<?=$_GET['tipo']?>')"></i>
@@ -143,7 +170,7 @@
                                             <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/HojaInicialAbierto/<?=$value['triage_id']?>')" data-original-title="Generar Hoja Frontal"></i>
                                             &nbsp;
                                             <?php }?>
-                                            
+
                                             <?php if($PINFO['pia_lugar_accidente']=='TRABAJO'):?>
                                             <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/ST7/<?=$value['triage_id']?>')" data-original-title="Generar ST7"></i>
                                             &nbsp;
@@ -173,7 +200,7 @@
                                         </td>
                                         <td><?=$value['notas_area']?></td>
                                         <td><?=$value['empleado_nombre']?> <?=$value['empleado_apellidos']?></td>
-                                        
+
                                         <td>
                                             <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>')" data-original-title="Generar <?=$value['notas_tipo']?>"></i>
                                             &nbsp;
@@ -181,7 +208,7 @@
                                                 <a onclick="AbrirVista(base_url+'Sections/Documentos/Notas/<?=$value['notas_id']?>/?a=edit&TipoNota=<?=$value['notas_tipo']?>&folio=<?=$this->uri->segment(4)?>&via=<?=$_GET['via']?>&doc_id=<?=$_GET['doc_id']?>&inputVia=<?=$_GET['tipo']?>',1100)">
                                                     <i class="fa fa-pencil icono-accion"></i>
                                                 </a>&nbsp;
-                                                
+
                                             <?php }?>
                                         </td>
                                     </tr>
@@ -200,7 +227,7 @@
                                     <?php if($_GET['tipo']=='Choque'  ){?>
                                     <tr>
                                         <td>NO APLICA</td>
-                                        
+
                                         <td>Consentimiento informado para el ingreso al área de Choque-Urgencias</td>
                                         <td>NO APLICA</td>
                                         <td>NO APLICA</td>
@@ -221,8 +248,7 @@
                                     </tr>
                                     <?php }?>
                                 </tbody>
-
-                            </table>
+                            </table> <!-- Fin tabla listado de documentos paciente -->
                         </div>
                     </div>
                 </div>

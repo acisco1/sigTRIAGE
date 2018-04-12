@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  
+
     $('.select2').select2();
     //$('textarea[name=cpr_nota]').wysihtml5();
     $('.hf_motivo_abierto').wysihtml5();
@@ -103,6 +105,7 @@ $(document).ready(function () {
             }
         })
     })
+
     $('input[name=asistentesmedicas_incapacidad_am]').click(function (e){
         if($(this).val()=='Si'){
             $('input[name=asistentesmedicas_incapacidad_ga]').removeAttr('disabled');
@@ -748,9 +751,9 @@ function limpiarFormularioPrescripcion(){
   $('#frecuencia').val("0");
   $('#aplicacion').val("");
   $('#fechaInicio').val("");
-  $('#duracion').val("");
+  $('#duracion').val("0");
   $('#fechaFin').val("");
-
+  $('#observacion').val("");
 }
 // Arreglo donde se almacenara los datos de cada prescripcion
 var arrayPrescripcion = [];
@@ -781,9 +784,11 @@ function agregarPrescripcion(){
     var fechaInicio = $('#fechaInicio').val();
     var duracion = $('#duracion').val();
     var fechaFin = $('#fechaFin').val();
+    var observacion = $('#observacion').val();;
+    if(observacion === ''){
+      observacion = "Sin observaciones";
+    }
     var arrayLongitud = arrayPrescripcion.length;
-
-
     // verifica si el arreglo esta vacio y determinar si el registro es directo o inicia la comparacion
     if(arrayLongitud > 0){
       var interaccionA;
@@ -839,7 +844,8 @@ function agregarPrescripcion(){
           horaAplicacion:horaAplicacion,
           fechaInicio:fechaInicio,
           duracion:duracion,
-          fechaFin:fechaFin
+          fechaFin:fechaFin,
+          observacion:observacion
         }
         agregarFilaPrescripcion(arrayPrescripcion);
       }
@@ -857,7 +863,8 @@ function agregarPrescripcion(){
         horaAplicacion:horaAplicacion,
         fechaInicio:fechaInicio,
         duracion:duracion,
-        fechaFin:fechaFin
+        fechaFin:fechaFin,
+        observacion:observacion
       }
       agregarFilaPrescripcion(arrayPrescripcion);
     }
@@ -867,25 +874,45 @@ function agregarPrescripcion(){
 //pinta la fila con los datos del arraglo 'arrayPrescripcion'
 function agregarFilaPrescripcion(arrayPrescripcion){
   var arrayLongitud = arrayPrescripcion.length - 1;
-  var fila ="<tr id=fila"+arrayLongitud+" >"+
+  var fila ="<tr class='fila"+arrayLongitud+"' >"+
   "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["idMedicamento"]+"' /></td>"+
   "<td>"+arrayPrescripcion[arrayLongitud]["medicamento"]+"</td>"+
-  "<td><input type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
-  "<td><input type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["frecuencia"]+"' /></td>"+
-  "<td><input type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["horaAplicacion"]+"' /></td>"+
-  "<td><input type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaInicio"]+"' /></td>"+
-  "<td><input type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["duracion"]+"' /></td>"+
-  "<td><input type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaFin"]+"' /></td>"+
+  "<td><input readonly type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
+  "<td><input readonly type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["frecuencia"]+"' /></td>"+
+  "<td><input readonly type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["horaAplicacion"]+"' /></td>"+
+  "<td><input readonly type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaInicio"]+"' /></td>"+
+  "<td><input readonly type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["duracion"]+"' /></td>"+
+  "<td><input readonly type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaFin"]+"' /></td>"+
   "<td><a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+arrayLongitud+") ></i></a>"+
-  "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+arrayLongitud+") ></i> </a></td>"+
+  "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+arrayLongitud+") ></i> </a>"+
+  "<a href='#'> <i class='glyphicon glyphicon-eye-open icono-accion' onclick=MostrarOcularObservacion("+arrayLongitud+") ></i> </a></td>"+
+  "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
+  "<td style='text-align: right;'><strong>Observación del medicamento:  </strong></td>"+
+  "<td colspan='7' ><input hidden style='text-align: left;' class='fila"+arrayLongitud+"Val' value='0' />"+
+  "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["observacion"]+"' />"+
+  "</td></tr>"+
   "</tr>";
   $('#tablaPrescripcion').append(fila);
   limpiarFormularioPrescripcion();
 }
+
+function MostrarOcularObservacion(fila){
+  var observacionOculto = $('.fila'+fila+"Val").val();
+  if(observacionOculto == 0){
+    $('.fila'+fila+"Observacion").removeAttr("hidden");
+    $('.fila'+fila+"Val").val("1");
+  }else{
+    $('.fila'+fila+"Observacion").attr("hidden","true");
+    $('.fila'+fila+"Val").val("0");
+  }
+
+}
+
 // elimina la fila de la prescripcion con el indice enviado
 function EliminarFilaPrescripcion(fila){
 
-  $('#fila'+fila).remove();
+  $('.fila'+fila).remove();
+  $('.fila'+fila+"Observacion").remove();
   arrayPrescripcion.splice(fila,1);
 }
 function actualizarPrescripcion(){
@@ -896,17 +923,23 @@ function actualizarPrescripcion(){
   var longitud = arrayPrescripcion.length
 
   for(var x = 0; x < longitud; x++){
-    var fila ="<tr id=fila"+x+" >"+
+    var fila ="<tr class='fila"+x+"' >"+
     "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[x]["idMedicamento"]+"' /></td>"+
     "<td>"+arrayPrescripcion[x]["medicamento"]+"</td>"+
-    "<td><input type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["via"]+"' /></td>"+
-    "<td><input type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[x]["frecuencia"]+"' /></td>"+
-    "<td><input type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[x]["horaAplicacion"]+"' /></td>"+
-    "<td><input type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaInicio"]+"' /></td>"+
-    "<td><input type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[x]["duracion"]+"' /></td>"+
-    "<td><input type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaFin"]+"' /></td>"+
+    "<td><input readonly type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["via"]+"' /></td>"+
+    "<td><input readonly type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[x]["frecuencia"]+"' /></td>"+
+    "<td><input readonly type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[x]["horaAplicacion"]+"' /></td>"+
+    "<td><input readonly type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaInicio"]+"' /></td>"+
+    "<td><input readonly type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[x]["duracion"]+"' /></td>"+
+    "<td><input readonly type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaFin"]+"' /></td>"+
     "<td><a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+x+") ></i></a>"+
-    "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+x+") ></i> </a></td>"+
+    "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+x+") ></i> </a>"+
+    "<a href='#'> <i class='glyphicon glyphicon-eye-open icono-accion' onclick=MostrarOcularObservacion("+x+") ></i> </a></td>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228);' class='fila"+x+"Observacion'>"+
+    "<td style='text-align: right;'><strong>Observación del medicamento:</strong>  </td>"+
+    "<td colspan='7' ><input hidden  class='fila"+x+"Val' value='0' />"+
+    "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[x]["observacion"]+"' />"+
+    "</td></tr>"+
     "</tr>";
     $('#tablaPrescripcion').append(fila);
 
@@ -922,6 +955,7 @@ function TomarDatosTablaPrescripcion(fila){
   $('#fechaInicio').val(arrayPrescripcion[fila]["fechaInicio"]);
   $('#duracion').val(arrayPrescripcion[fila]["duracion"]);
   $('#fechaFin').val(arrayPrescripcion[fila]["fechaFin"]);
+  $('#observacion').val(arrayPrescripcion[fila]["observacion"]);
   revisarCamposVaciosPrescripcion();
 }
 

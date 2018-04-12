@@ -1,8 +1,70 @@
 $(document).ready(function (e){
+    /*Muestra la tabla original */
+    $('#btnNotasTriage').click(function(){
+      $('#cabezaTablaExpediente').empty();
+      $('#cuerpoTablaExpediente').empty();
+      $('#tablaNotasTriage').removeAttr("hidden");
+    })
+    /*Muestra el historial de prescripciones de un paciente */
+    $('#btnExpedientePrescripcion').click(function(){
+      $('#tablaNotasTriage').attr("hidden","true");
+      $('#cabezaTablaExpediente').empty();
+      $('#cuerpoTablaExpediente').empty();
+      var cabezaTabla = ""
+      var filaTabla = "";
+      var paciente = $('#folioPaciente').val();
+      $.ajax({
+        url: base_url+"Sections/Documentos/AjaxHistorialPrescripcion",
+        type: 'GET',
+        dataType: 'json',
+        data:{'paciente':paciente},
+        success: function(data, textStatus, jqXHR){
+          cabezaTabla = "<tr>"+
+          "<th>Fecha</th>"+
+          "<th>Médico</th>"+
+          "<th>Medicamento</th>"+
+          "<th>Via</th>"+
+          "<th>Frecuencia</th>"+
+          "<th>Aplicacion</th>"+
+          "<th>Inicio</th>"+
+          "<th>Fin</th>"+
+          "<th>Estado</th>"+
+          "<th>Nota</th>"+
+          "</tr>";
+          $('#cabezaTablaExpediente').append(cabezaTabla);
+          var estadoColor = "";
+          for(var i = 0; i < data.length; i++){
+            //Pinta la fila, si esta se encuentra activa o inactiva
+            if(data[i].estado == 0){
+              estadoColor = "rgb(255, 195, 195)";//verde
+            }else{
+              estadoColor = "rgb(162, 255, 156)";//rojo
+            }
+            filaTabla = "<tr style='background:"+estadoColor+";' >"+
+            "<td>"+data[i].fecha_prescripcion+"</td>"+
+            "<td>"+data[i].empleado+"</td>"+
+            "<td>"+data[i].medicamento+"</td>"+
+            "<td>"+data[i].via_administracion+"</td>"+
+            "<td>"+data[i].frecuencia+"</td>"+
+            "<td>"+data[i].aplicacion+"</td>"+
+            "<td>"+data[i].fecha_inicio+"</td>"+
+            "<td>"+data[i].fecha_fin+"</td>"+
+            "<td>"+data[i].estado+"</td>"+
+            "<td>"+data[i].notas_id+"</td>"+
+            "</tr>";
+            $('#cuerpoTablaExpediente').append(filaTabla);
+          }
+        },error: function (e) {
+            bootbox.hideAll();
+            msj_error_serve();
+        }
+      })
+    });
+
     $('#input_search').focus()
     $('#input_search').keyup(function (e){
         var input=$(this);
-        if($(this).val().length==11 && input.val()!=''){ 
+        if($(this).val().length==11 && input.val()!=''){
             $.ajax({
                 url: base_url+"observacion/ObtenerPacienteMedico",
                 type: 'POST',
@@ -10,9 +72,9 @@ $(document).ready(function (e){
                 data: {
                     'id':input.val(),
                     'csrf_token':csrf_token
-                },success: function (data, textStatus, jqXHR) { 
+                },success: function (data, textStatus, jqXHR) {
                     console.log(data)
-                    if(data.accion=='1' && input.val()!=''){                        
+                    if(data.accion=='1' && input.val()!=''){
                         if(confirm('¿DESEA AGREGAR ESTE PACIENTE?')){
                             var matricula=prompt('CONFIRMAR MATRICULA','');
                             if(matricula!='' && matricula!=null){
@@ -46,10 +108,10 @@ $(document).ready(function (e){
                     }if(data.accion=='2' && input.val()!=''){
                         AgregarPacienteObservacion(data.paciente);
                     }if(data.accion=='3' && input.val()!=''){
-                        msj_success_noti('EL N° PACIENTE YA SE ENCUENTRA REGISTRADO O SE HA DADO DE ALTA') 
+                        msj_success_noti('EL N° PACIENTE YA SE ENCUENTRA REGISTRADO O SE HA DADO DE ALTA')
                     }
                     if(data.accion=='4' && input.val()!=''){
-                        msj_success_noti('EL N° PACIENTE NO CORRESPONDE A ESTA AREA') 
+                        msj_success_noti('EL N° PACIENTE NO CORRESPONDE A ESTA AREA')
                     }
                     input.val('');
                     e.preventDefault();
@@ -57,7 +119,7 @@ $(document).ready(function (e){
                     msj_error_serve();
                     console.log(e)
                 }
-            }) 
+            })
         }
     })
     function AgregarPacienteObservacion(info) {
@@ -161,16 +223,16 @@ $(document).ready(function (e){
                     });
                     setting_modal(25)
 
-                    
+
                 },error: function (jqXHR, textStatus, errorThrown) {
                     msj_error_serve();
-                    
+
                 }
             })
-                
+
         }
     })
-    
+
     function setting_modal(width){
         $('body .modal-body').addClass('text_25');
         $('.modal-title').css({
@@ -186,7 +248,7 @@ $(document).ready(function (e){
                 'margin-top':'130px','width':width+'%'
             })
         }
-        
+
         $('.modal-header').css('background','#02344A').css('padding','7px')
         $('.close').css({
             'color'     : 'white',
@@ -212,7 +274,7 @@ $(document).ready(function (e){
                         bootbox.hideAll();
                         if(data.accion=='1'){
                             msj_success_noti('Médico asociado correctamente');
-                            location.reload()                       
+                            location.reload()
                         }
                     },error:function (){
                         bootbox.hideAll();
@@ -237,18 +299,18 @@ $(document).ready(function (e){
                     bootbox.hideAll();
                     if(data.accion=='1'){
                         var area_acceso=$('input[name=accion_area_acceso]').val();
-                           
+
                     }if(data.accion=='2'){
                         msj_error_noti('DATOS NO CAPTURADOS POR ASISTENTES MÉDICAS')
                     }
-                    
+
                 },error: function (jqXHR, textStatus, errorThrown) {
                     msj_error_serve();
                 }
             })
-            
-            
-            
+
+
+
     })
     $('.solicitud-transfucion').submit(function (e){
         e.preventDefault()
@@ -264,7 +326,7 @@ $(document).ready(function (e){
                 if(data.accion=='1'){
                     msj_success_noti('Solicitud Guardada');
                     location.reload();
-                    
+
                 }
             },error: function (jqXHR, textStatus, errorThrown) {
                 msj_error_serve();
@@ -272,11 +334,11 @@ $(document).ready(function (e){
             }
         })
     });
-    
+
     $('input[name=solicitudtransfucion_sangre][value="'+$('input[name=solicitudtransfucion_sangre]').data('value')+'"]').prop("checked",true);
     $('input[name=solicitudtransfucion_plasma][value="'+$('input[name=solicitudtransfucion_plasma]').data('value')+'"]').prop("checked",true);
     $('input[name=solicitudtransfucion_suspensionconcentrada][value="'+$('input[name=solicitudtransfucion_suspensionconcentrada]').data('value')+'"]').prop("checked",true);
-    
+
     $('input[name=solicitudtransfucion_otros][value="'+$('input[name=solicitudtransfucion_otros]').data('value')+'"]').prop("checked",true);
     $('input[name=solicitudtransfucion_ordinaria][value="'+$('input[name=solicitudtransfucion_ordinaria]').data('value')+'"]').prop("checked",true);
     $('input[name=solicitudtransfucion_urgente][value="'+$('input[name=solicitudtransfucion_urgente]').data('value')+'"]').prop("checked",true);
@@ -295,7 +357,7 @@ $(document).ready(function (e){
                 if(data.accion=='1'){
                     msj_success_noti('Registro Guardada');
                     location.reload();
-                    
+
                 }
             },error: function (jqXHR, textStatus, errorThrown) {
                 msj_error_serve();
@@ -317,7 +379,7 @@ $(document).ready(function (e){
                 if(data.accion=='1'){
                     msj_success_noti('Registro Guardada');
                     location.reload();
-                    
+
                 }
             },error: function (jqXHR, textStatus, errorThrown) {
                 msj_error_serve();
@@ -342,7 +404,7 @@ $(document).ready(function (e){
                 if(data.accion=='1'){
                     msj_success_noti('Registro Guardada');
                     location.reload();
-                    
+
                 }
             },error: function (jqXHR, textStatus, errorThrown) {
                 msj_error_serve();
@@ -366,7 +428,7 @@ $(document).ready(function (e){
                 if(data.accion=='1'){
                     msj_success_noti('Registro Guardada');
                     location.reload();
-                    
+
                 }
             },error: function (jqXHR, textStatus, errorThrown) {
                 msj_error_serve();
@@ -391,13 +453,13 @@ $(document).ready(function (e){
                 }else{
                     $('.result_camas').html(data.result_camas);
                 }
-                
+
             },error: function (jqXHR, textStatus, errorThrown) {
 
             }
         })
     }
-    
+
     var triage_paciente_accidente_lugar=$('input[name=triage_paciente_accidente_lugar]').val();
     $('.guardar-solicitud-hf-observacion').submit(function (e) {
         e.preventDefault();
@@ -416,7 +478,7 @@ $(document).ready(function (e){
                     if(triage_paciente_accidente_lugar=='TRABAJO'){
                         window.open(base_url+'inicio/documentos/ST7/'+$('input[name=triage_id]').val(), '_blank');
                     }
-                    
+
                 }
                 window.opener.location.reload();
                 window.top.close();
@@ -564,7 +626,7 @@ $(document).ready(function (e){
                     msj_error_serve(e)
                 }
             })
-            
+
         }
     })
     $('body').on('click','.cambiar-enfermera',function () {

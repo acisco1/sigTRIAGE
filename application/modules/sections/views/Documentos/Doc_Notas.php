@@ -76,6 +76,7 @@
               background:none;
               margin:0;
               outline:0;
+              width: 100%;
             }
             </style>
             <div class="panel panel-default ">
@@ -483,21 +484,60 @@
                                             </div><br>
                                             <div>
                                             <label><b>e) Prescripcion: </b></label>
-
-                                                <button type="button" class="back-imss" onclick="agregarPrescripcion()"> Nueva </button>
-                                                <button type="button" hidden id="btnActualizarPrescripcion" class="back-imss" onclick="actualizarPrescripcion()"> Actualizar </button>
-
-
-
-                                                <!-- <textarea class="form-control" name="nota_medicamentos" placeholder="Anote aquí los Medicamentos"><?=$Nota['nota_medicamentos']?></textarea> -->
-
-
-                                                <div class="row" id="contenedorFormularios">
+                                            <!-- Panel con el historial de prescripciones -->
+                                            <div class="panel-group" id="accordion">
+                                               <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
+                                                 <h4 style="padding-left:5px"><a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                                 Historial prescripciones </a> Total: <?= count($Prescripcion) ?></h4>
+                                               </div>
+                                               <div id="collapse1" class="panel-collapse collapse" >
+                                                   <table style="width:100%;">
+                                                     <thead >
+                                                       <tr>
+                                                         <th>Medicamento</th>
+                                                         <th>Fecha prescripción</th>
+                                                         <th>Via</th>
+                                                         <th>Frecuencia</th>
+                                                         <th>Aplicacion</th>
+                                                         <th>Fecha Inicio</th>
+                                                         <th>Dias</th>
+                                                         <th>Fecha Fin</th>
+                                                         <th>Estado</th>
+                                                       </tr>
+                                                     </thead>
+                                                     <tbody id="">
+                                                       <?php
+                                                        foreach($Prescripcion as $value){
+                                                          if($value['estado'] == 1){
+                                                            $colorEstado = "background:rgb(162, 255, 156); ";
+                                                          }else{
+                                                            $colorEstado = "background:rgb(255, 195, 195); ";
+                                                          } ?>
+                                                          <tr style="<?= $colorEstado ?>" >
+                                                            <td><?= $value['medicamento'] ?></td>
+                                                            <td><?= $value['fecha_prescripcion'] ?></td>
+                                                            <td><?= $value['via_administracion'] ?></td>
+                                                            <td><?= $value['frecuencia'] ?></td>
+                                                            <td><?= $value['aplicacion'] ?></td>
+                                                            <td><?= $value['fecha_inicio'] ?></td>
+                                                            <td><?= $value['dias'] ?></td>
+                                                            <td><?= $value['fecha_fin'] ?></td>
+                                                            <td><?= $value['estado'] ?></td>
+                                                          </tr>
+                                                       <?php } ?>
+                                                     </tbody>
+                                                   </table>
+                                               </div>
+                                            </div> <!-- Fin panel prescripciones -->
+                                        <div class="row" id="contenedorFormularios">
                                         <input hidden type="text" id="nombreUsuario" value="<?=$Usuario[0]['empleado_nombre']?>"/>
                                         <input hidden type="text" id="servicioUsuario" value="<?=$Usuario[0]['empleado_servicio']?>"/>
                                         <input hidden type="text" id="indiceArrayPrescripcion" value=""/>
                                         <div class="col-sm-12">
-                                            <label><b>Medicamento</b></label>
+                                            <label><b>Medicamento</b>
+                                              <button type="button" class="back-imss" onclick="agregarPrescripcion()"> Nueva </button>
+                                              <button type="button" hidden id="btnActualizarPrescripcion" class="back-imss" onclick="actualizarPrescripcion()"> Actualizar </button>
+                                            </label>
                                             <div id="borderMedicamento">
                                               <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
                                                   <option value="0">-Seleccionar-</option>
@@ -560,7 +600,7 @@
                                         <div class="col-sm-3">
                                           <label><b>Aplicacion</b></label>
                                           <div id="borderAplicacion">
-                                          <input id="aplicacion" class="form-control" type="text" name="" value="12:00 / 18:00 / 24:00 / 6:00">
+                                          <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
                                           </div>
                                         </div>
                                         <div class="col-sm-2">
@@ -593,7 +633,12 @@
                                           <input class="form-control" id="fechaFin"   name="" >
                                           </div>
                                         </div>
-
+                                        <div class="col-sm-12">
+                                          <label><b>Observaciones para la Prescripcion</b></label>
+                                          <div id="borderFechaFin">
+                                          <input name="observacion_prescripcion" class="form-control" id="observacion"   name="" >
+                                          </div>
+                                        </div>
                                         <table style="width:100%;">
                                           <thead >
                                             <tr>
@@ -612,12 +657,7 @@
                                           </tbody>
                                         </table>
                                         <br/>
-                                        <div class="col-sm-12">
-                                          <label><b>Observaciones para la Prescripcion</b></label>
-                                          <div id="borderFechaFin">
-                                          <input name="observacion_prescripcion" class="form-control" id="fechaFin"   name="" >
-                                          </div>
-                                        </div>
+
                                     </div>
                                         </div>
 

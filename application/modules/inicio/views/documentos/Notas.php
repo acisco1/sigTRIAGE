@@ -216,9 +216,29 @@ $margenBajo = "75mm";
         <?php if($Nota['nota_solucionesp']!=''){?>
             SOLUCIONES Y DIETA<?=$Nota['nota_solucionesp']?><br>
         <?php }?>
-        <?php if($Nota['nota_medicamentos']!=''){?>
-            MEDICAMENTOS<?=$Nota['nota_medicamentos']?><br>
-        <?php }?>
+        <br>
+        <table>
+          <tr>
+            <td><strong>#</strong></td>
+            <td><strong>Medicamento</strong></td>
+            <td><strong>Via</strong></td>
+            <td><strong>Frecuencia</strong></td>
+            <td><strong>Aplicacion</strong></td>
+            <td><strong>Fecha Inicio</strong></td>
+            <td><strong>Fecha Fin</strong></td>
+          </tr>
+          <?php for($x = 0; $x < count($Prescripcion); $x++){ ?>
+            <tr>
+              <td><?= $x+1 ?>.</td>
+              <td><?= $Prescripcion[$x]['medicamento'] ?></td>
+              <td><?= $Prescripcion[$x]['via_administracion'] ?></td>
+              <td><?= $Prescripcion[$x]['frecuencia'] ?></td>
+              <td><?= $Prescripcion[$x]['aplicacion'] ?></td>
+              <td><?= $Prescripcion[$x]['fecha_inicio'] ?></td>
+              <td><?= $Prescripcion[$x]['fecha_fin'] ?></td>
+            </tr>
+          <?php } ?>
+        </table>
         <?php if($Nota['nota_interconsultas']!=''){?>
          <h5 style="margin-botton: -6px">INTERCONSULTAS</h5>
             <?=$Nota['nota_interconsulta']?>

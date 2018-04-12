@@ -45,7 +45,7 @@ class Documentos extends Config{
         ))[0];
         $sql['NotasAll']= $this->config_mdl->_query("SELECT * FROM doc_notas, os_empleados WHERE
             doc_notas.empleado_id=os_empleados.empleado_id AND
-            doc_notas.triage_id=".$paciente);
+            doc_notas.triage_id=".$paciente." GROUP BY notas_fecha DESC");
         $sql['info']=  $this->config_mdl->_get_data_condition('os_triage',array(
             'triage_id'=> $paciente
         ))[0];
@@ -61,6 +61,21 @@ class Documentos extends Config{
         $sql['DocumentosNotas']= $this->config_mdl->_query("SELECT * FROM pc_documentos WHERE doc_nombre!='Hoja Frontal'");
         $this->load->view('Documentos/Expediente',$sql);
     }
+    /*Retorna JSON con las prescripcions del paciente*/
+    public function AjaxHistorialPrescripcion(){
+      $paciente = $this->input->get('paciente');
+      $sql = $this->config_mdl->_query("SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
+                                        CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,via_administracion,frecuencia,
+                                        aplicacion, fecha_inicio, fecha_fin, estado,notas_id
+                                        FROM prescripcion INNER JOIN os_empleados
+                                        ON prescripcion.empleado_id = os_empleados.empleado_id
+                                        INNER JOIN catalogo_medicamentos
+                                        ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                        WHERE prescripcion.triage_id = ".$paciente."
+                                        ORDER BY fecha_prescripcion DESC");
+      print json_encode($sql);
+    }
+
     public function ExpedienteEmpleado($data) {
         $sql= $this->config_mdl->_get_data_condition('os_empleados',array(
             'empleado_id'=> $data['empleado_id']
@@ -737,6 +752,12 @@ class Documentos extends Config{
                                                              WHERE empleado_id = (
                                                                SELECT empleado_id FROM doc_notas WHERE notas_id = $Nota
                                                              )");
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,
+                                                          fecha_prescripcion,via_administracion, frecuencia,aplicacion,fecha_inicio,dias,fecha_fin,estado
+                                                          FROM prescripcion INNER JOIN catalogo_medicamentos ON
+                                                          prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                          INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
+                                                          WHERE os_triage.triage_id =".$_GET['folio']);
         $this->load->view('Documentos/Doc_Notas',$sql);
     }
     /*Funcion para insertar el estado del paciente en la nota medica o editarla*/
@@ -779,22 +800,7 @@ class Documentos extends Config{
 
 
 
-          for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
-            $datosPrescripcion = array(
-              'empleado_id' => $this->UMAE_USER,
-              'triage_id' => $this->input->post('triage_id'),
-              'medicamento_id' => $this->input->post("idMedicamento[$x]"),
-              'fecha_prescripcion' => date('d-m-Y'),
-              'via_administracion' => $this->input->post("via_administracion[$x]"),
-              'frecuencia' => $this->input->post("frecuencia[$x]"),
-              'aplicacion' => $this->input->post("horaAplicacion[$x]"),
-              'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
-              'dias' => $this->input->post("duracion[$x]"),
-              'fecha_fin' => $this->input->post("fechaFin[$x]"),
-              'observacion' => $this->input->post("observacion_prescripcion")
-            );
-            $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
-          }
+
 
 
 
@@ -820,6 +826,24 @@ class Documentos extends Config{
                 'nota_interconsulta'=> trim($interconsulta, ','),
                 'notas_id'=>$sqlMax
             ));
+            for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
+              $datosPrescripcion = array(
+                'empleado_id' => $this->UMAE_USER,
+                'triage_id' => $this->input->post('triage_id'),
+                'medicamento_id' => $this->input->post("idMedicamento[$x]"),
+                'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
+                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
+                'via_administracion' => $this->input->post("via_administracion[$x]"),
+                'frecuencia' => $this->input->post("frecuencia[$x]"),
+                'aplicacion' => $this->input->post("horaAplicacion[$x]"),
+                'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
+                'dias' => $this->input->post("duracion[$x]"),
+                'fecha_fin' => $this->input->post("fechaFin[$x]"),
+                'observacion' => $this->input->post("observacion[$x]"),
+                'estado' => "1"
+              );
+              $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
+            }
             $MaxNota=$sqlMax;
         }else{
             $this->config_mdl->_update_data('doc_notas',array(
