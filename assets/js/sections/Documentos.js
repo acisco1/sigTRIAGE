@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
 
     $('.select2').select2();
     //$('textarea[name=cpr_nota]').wysihtml5();
@@ -803,15 +803,16 @@ function agregarPrescripcion(){
         for (var y = 0; y < longitudInteracciones; y++){
           interaccionA = arrayInteracciones[x]['arrayInteraccionAmarilla'][y];
           if(arrayInteracciones[x]['arrayInteraccionAmarilla'][y] == idMedicamento ){
-            $('#fila'+x).css("background-color","rgb(252, 255, 124)");
+            $('#fila'+x).css("background-color","rgb(252, 255, 124)");// Amarillo para efectos grabes, solo requiere observación
             alert(arrayPrescripcion[x]['medicamento']+" puede generar efectos adversos al aplicarse con el medicamento seleccionado. Favor de notificar a la Gefatura de Consulta Externa");
+
             //break;
           }
         }
         for (var y = 0; y < longitudInteracciones; y++){
           interaccionA = arrayInteracciones[x]['arrayInteraccionRoja'][y];
           if(arrayInteracciones[x]['arrayInteraccionRoja'][y] == idMedicamento ){
-            $('#fila'+x).css("background-color","rgb(255, 170, 170)");
+            $('#fila'+x).css("background-color","rgb(255, 170, 170)");//color rojo para efectos muy grabes
             alert(arrayPrescripcion[x]['medicamento']+" puede generar efectos"+
             "adversos muy graves al aplicarse con el medicamento seleccionado. "+
             "Favor de notificar a la Gefatura de Consulta Externa");
@@ -874,7 +875,7 @@ function agregarPrescripcion(){
 //pinta la fila con los datos del arraglo 'arrayPrescripcion'
 function agregarFilaPrescripcion(arrayPrescripcion){
   var arrayLongitud = arrayPrescripcion.length - 1;
-  var fila ="<tr class='fila"+arrayLongitud+"' >"+
+  var fila ="<tr id='fila"+arrayLongitud+"' >"+
   "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["idMedicamento"]+"' /></td>"+
   "<td>"+arrayPrescripcion[arrayLongitud]["medicamento"]+"</td>"+
   "<td><input readonly type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
@@ -886,11 +887,12 @@ function agregarFilaPrescripcion(arrayPrescripcion){
   "<td><a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+arrayLongitud+") ></i></a>"+
   "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+arrayLongitud+") ></i> </a>"+
   "<a href='#'> <i class='glyphicon glyphicon-eye-open icono-accion' onclick=MostrarOcularObservacion("+arrayLongitud+") ></i> </a></td>"+
+  "</tr>"+
   "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
   "<td style='text-align: right;'><strong>Observación del medicamento:  </strong></td>"+
   "<td colspan='7' ><input hidden style='text-align: left;' class='fila"+arrayLongitud+"Val' value='0' />"+
   "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["observacion"]+"' />"+
-  "</td></tr>"+
+  "</td>"+
   "</tr>";
   $('#tablaPrescripcion').append(fila);
   limpiarFormularioPrescripcion();
@@ -923,7 +925,7 @@ function actualizarPrescripcion(){
   var longitud = arrayPrescripcion.length
 
   for(var x = 0; x < longitud; x++){
-    var fila ="<tr class='fila"+x+"' >"+
+    var fila ="<tr id='fila"+x+"' >"+
     "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[x]["idMedicamento"]+"' /></td>"+
     "<td>"+arrayPrescripcion[x]["medicamento"]+"</td>"+
     "<td><input readonly type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["via"]+"' /></td>"+
@@ -935,11 +937,12 @@ function actualizarPrescripcion(){
     "<td><a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+x+") ></i></a>"+
     "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+x+") ></i> </a>"+
     "<a href='#'> <i class='glyphicon glyphicon-eye-open icono-accion' onclick=MostrarOcularObservacion("+x+") ></i> </a></td>"+
+    "</tr>"+
     "<tr hidden style='background-color:rgb(228, 228, 228);' class='fila"+x+"Observacion'>"+
     "<td style='text-align: right;'><strong>Observación del medicamento:</strong>  </td>"+
     "<td colspan='7' ><input hidden  class='fila"+x+"Val' value='0' />"+
     "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[x]["observacion"]+"' />"+
-    "</td></tr>"+
+    "</td>"+
     "</tr>";
     $('#tablaPrescripcion').append(fila);
 

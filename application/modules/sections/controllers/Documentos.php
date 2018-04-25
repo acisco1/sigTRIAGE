@@ -61,17 +61,19 @@ class Documentos extends Config{
         $sql['DocumentosNotas']= $this->config_mdl->_query("SELECT * FROM pc_documentos WHERE doc_nombre!='Hoja Frontal'");
         $this->load->view('Documentos/Expediente',$sql);
     }
-    /*Retorna JSON con las prescripcions del paciente*/
+    /*Retorna JSON con las prescripciones del paciente, ordenadas por fecha de prescripcion y estado*/
     public function AjaxHistorialPrescripcion(){
       $paciente = $this->input->get('paciente');
-      $sql = $this->config_mdl->_query("SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
+      $estado = $this->input->get('estado');
+      $sql = $this->config_mdl->_query("SELECT DISTINCT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
                                         CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,via_administracion,frecuencia,
-                                        aplicacion, fecha_inicio, fecha_fin, estado,notas_id
+                                        aplicacion, fecha_inicio, fecha_fin, estado
                                         FROM prescripcion INNER JOIN os_empleados
                                         ON prescripcion.empleado_id = os_empleados.empleado_id
                                         INNER JOIN catalogo_medicamentos
                                         ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                         WHERE prescripcion.triage_id = ".$paciente."
+                                        AND estado = ".$estado."
                                         ORDER BY fecha_prescripcion DESC");
       print json_encode($sql);
     }
@@ -798,12 +800,6 @@ class Documentos extends Config{
             }
           }
 
-
-
-
-
-
-
             $sqlMax= $this->config_mdl->_get_last_id('doc_notas','notas_id');
             $this->config_mdl->_insert('doc_nota',array(
                 'nota_motivoInterconsulta' => $this->input->post('nota_motivoInterconsulta'),
@@ -826,12 +822,13 @@ class Documentos extends Config{
                 'nota_interconsulta'=> trim($interconsulta, ','),
                 'notas_id'=>$sqlMax
             ));
+            // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
+            // tabla "prescripcio"
             for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
               $datosPrescripcion = array(
                 'empleado_id' => $this->UMAE_USER,
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento[$x]"),
-                'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
                 'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
                 'via_administracion' => $this->input->post("via_administracion[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
@@ -843,6 +840,18 @@ class Documentos extends Config{
                 'estado' => "1"
               );
               $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
+            }
+            // Se toma el ID de las precripcines activas
+            $Prescripciones = $this->config_mdl->_query("SELECT prescripcion_id
+                                                         FROM prescripcion
+                                                         WHERE estado = 1 and triage_id = ".$this->input->post('triage_id').";");
+            for($x = 0; $x < count($Prescripciones); $x++){
+              $NotaPrescripcion = array(
+                'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
+                'prescripcion_id' => $Prescripciones[$x]['prescripcion_id']
+              );
+              // Se registra la relacion entre notas y prescripcion
+              $this->config_mdl->_insert('nm_notas_prescripcion', $NotaPrescripcion);
             }
             $MaxNota=$sqlMax;
         }else{

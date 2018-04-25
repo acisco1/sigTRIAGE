@@ -3,6 +3,7 @@
   .li-hover:hover{
     background-color: #14322D;
   }
+
 </style>
 <div class="box-row">
     <div class="box-cell">
@@ -109,15 +110,44 @@
                               <li class="li-hover"><a href="#">Imagenología</a></li>
                               <li class="li-hover"><a href="#">Estudio de laboratorio</a></li>
                             </ul>
+                            <!-- Espacio para la seccion 'Prescripcion' -->
                             <!-- Tabla con el listado de documentos del paciente -->
                             <table class="table table-bordered table-hover footable">
                               <thead id="cabezaTablaExpediente">
-
                               </thead>
                               <tbody id="cuerpoTablaExpediente">
-
                               </tbody>
-                            </table>
+                            </table><!-- Fin tabla listado de documentos -->
+                            <!-- Panel prescripciones inactivas -->
+                            <div class="panel-group" id="acordeon" hidden>
+                               <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
+                                 <h5 style="padding-left:5px"><a id ='prescripcionInactiva' data-toggle="collapse" data-parent="#acordeon" href="#collapse1">
+                                 Prescripciones inactivas </a></h5>
+                               </div>
+                               <div id="collapse1" class="panel-collapse collapse" >
+                                   <table style="width:100%;">
+                                     <thead >
+                                       <tr>
+                                         <th>Fecha</th>
+                                         <th>Médico</th>
+                                         <th>Medicamento</th>
+                                         <th>Via</th>
+                                         <th>Frecuencia</th>
+                                         <th>Aplicacion</th>
+                                         <th>Inicio</th>
+                                         <th>Fin</th>
+                                         <th>Accion</th>
+                                       </tr>
+                                     </thead>
+                                     <tbody id='tablaPrescripcionInactiva'>
+
+                                     </tbody>
+                                   </table>
+                               </div>
+                            </div> <!-- Fin panel prescripciones -->
+                            <div id="PanelPrescripciones">
+
+                            </div>
                             <table  id="tablaNotasTriage" class="table table-bordered table-hover footable"  >
                                 <thead>
                                     <tr>
@@ -227,7 +257,6 @@
                                     <?php if($_GET['tipo']=='Choque'  ){?>
                                     <tr>
                                         <td>NO APLICA</td>
-
                                         <td>Consentimiento informado para el ingreso al área de Choque-Urgencias</td>
                                         <td>NO APLICA</td>
                                         <td>NO APLICA</td>
@@ -252,6 +281,80 @@
                         </div>
                     </div>
                 </div>
+                <!--Inico modal confirmacion -->
+                <div class="modal fade" id="ModalConfirmar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" id="modalTamanioG">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Puntuación de la Escala de Glasgow</h4>
+                      </div>
+
+                            <div class="modal-body">
+
+                                            <fieldset class="scheduler-border">
+                                                <legend class="scheduler-border"><b>APERTURA OCULAR</b></legend>
+                                                    <div class="form-group">
+                                                           <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_expontanea" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_expontanea']?>" class="has-value"><i class="indigo"></i>Espontánea</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_hablar" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_hablar']?>" class="has-value"><i class="indigo"></i>Hablar</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_dolor" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_dolor']?>" class="has-value"><i class="indigo"></i>Dolor</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_ausente" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausente']?>" class="has-value"><i class="indigo"></i>Ausente</label>
+                                                        </div>
+
+                                    </fieldset>
+                                    <fieldset class="scheduler-border">
+                                        <legend class="scheduler-border"><B>RESPUESTA MOTORA</B></legend>
+                                                        <div class="form-group">
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_obedece" value="6" data-value="<?=$hojafrontal[0]['hf_glasgow_obedece']?>" class="has-value"><i class="indigo"></i>Obedece</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_localiza" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_localiza']?>" class="has-value"><i class="indigo"></i>Localiza</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_retira" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_retira']?>" class="has-value"><i class="indigo"></i>Retira</label>
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_flexion" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_flexion']?>" class="has-value"><i class="indigo"></i>Flexión normal</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_extension" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_extension']?>" class="has-value"><i class="indigo"></i>Extensión anormal</label>&nbsp;&nbsp;
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_ausencia" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausencia']?>" class="has-value"><i class="indigo"></i>Ausencia de repuesta</label>
+                                                        </div>
+                                    </fieldset>
+
+                                    <fieldset class="scheduler-border">
+                                        <legend class="scheduler-border"><b>RESPUESTA VERBAL</b></legend>
+                                                        <div class="form-group">
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_orientado" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_orientado']?>" class="has-value"><i class="indigo"></i>Orientado&nbsp;&nbsp;</label>
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_confuso" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_confuso']?>" class="has-value"><i class="indigo"></i>Confuso&nbsp;&nbsp;</label>
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_incoherente" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_incoherente']?>" class="has-value"><i class="indigo"></i>Incoherente&nbsp;&nbsp;</label>
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_sonidos" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_sonidos']?>" class="has-value"><i class="indigo"></i>Sonidos Incomprensibles&nbsp;&nbsp;</label>
+                                                            <label class="md-check">
+                                                            <input type="checkbox" class='sum' name="hf_glasgow_arespuesta" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_arespuesta']?>" class="has-value"><i class="indigo"></i>Ausencia de respuesta</label>
+                                                        </div>
+
+                                                    <div class="form-group">PUNTUACIÓN TOTAL: &nbsp;<input type="text" name="hf_escala_glasgow" size="3" data-value="<?=$Nota[0]['hf_escala_glasgow']?>" disable></div>
+                                    </fieldset>
+
+                        </div>
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>

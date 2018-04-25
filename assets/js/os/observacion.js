@@ -1,23 +1,74 @@
 $(document).ready(function (e){
+    $('.tip').tooltip();
     /*Muestra la tabla original */
     $('#btnNotasTriage').click(function(){
       $('#cabezaTablaExpediente').empty();
       $('#cuerpoTablaExpediente').empty();
+      $('#acordeon').attr('hidden','true');
       $('#tablaNotasTriage').removeAttr("hidden");
     })
+
+    $('#prescripcionInactiva').click(function(){
+      var cabezaTabla = ""
+      var filaTabla = "";
+      var paciente = $('#folioPaciente').val();
+      $('#tablaPrescripcionInactiva').empty();
+      $.ajax({
+        url: base_url+"Sections/Documentos/AjaxHistorialPrescripcion",
+        type: 'GET',
+        dataType: 'json',
+        data:{'paciente':paciente, 'estado': 0},
+        success: function(data, textStatus, jqXHR){
+          var estadoColor = "";
+          if(data.length == 0){
+            filaTabla = "<tr><td colspan='10' ><h2>El paciente no tiene una prescripción inactiva</h2></td></tr>"
+            $('#tablaPrescripcionInactiva').append(filaTabla);
+          }else{
+            for(var i = 0; i < data.length; i++){
+              //Pinta la fila, si esta se encuentra activa o inactiva
+              if(data[i].estado == 0){
+                estadoColor = "rgb(255, 195, 195)";//verde
+              }else{
+                estadoColor = "rgb(162, 255, 156)";//rojo
+              }
+              filaTabla = "<tr style='background:"+estadoColor+";' >"+
+              "<td>"+data[i].fecha_prescripcion+"</td>"+
+              "<td>"+data[i].empleado+"</td>"+
+              "<td>"+data[i].medicamento+"</td>"+
+              "<td>"+data[i].via_administracion+"</td>"+
+              "<td>"+data[i].frecuencia+"</td>"+
+              "<td>"+data[i].aplicacion+"</td>"+
+              "<td>"+data[i].fecha_inicio+"</td>"+
+              "<td>"+data[i].fecha_fin+"</td>"+
+              "<td>"+
+
+              "</td>"+
+              "</tr>";
+              $('#tablaPrescripcionInactiva').append(filaTabla);
+            }
+          }
+        },error: function (e) {
+            bootbox.hideAll();
+            msj_error_serve();
+        }
+      });
+    });
+
     /*Muestra el historial de prescripciones de un paciente */
     $('#btnExpedientePrescripcion').click(function(){
-      $('#tablaNotasTriage').attr("hidden","true");
+      $('#tablaNotasTriage').attr("hidden","false");
+      $('#acordeon').removeAttr("hidden");
       $('#cabezaTablaExpediente').empty();
       $('#cuerpoTablaExpediente').empty();
       var cabezaTabla = ""
       var filaTabla = "";
       var paciente = $('#folioPaciente').val();
+
       $.ajax({
         url: base_url+"Sections/Documentos/AjaxHistorialPrescripcion",
         type: 'GET',
         dataType: 'json',
-        data:{'paciente':paciente},
+        data:{'paciente':paciente,'estado': 1},
         success: function(data, textStatus, jqXHR){
           cabezaTabla = "<tr>"+
           "<th>Fecha</th>"+
@@ -28,38 +79,48 @@ $(document).ready(function (e){
           "<th>Aplicacion</th>"+
           "<th>Inicio</th>"+
           "<th>Fin</th>"+
-          "<th>Estado</th>"+
-          "<th>Nota</th>"+
+          "<th>Acción</th>"+
           "</tr>";
           $('#cabezaTablaExpediente').append(cabezaTabla);
           var estadoColor = "";
-          for(var i = 0; i < data.length; i++){
-            //Pinta la fila, si esta se encuentra activa o inactiva
-            if(data[i].estado == 0){
-              estadoColor = "rgb(255, 195, 195)";//verde
-            }else{
-              estadoColor = "rgb(162, 255, 156)";//rojo
-            }
-            filaTabla = "<tr style='background:"+estadoColor+";' >"+
-            "<td>"+data[i].fecha_prescripcion+"</td>"+
-            "<td>"+data[i].empleado+"</td>"+
-            "<td>"+data[i].medicamento+"</td>"+
-            "<td>"+data[i].via_administracion+"</td>"+
-            "<td>"+data[i].frecuencia+"</td>"+
-            "<td>"+data[i].aplicacion+"</td>"+
-            "<td>"+data[i].fecha_inicio+"</td>"+
-            "<td>"+data[i].fecha_fin+"</td>"+
-            "<td>"+data[i].estado+"</td>"+
-            "<td>"+data[i].notas_id+"</td>"+
-            "</tr>";
+
+          if(data.length == 0){
+            filaTabla = "<tr><td colspan='10' ><h2>El paciente no cuenta con una prescripcion</h2></td></tr>"
             $('#cuerpoTablaExpediente').append(filaTabla);
+          }else{
+            for(var i = 0; i < data.length; i++){
+              //Pinta la fila, si esta se encuentra activa o inactiva
+              if(data[i].estado == 0){
+                estadoColor = "rgb(255, 195, 195)";//verde
+              }else{
+                estadoColor = "rgb(162, 255, 156)";//rojo
+              }
+              filaTabla = "<tr style='background:"+estadoColor+";' >"+
+              "<td>"+data[i].fecha_prescripcion+"</td>"+
+              "<td>"+data[i].empleado+"</td>"+
+              "<td>"+data[i].medicamento+"</td>"+
+              "<td>"+data[i].via_administracion+"</td>"+
+              "<td>"+data[i].frecuencia+"</td>"+
+              "<td>"+data[i].aplicacion+"</td>"+
+              "<td>"+data[i].fecha_inicio+"</td>"+
+              "<td>"+data[i].fecha_fin+"</td>"+
+              "<td><i class='fa fa-pencil icono-accion pointer' title='Modificar Prescripción'  onclick='' </i>"+
+              "<i class='glyphicon glyphicon-remove pointer' title='Canselar Prescripción' onclick='' </i>"+
+              "</td>"+
+              "</tr>";
+              $('#cuerpoTablaExpediente').append(filaTabla);
+            }
+
           }
+
+
         },error: function (e) {
             bootbox.hideAll();
             msj_error_serve();
         }
       })
     });
+    $
 
     $('#input_search').focus()
     $('#input_search').keyup(function (e){

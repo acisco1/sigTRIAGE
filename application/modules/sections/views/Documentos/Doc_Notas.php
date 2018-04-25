@@ -467,8 +467,29 @@
                                     <div class="form-group">
                                         <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4>
                                             <div>
-                                                <label><b>a) Ayuno:</b></label>
-                                                <input class="form-control" type="text" name="nota_ayuno" placeholder="Instrucciones de ayuno" value="<?=$Nota['nota_ayuno']?>"></div><br>
+                                              <label class="radio-inline md-check">
+                                                <input type="radio" class="has-value" name="ayuno"><i class="red"></i>Ayuno
+                                              </label>
+                                              <label class="radio-inline md-check">
+                                                <input type="radio" class="has-value" name="ayuno"><i class="red"></i>Dieta
+                                              </label>
+                                              <label for=""><select name="" id="">
+                                                  <option value="1">IB - Normal</option>
+                                                  <option value="2">IIA - Blanda</option>
+                                                  <option value="3">IIB - Astringente</option>
+                                                  <option value="4">III - Diabetica</option>
+                                                  <option value="5">IV - Hiposodica</option>
+                                                  <option value="6">V - Hipograsa</option>
+                                                  <option value="7">VI - Liquida clara</option>
+                                                  <option value="8">VIA - Liquida general</option>
+                                                  <option value="9">VIB - Licuada por sonda</option>
+                                                  <option value="10">VIB - Licuada por sonda artesanal</option>
+                                                  <option value="13">VII - Papilla</option>
+                                                  <option value="12">VIII - Epecial</option>
+                                                  <option value="14">Otros</option>
+                                                </select></label>
+                                                <input class="form-control" type="text" name="nota_ayuno" placeholder="Instrucciones de ayuno" value="<?=$Nota['nota_ayuno']?>">
+                                              </div><br>
                                             <div>
                                                 <label><b>b) Signos vitales y cuidados de enfermeria</b></label>
                                                 <input class="form-control" type="text" name="nota_svycuidados" placeholder="Instrucciones de signos vitales y cuidados de enfermeria" value="<?=$Nota['nota_svycuidados']?>">
@@ -485,9 +506,9 @@
                                             <div>
                                             <label><b>e) Prescripcion: </b></label>
                                             <!-- Panel con el historial de prescripciones -->
-                                            <div class="panel-group" id="accordion">
+                                            <div class="panel-group" id="acordeon">
                                                <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
-                                                 <h4 style="padding-left:5px"><a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                                 <h4 style="padding-left:5px"><a data-toggle="collapse" data-parent="#acordeon" href="#collapse1">
                                                  Historial prescripciones </a> Total: <?= count($Prescripcion) ?></h4>
                                                </div>
                                                <div id="collapse1" class="panel-collapse collapse" >
@@ -505,7 +526,7 @@
                                                          <th>Estado</th>
                                                        </tr>
                                                      </thead>
-                                                     <tbody id="">
+                                                     <tbody >
                                                        <?php
                                                         foreach($Prescripcion as $value){
                                                           if($value['estado'] == 1){
@@ -529,6 +550,11 @@
                                                    </table>
                                                </div>
                                             </div> <!-- Fin panel prescripciones -->
+
+
+
+
+
                                         <div class="row" id="contenedorFormularios">
                                         <input hidden type="text" id="nombreUsuario" value="<?=$Usuario[0]['empleado_nombre']?>"/>
                                         <input hidden type="text" id="servicioUsuario" value="<?=$Usuario[0]['empleado_servicio']?>"/>
@@ -558,7 +584,6 @@
                                                   <?php } ?>
                                               </select>
                                             </div>
-
                                         </div>
                                         <div hidden class="col-sm-2">
                                             <label><b>interaccion_roja</b></label>
@@ -570,7 +595,6 @@
                                                   <?php } ?>
                                               </select>
                                             </div>
-
                                         </div>
                                         <div class="col-sm-2">
                                             <label><b>Via Administración</b></label>
@@ -690,14 +714,9 @@
                                                                 <div class="modal-footer">
                                                                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="obtenerDatosPrescripcion()">Aceptar</button>
                                                                 </div>
-
                                                         </div>
                                                     </div>
                                                 </div>
-
-
-
-
                                             </div>
                                     </div>
 

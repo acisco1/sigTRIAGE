@@ -127,6 +127,7 @@ $margenBajo = "75mm";
             </div>
             <div style="position: absolute;top: 783px;left: 480px;width: 110px;font-size: 11px;text-align: center">
             <b>CEDULA</b><br><br>
+
             <?php foreach ($Residentes as $value){?>
                   <?=$value['cedulap_residente']?><br><br><br>
             <?php } ?>
@@ -206,39 +207,29 @@ $margenBajo = "75mm";
         <h5 style="margin-botton: -6px">ORDENES MEDICAS</h5>
         <?php if($Nota['nota_ayuno']!=''){?>
         AYUNO:<?=$Nota['nota_ayuno']?><br>
-        <?php }?>
+      <?php }?><br>
         <?php if($Nota['nota_svycuidados']!=''){?>
             ORDENES DE ENFERMERIA: <?=$Nota['nota_svycuidados']?><br>
-        <?php }?>
+        <?php }?><br>
         <?php if($Nota['nota_estadosalud']!=''){?>
-            CUIDADOS DE ENFEREMERIA<?=$Nota['nota_estadosalud']?><br>
-        <?php }?>
+            CUIDADOS DE ENFEREMERIA: <?=$Nota['nota_estadosalud']?><br>
+        <?php }?><br>
         <?php if($Nota['nota_solucionesp']!=''){?>
-            SOLUCIONES Y DIETA<?=$Nota['nota_solucionesp']?><br>
+            SOLUCIONES Y DIETA: <?=$Nota['nota_solucionesp']?><br>
         <?php }?>
-        <br>
-        <table>
-          <tr>
-            <td><strong>#</strong></td>
-            <td><strong>Medicamento</strong></td>
-            <td><strong>Via</strong></td>
-            <td><strong>Frecuencia</strong></td>
-            <td><strong>Aplicacion</strong></td>
-            <td><strong>Fecha Inicio</strong></td>
-            <td><strong>Fecha Fin</strong></td>
-          </tr>
+        <h5 style="margin-bottom: -6px">PRESCRIPCIONES:</h5>
           <?php for($x = 0; $x < count($Prescripcion); $x++){ ?>
-            <tr>
-              <td><?= $x+1 ?>.</td>
-              <td><?= $Prescripcion[$x]['medicamento'] ?></td>
-              <td><?= $Prescripcion[$x]['via_administracion'] ?></td>
-              <td><?= $Prescripcion[$x]['frecuencia'] ?></td>
-              <td><?= $Prescripcion[$x]['aplicacion'] ?></td>
-              <td><?= $Prescripcion[$x]['fecha_inicio'] ?></td>
-              <td><?= $Prescripcion[$x]['fecha_fin'] ?></td>
-            </tr>
+              <?= $x+1 ?>.-
+              <label style="">MEDICAMENTO: <?= $Prescripcion[$x]['medicamento'] ?></label><br>
+              <label style="margin-left:20px;">VIA: <?= $Prescripcion[$x]['via_administracion'] ?></label><br>
+              <label style="margin-left:20px;">FRECUENCIA: <?= $Prescripcion[$x]['frecuencia'] ?></label><br>
+              <label style="margin-left:20px;">HORARIO DE APLICACION: <?= $Prescripcion[$x]['aplicacion'] ?></label><br>
+              <label style="margin-left:20px;">INICIO TRATAMIENTO: <?= $Prescripcion[$x]['fecha_inicio'] ?></label><br>
+              <label style="margin-left:20px;">FIN TRATAMIENTO: <?= $Prescripcion[$x]['fecha_fin'] ?></label><br>
+              <label style="margin-left:20px;">TOTAL DIAS: <?= $Prescripcion[$x]['dias'] ?></label><br>
+              <label style="margin-left:20px;">OBSERVACIONES: <?= $Prescripcion[$x]['observacion'] ?></label><br><br>
           <?php } ?>
-        </table>
+
         <?php if($Nota['nota_interconsultas']!=''){?>
          <h5 style="margin-botton: -6px">INTERCONSULTAS</h5>
             <?=$Nota['nota_interconsulta']?>
