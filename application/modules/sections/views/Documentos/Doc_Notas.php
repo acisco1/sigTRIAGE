@@ -133,7 +133,7 @@
                                     <div class="form-group">
                                         <div class="input-group m-b">
                                             <span class="input-group-addon back-imss border-back-imss">SELECCIONAR TIPO DE NOTA</span>
-                                            <select name="notas_tipo" class="form-control" data-value="<?=$Nota['notas_tipo']?>" required>
+                                              <select name="notas_tipo" class="form-control" data-value="<?=$Nota['notas_tipo']?>" required>
                                                 <option value="" selected hidden>NOTAS</option>
                                                 <?php foreach ($Documentos as $value) {?>
                                                 <option value="<?=$value['doc_nombre']?>"><?=$value['doc_nombre']?></option>
@@ -464,47 +464,158 @@
                                         <h4><span class = "label back-imss border-back-imss">PRONÓSTICO(S)</span></h4>
                                         <textarea class="form-control" name="nota_pronosticos" rows="2" placeholder="Anote diagnóstico y problemas clinicos"><?=$Nota['nota_pronosticos']?></textarea>
                                 </div>
-                                    <div class="form-group">
+
                                         <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4>
-                                            <div>
-                                              <label class="radio-inline md-check">
-                                                <input type="radio" class="has-value" name="ayuno"><i class="red"></i>Ayuno
-                                              </label>
-                                              <label class="radio-inline md-check">
-                                                <input type="radio" class="has-value" name="ayuno"><i class="red"></i>Dieta
-                                              </label>
-                                              <label for=""><select name="" id="">
-                                                  <option value="1">IB - Normal</option>
-                                                  <option value="2">IIA - Blanda</option>
-                                                  <option value="3">IIB - Astringente</option>
-                                                  <option value="4">III - Diabetica</option>
-                                                  <option value="5">IV - Hiposodica</option>
-                                                  <option value="6">V - Hipograsa</option>
-                                                  <option value="7">VI - Liquida clara</option>
-                                                  <option value="8">VIA - Liquida general</option>
-                                                  <option value="9">VIB - Licuada por sonda</option>
-                                                  <option value="10">VIB - Licuada por sonda artesanal</option>
-                                                  <option value="13">VII - Papilla</option>
-                                                  <option value="12">VIII - Epecial</option>
-                                                  <option value="14">Otros</option>
-                                                </select></label>
-                                                <input class="form-control" type="text" name="nota_ayuno" placeholder="Instrucciones de ayuno" value="<?=$Nota['nota_ayuno']?>">
-                                              </div><br>
-                                            <div>
-                                                <label><b>b) Signos vitales y cuidados de enfermeria</b></label>
-                                                <input class="form-control" type="text" name="nota_svycuidados" placeholder="Instrucciones de signos vitales y cuidados de enfermeria" value="<?=$Nota['nota_svycuidados']?>">
+
+                                              <div class="col-sm-12" id="divNutricion" style="padding:0">
+                                                <div class="col-sm-2" style="padding:0" id="divRadioNutricion">
+                                                  <label><b>a) Instrucciones de nutricion:</b></label>
+                                                  <?php
+                                                  // Declara estado original del radio cuando se realiza nueva nota
+                                                  $checkAyuno = '';
+                                                  $checkDieta = '';
+                                                  $divSelectDietas = 'hidden';
+                                                  $select_dietas = '0';
+                                                  $otraDieta = '';
+                                                  $divOtraDieta = 'hidden';
+                                                  if($Nota['nota_nutricion'] == '0'){
+                                                    $checkAyuno = 'checked';
+                                                  }else if($Nota['nota_nutricion'] == '1' || $Nota['nota_nutricion'] == '2'
+                                                  || $Nota['nota_nutricion'] == '3'|| $Nota['nota_nutricion'] == '4'|| $Nota['nota_nutricion'] == '5'
+                                                  || $Nota['nota_nutricion'] == '6'|| $Nota['nota_nutricion'] == '7'|| $Nota['nota_nutricion'] == '8'
+                                                  || $Nota['nota_nutricion'] == '9'|| $Nota['nota_nutricion'] == '10'|| $Nota['nota_nutricion'] == '11'
+                                                  || $Nota['nota_nutricion'] == '12'){
+                                                    $checkDieta = 'checked';
+                                                    $divSelectDietas = '';
+                                                    $select_dietas = $Nota['nota_nutricion'];
+                                                  }else{
+                                                    $divSelectDietas = '';
+                                                    $checkDieta = 'checked';
+                                                    $divOtraDieta = '';
+                                                    $select_dietas = '13';
+                                                    $otraDieta = $Nota['nota_nutricion'];
+                                                  }
+                                                   ?>
+                                                  <div class="form-group radio">
+                                                    <label class="md-check">
+                                                      <input type="radio" class="has-value" value="0" id='radioAyuno' name="dieta" <?= $checkAyuno ?> ><i class="red"></i>Ayuno
+                                                    </label>
+                                                    <label class="md-check">
+                                                      <input type="radio" class="has-value" value="" id='radioDieta' name="dieta" <?= $checkDieta ?> ><i class="red"></i>Dieta
+                                                    </label>
+                                                  </div>
+
                                                 </div>
-                                                <br>
+                                                <div  id="divSelectDietas" class="col-sm-4"  <?= $divSelectDietas ?>>
+                                                  <div class="form-group">
+                                                    <label>Tipos de dieta:</label>
+                                                    <!-- El valor es numerico para distinguir si la opcion pertenece a los
+                                                         radios, selects o input -->
+                                                    <select name="tipoDieta" id="selectDietas" class="form-control" data-value="<?= $select_dietas ?>">
+                                                      <option value="0">Seleccionar Dieta</option>
+                                                      <option value="1">IB - Normal</option>
+                                                      <option value="2">IIA - Blanda</option>
+                                                      <option value="3">IIB - Astringente</option>
+                                                      <option value="4">III - Diabetica</option>
+                                                      <option value="5">IV - Hiposodica</option>
+                                                      <option value="6">V - Hipograsa</option>
+                                                      <option value="7">VI - Liquida clara</option>
+                                                      <option value="8">VIA - Liquida general</option>
+                                                      <option value="9">VIB - Licuada por sonda</option>
+                                                      <option value="10">VIB - Licuada por sonda artesanal</option>
+                                                      <option value="11">VII - Papilla</option>
+                                                      <option value="12">VIII - Epecial</option>
+                                                      <option value="13">Otros</option>
+                                                    </select>
+                                                  </div>
+                                                </div>
+                                                <div  id='divOtraDieta' class="col-sm-6" style="padding:0" <?= $divOtraDieta ?> >
+                                                  <div class="form-group">
+                                                    <label>Otra dieta:</label>
+                                                    <input type="text" class="form-control" name="otraDieta" value="<?= $otraDieta ?>" id="inputOtraDieta" placeholder="Otra dieta">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <?php
+                                                // Declara estado original del select cuando se realiza nueva nota
+                                                $select_signos = 0;
+                                                $otras_indicaciones = 'hidden';
+                                                // El estado de las variables cambia al realizar un cambio, esto para determinar si el valor corresponde al select o textarea
+                                                if($Nota['nota_svycuidados'] == '0' || $Nota['nota_svycuidados'] == '1' || $Nota['nota_svycuidados'] == '2' ){
+                                                  $select_signos = $Nota['nota_svycuidados'];
+                                                }else{
+                                                  $select_signos = "3";
+                                                  $otras_indicaciones = '';
+                                                }
+                                              ?>
+                                              <div class="col-sm-12" id="divSignos" style="padding:0">
+                                                <div class="col-sm-4 form-group" style="padding:0" id="divTomaSignos">
+                                                  <label><b>b) Toma de signos vitales: </b></label>
+                                                  <select  id="selectTomaSignos" class="form-control" data-value="<?= $select_signos ?>" name="tomaSignos">
+                                                    <option value="0">Toma de signos</option>
+                                                    <option value="1">Por turno</option>
+                                                    <option value="2">Cada 4 horas</option>
+                                                    <option value="3">Otros</option>
+                                                  </select>
+                                                </div>
+
+                                                <div id="divOtrasInidcacionesSignos"  <?= $otras_indicaciones ?>>
+                                                  <div class="col-sm-8 form-group" style="padding-right: 0">
+                                                  <label>Otras inidcaciones:</label>
+                                                  <input type="text" name="otrasIndicacionesSignos" class="form-control" placeholder="Otras indicaciones" value="<?=$Nota['nota_svycuidados']?>">
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-12" style="padding:0">
+                                                <div class="col-sm-12" style="padding:0" id="divCuidadosGenerales">
+                                                  <div class="form-group ">
+                                                    <label><b>c) Cuidades Generales de enfermeria:</b>
+                                                        <?php
+                                                        // Declara el estado original checkbox de cuidados generales de enfermeria
+                                                        $labelCheck = 'NO';
+                                                        $hiddenCheck = 'hidden';
+                                                        // Al editar, modifica el estado del checkbox
+                                                        if($Nota['nota_cgenfermeria'] == 1){
+                                                          $check_generales = 'checked';
+                                                          $labelCheck = 'SI';
+                                                          $hiddenCheck = '';
+                                                        }
+                                                        ?>
+                                                      <input type="checkbox" id="checkCuidadosGenerales" name="nota_cgenfermeria" value="1" <?= $check_generales ?> > -
+                                                      <label id="labelCheckCuidadosGenerales"><?= $labelCheck ?></label>
+                                                    </label>
+                                                    <ul id="listCuidadosGenerales" <?= $hiddenCheck ?> >
+                                                      <li>a. Estado neurológico</li>
+                                                      <li>b. Cama Con barandales</li>
+                                                      <li>c. Calificación del dolor</li>
+                                                      <li>d. Calificación de riesgo de caida</li>
+                                                      <li>e. Control de liquidos por turno</li>
+                                                      <li>f. Vigilar riesgo de ulceras por presión</li>
+                                                      <li>g. Aseo bucal</li>
+                                                      <li>h. Lavado de manos</li>
+                                                    </ul>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-12" id="divCuidadesEspeciales" style="padding:0">
+                                                <div class="col-sm-12" style="padding:0">
+                                                  <div class="form-group">
+                                                    <label><b>d) Cuidades especiales de enfermeria</b></label>
+                                                    <textarea class="form-control" name="nota_cuidadosenfermeria" placeholder="Cuidados especiales de enfermeria"><?=$Nota['nota_cuidadosenfermeria']?></textarea>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-12" id="divCuidadosGenerales" style="padding:0">
+                                                <div class="col-sm-12" style="padding:0">
+                                                  <div class="form-group">
+                                                    <label><b>e) Soluciones Parenterales</b></label>
+                                                    <textarea class="form-control" name="nota_solucionesp" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
+                                                  </div>
+                                                </div>
+                                              </div>
                                             <div>
-                                                <label><b>c) Indicaciones y cuidados de enfermeria</b></label>
-                                                <textarea class="form-control" name="nota_cuidadosenfermeria" placeholder="Cuidados especificos de enfermeria"><?=$Nota['nota_cuidadosenfermeria']?></textarea>
-                                            </div><br>
-                                            <div>
-                                            <label><b>d) Soluciones Parenterales</b></label>
-                                                <textarea class="form-control" name="nota_solucionesp" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
-                                            </div><br>
-                                            <div>
-                                            <label><b>e) Prescripcion: </b></label>
+
+                                            <label><b>f) Prescripcion: </b></label>
                                             <!-- Panel con el historial de prescripciones -->
                                             <div class="panel-group" id="acordeon">
                                                <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
@@ -681,56 +792,17 @@
                                           </tbody>
                                         </table>
                                         <br/>
-
-                                    </div>
-                                        </div>
-
-
-
-                                                <!-- Modal prescripcion -->
-                                                <div class="modal fade" id="myModal3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-lg" id="modalTamanioT">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header container-fluid">
-                                                                <div class="navbar-header">
-                                                                    <a class="navbar-brand modal-title" href="#">Prescripcion Medica</a>
-                                                                </div>
-                                                                <ul class="nav navbar-nav navbar-right">
-                                                                    <li>
-                                                                        <a class="btn btn-default btn-md" id="agregarFormulario">Agregar Prescripcion</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a class="close" data-dismiss="modal">&times;</a>
-                                                                    </li>
-                                                                </ul>
-
-                                                            </div>
-
-                                                            <div class="modal-body" data-spy="scroll" data-target="#myScrollspy" data-offset="20">
-
-                                                            </div> <!-- modal-body  de riesgo de trombosis-->
-                                                            <!-- Contenedor paral ingresar los nuevos formularios-->
-
-                                                                <div class="modal-footer">
-                                                                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="obtenerDatosPrescripcion()">Aceptar</button>
-                                                                </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </div>
-
                                 <div class="form-group">
                                     <h4><span class = "label back-imss border-back-imss">SOLICITUD DE INTERCONSULTAS</span></h4>
                                     <?php echo $nota_interconsulta; ?>
                                         <div class="input-group m-b">
-                                             <span class="input-group-addon back-imss border-back-imss"><i class="fa fa-user-plus"></i></span>
+                                          <span class="input-group-addon back-imss border-back-imss"><i class="fa fa-user-plus"></i></span>
                                               <select class="select2" multiple="" name="nota_interconsulta[]" id="nota_interconsulta" data-value="<?=$Nota['nota_interconsulta']?>" style="width: 100%">
                                                 <?php foreach ($Especialidades as $value) {?>
                                                 <option value="<?=$value['especialidad_id']?>"><?=$value['especialidad_nombre']?></option>
                                                 <?php }?>
-                                        </select>
-                                    </div>
+                                              </select>
+                                        </div>
                                 </div>
 
                     </div>
@@ -767,7 +839,6 @@
                             </div>
                         </div>
                          <div class="col-sm-12 medico_residente <?=$residentesForm ?> ">
-
                            <div class="form-group">
                             <div class="col-sm-8">
                               <label>Medico de Base:</label>
@@ -782,6 +853,7 @@
                                 </select>
                               <?php }
                               else{
+
                                 foreach ($MedicosBaseNota as $value) { ?>
                                     <input type="text" class="form-control" id="" name="nombre_residente[]" placeholder="Nombre(s)" value="<?= $value['empleado_nombre']?> <?= $value['empleado_apellidos']?>" <?=$bloquear ?> >
                                 <?php }
@@ -871,7 +943,7 @@ $(document).ready(function() {
                 window.top.close();
                 AbrirDocumentoMultiple(base_url+'Inicio/Documentos/GenerarNotas/'+response.notas_id+'?inputVia='+$('input[name=inputVia]').val(),'NOTAS');
             }
-        },'','No')
+        },'','No');
     });
 
 });

@@ -1,3 +1,4 @@
+var cont = 0;
 $(document).ready(function () {
 
 
@@ -105,7 +106,38 @@ $(document).ready(function () {
             }
         })
     })
-
+    $('#radioAyuno').click(function(){
+      $('#divSelectDietas').attr('hidden','true');
+      $('#divOtraDieta').attr('hidden','true');
+      $('#selectDietas').val('0');
+      $('#inputOtraDieta').val('');
+    });
+    $('#radioDieta').click(function(){
+      $('#divSelectDietas').removeAttr("hidden");
+    });
+    $('#selectDietas').change(function(){
+      if($('#selectDietas').val() == 13){
+        $('#divOtraDieta').removeAttr("hidden");
+      }else{
+        $('#divOtraDieta').attr("hidden",'true');
+      }
+    });
+    $('#selectTomaSignos').change(function(){
+      if( $(this).val() == '3' ){
+        $('#divOtrasInidcacionesSignos').removeAttr('hidden');
+      }else{
+        $('#divOtrasInidcacionesSignos').attr('hidden','true');
+      }
+    });
+    $('#checkCuidadosGenerales').change(function(){
+      if($(this).is(':checked')){
+        $('#listCuidadosGenerales').removeAttr('hidden');
+        $('#labelCheckCuidadosGenerales').text('SI');
+      }else{
+        $('#listCuidadosGenerales').attr('hidden', 'true');
+        $('#labelCheckCuidadosGenerales').text('NO');
+      }
+    });
     $('input[name=asistentesmedicas_incapacidad_am]').click(function (e){
         if($(this).val()=='Si'){
             $('input[name=asistentesmedicas_incapacidad_ga]').removeAttr('disabled');
@@ -188,8 +220,10 @@ $(document).ready(function () {
     $('input[name=hf_riesgocaida][value="'+$('input[name=hf_riesgocaida]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_eva][value="'+$('input[name=hf_eva]').data('value')+'"]').prop("checked",true);
 
-
-    $('select[name=hf_alta]').val($('select[name=hf_alta]').attr('data-value'))
+    // Toma el valor del 'data-value' y lo asigna en el select
+    $('select[name=tomaSignos]').val($('select[name=tomaSignos]').attr('data-value'));
+    $('select[name=tipoDieta]').val($('select[name=tipoDieta]').attr('data-value'));
+    $('select[name=hf_alta]').val($('select[name=hf_alta]').attr('data-value'));
     $('select[name=hf_alta]').click(function (e) {
         if($(this).val()=='Otros'){
             $('.hf_alta_otros').removeClass('hide');
@@ -601,16 +635,17 @@ $(document).ready(function () {
     $('input[name=residente][value="'+$('input[name=residente]').data('value')+'"]').prop("checked",true);
 
     /*Evento para agregar dinamicamento nuevos médicos residentes*/
-    var cont = 0;
+
     $("#add_otro_residente").click (function(e) {
         /*la varivable cont incrementa cada ves que se genera un nuevo médico residente
         la variable se concatena al identificador del campo con el proposito de tener distinguir cada uno
         en el momento de ser eliminados*/
-        cont += 1;
-        if(cont > 3){
+
+        if(cont >= 3){
           alert('La nota medica solo acepta maximo 3 medicos residentes');
         }
         else{
+          cont += 1;
           $("#medicoResidente").append('<div id=areaResidentes'+ cont +' class="col-sm-12 form-group">'+
           '<div class=col-sm-4 >'+
           '<input id="medico'+ cont +'" class="form-control"  type="text" required name="nombre_residente[]" placeholder="Nombre Residente">'+
@@ -648,6 +683,7 @@ $(document).ready(function () {
 });
 function quitarResidenteFormulario(residente){
   $('#areaResidentes'+residente).remove();
+  cont -= 1;
 }
 function calcular() {
   var tot = $('#puntos_rt');

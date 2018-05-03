@@ -174,15 +174,14 @@ $margenBajo = "75mm";
     <span style="text-align: justify">
         <?php if($Nota['nota_interrogatorio']!=''){?>
             <h5 style="margin-bottom: -6px">INTERROGATORIO</h5>
-            <?=$Nota['nota_interrogatorio']?><br>
+            <?=$Nota['nota_interrogatorio']?>
         <?php }?>
         <?php if($Nota['nota_exploracionf']!=''){?>
             <h5 style="margin-bottom: -6px">EXPLORACION FISICA</h5>
             <?=$Nota['nota_exploracionf']?><br>
         <?php }?>
         <?php if($Nota['nota_escala_glasgow']!=''){?>
-            <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW:</h5>
-            <?=$Nota['nota_escala_glasgow']?><br>
+            <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$Nota['nota_escala_glasgow']?> </h5>
         <?php }?>
         <?php if($Nota['nota_auxiliaresd']!=''){?>
             <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5>
@@ -200,27 +199,81 @@ $margenBajo = "75mm";
                <h5 style="margin-botton: -6px">PRONOSTICOS</h5>
                <?=$Nota['nota_pronosticos']?><br>
         <?php }?>
-        <?php if($Nota['nota_estadosalud']!=''){?>
-           <h5 style="margin-botton: -6px">ESTADO DE SALUD</h5>
-            <?=$Nota['nota_estadosalud']?><br>
-        <?php }?>
-        <h5 style="margin-botton: -6px">ORDENES MEDICAS</h5>
-        <?php if($Nota['nota_ayuno']!=''){?>
+        <?php if($Nota['nota_estadosalud']!=''){ ?>
+           <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
+        <?php } ?>
+        <h5 style="margin-botton: -6px">ORDENES MEDICAS:</h5>
+        <?php if($Nota['nota_ayuno']!=''){ ?>
         AYUNO:<?=$Nota['nota_ayuno']?><br>
-      <?php }?><br>
-        <?php if($Nota['nota_svycuidados']!=''){?>
-            ORDENES DE ENFERMERIA: <?=$Nota['nota_svycuidados']?><br>
-        <?php }?><br>
-        <?php if($Nota['nota_estadosalud']!=''){?>
-            CUIDADOS DE ENFEREMERIA: <?=$Nota['nota_estadosalud']?><br>
-        <?php }?><br>
-        <?php if($Nota['nota_solucionesp']!=''){?>
-            SOLUCIONES Y DIETA: <?=$Nota['nota_solucionesp']?><br>
-        <?php }?>
-        <h5 style="margin-bottom: -6px">PRESCRIPCIONES:</h5>
+        <?php } ?>
+
+        <?php if($Nota['nota_nutricion'] == '0') {
+          $nutricion = 'Ayuno';
+        }else if($Nota['nota_nutricion'] == '1'){
+          $nutricion = 'IB - Normal';
+        }else if($Nota['nota_nutricion'] == '2'){
+          $nutricion = 'IIA - Blanda';
+        }else if($Nota['nota_nutricion'] == '3'){
+          $nutricion = 'IIB - Astringente';
+        }else if($Nota['nota_nutricion'] == '4'){
+          $nutricion = 'III - Diabetica';
+        }else if($Nota['nota_nutricion'] == '5'){
+          $nutricion = 'IV - Hiposodica';
+        }else if($Nota['nota_nutricion'] == '6'){
+          $nutricion = 'V - Hipograsa';
+        }else if($Nota['nota_nutricion'] == '7'){
+          $nutricion = 'VI - Liquida clara';
+        }else if($Nota['nota_nutricion'] == '8'){
+          $nutricion = 'VIA - Liquida general';
+        }else if($Nota['nota_nutricion'] == '9'){
+          $nutricion = 'VIB - Licuada por sonda';
+        }else if($Nota['nota_nutricion'] == '10'){
+          $nutricion = 'VIB - Licuada por sonda artesanal';
+        }else if($Nota['nota_nutricion'] == '11'){
+          $nutricion = 'VII - Papilla';
+        }else if($Nota['nota_nutricion'] == '12'){
+          $nutricion = 'VIII - Epecial';
+        }else{
+          $nutricion = $Nota['nota_nutricion'];
+        }
+        ?>
+        NUTRICION: <?= $nutricion ?> <br><br>
+
+        <?php if($Nota['nota_svycuidados'] == '1'){
+          $toma_signos = 'Por turno';
+        }else if($Nota['nota_svycuidados'] == '2'){
+          $toma_signos = 'Cada 4 horas';
+        }else{
+          $toma_signos = $Nota['nota_svycuidados'];
+        }
+        ?>
+        TOMA DE SIGNOS: <?= $toma_signos ?> <br><br>
+
+        <?php if($Nota['nota_cgenfermeria'] == '1'){ ?>
+          CUIDADOS GENERALES:<br><br>
+          <label style="margin-left:20px;" >a. Estado neurológico</label><br>
+          <label style="margin-left:20px;" >b. Cama Con barandales</label><br>
+          <label style="margin-left:20px;" >c. Calificación del dolor</label><br>
+          <label style="margin-left:20px;" >d. Calificación de riesgo de caida</label><br>
+          <label style="margin-left:20px;" >e. Control de liquidos por turno</label><br>
+          <label style="margin-left:20px;" >f. Vigilar riesgo de ulceras por presión</label><br>
+          <label style="margin-left:20px;" >g. Aseo bucal</label><br>
+          <label style="margin-left:20px;" >h. Lavado de manos</label><br><br>
+        <?php }else{ ?>
+          CUIDADOS GENERALES: No hay<br><br>
+        <?php } ?>
+
+        CUIDADOS ESPECIALES: <?= $Nota['nota_cuidadosenfermeria'] ?><br><br>
+
+        SOLUCIONES PARENTERALES: <?= $Nota['nota_solucionesp'] ?><br>
+
+
+
+        <h5 style="margin-bottom: -6px">PRESCRIPCIONES:</h5><br>
           <?php for($x = 0; $x < count($Prescripcion); $x++){ ?>
               <?= $x+1 ?>.-
               <label style="">MEDICAMENTO: <?= $Prescripcion[$x]['medicamento'] ?></label><br>
+              <label style="margin-left:20px;">FECHA PRESCRIPCION: <?= $Prescripcion[$x]['fecha_prescripcion'] ?></label><br>
               <label style="margin-left:20px;">VIA: <?= $Prescripcion[$x]['via_administracion'] ?></label><br>
               <label style="margin-left:20px;">FRECUENCIA: <?= $Prescripcion[$x]['frecuencia'] ?></label><br>
               <label style="margin-left:20px;">HORARIO DE APLICACION: <?= $Prescripcion[$x]['aplicacion'] ?></label><br>

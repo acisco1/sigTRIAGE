@@ -786,8 +786,43 @@ class Documentos extends Config{
             'notas_medicotratante'=> $this->input->post('notas_medicotratante'),
             'triage_id'=> $this->input->post('triage_id')
         );
+
+        // Se toman los valores del formulario 'Instrucciones de nutricion'
+        $nota_nutricion = "";
+        $radio_nutricion = $this->input->post('dieta');
+        $select_nutricion = $this->input->post('tipoDieta');
+        $otros_nutricion = $this->input->post('otraDieta');
+        /* las siguiendes condiciones son para indexar el campo 'nota_nutricion'
+          de esta forma se conoce el origen del dato.*/
+
+        //Indica que el valor viene de una caja de texto
+        if($otros_nutricion != "" & $select_nutricion == 13){
+          $nota_nutricion = $otros_nutricion;
+        // Indica que el valor viene de un select
+        }else if($select_nutricion >= 1 || $select_nutricion <=12 ){
+          $nota_nutricion = $select_nutricion;
+        // Indica que el valor viene de un radio
+        }else if($radio_nutricion == 0){
+          $nota_nutricion = $radio_nutricion;
+        }
+
+
+        $select_signos = $this->input->post("tomaSignos");
+        $otros_signos = $this->input->post("otrasIndicacionesSignos");
+        $nota_svycuidados = $select_signos;
+        if($select_signos == "3"){
+          $nota_svycuidados = $otros_signos;
+        }
+
+        $nota_cgenfermeria = 1;
+        if($this->input->post("nota_cgenfermeria") != 1){
+          $nota_cgenfermeria = 0;
+        }
+
+
         if($this->input->post('accion')=='add'){
           $this->config_mdl->_insert('doc_notas',$dataNotas);
+
           for($i = 0; $i < count($this->input->post('nombre_residente')); $i++){
             $datosResidente = array(
               'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
@@ -795,10 +830,12 @@ class Documentos extends Config{
               'apellido_residente' => $this->input->post("apellido_residente[$i]"),
               'cedulap_residente' => $this->input->post("cedula_residente[$i]")
             );
+
             if(count($datosResidente) > 0){
                 $this->config_mdl->_insert('um_notas_residentes',$datosResidente);
             }
           }
+
 
             $sqlMax= $this->config_mdl->_get_last_id('doc_notas','notas_id');
             $this->config_mdl->_insert('doc_nota',array(
@@ -814,8 +851,9 @@ class Documentos extends Config{
                 'nota_diagnostico'=> $this->input->post('nota_diagnostico'),
                 'nota_pronosticos'=> $this->input->post('nota_pronosticos'),
                 'nota_estadosalud'=> $this->input->post('nota_estadosalud'),
-                'nota_ayuno'=> $this->input->post('nota_ayuno'),
-                'nota_svycuidados'=> $this->input->post('nota_svycuidados'),
+                'nota_nutricion'=> $nota_nutricion,
+                'nota_svycuidados'=> $nota_svycuidados,
+                'nota_cgenfermeria' => $nota_cgenfermeria,
                 'nota_cuidadosenfermeria'=> $this->input->post('nota_cuidadosenfermeria'),
                 'nota_solucionesp'=> $this->input->post('nota_solucionesp'),
                 'nota_medicamentos'=> $this->input->post('nota_medicamentos'),
@@ -873,8 +911,9 @@ class Documentos extends Config{
                 'nota_diagnostico'=> $this->input->post('nota_diagnostico'),
                 'nota_pronosticos'=> $this->input->post('nota_pronosticos'),
                 'nota_estadosalud'=> $this->input->post('nota_estadosalud'),
-                'nota_ayuno'=> $this->input->post('nota_ayuno'),
-                'nota_svycuidados'=> $this->input->post('nota_svycuidados'),
+                'nota_nutricion'=> $nota_nutricion,
+                'nota_svycuidados'=> $nota_svycuidados,
+                'nota_cgenfermeria' => $nota_cgenfermeria,
                 'nota_cuidadosenfermeria'=> $this->input->post('nota_cuidadosenfermeria'),
                 'nota_solucionesp'=> $this->input->post('nota_solucionesp'),
                 'nota_medicamentos'=> $this->input->post('nota_medicamentos'),
@@ -928,7 +967,7 @@ class Documentos extends Config{
             }
         }
 
-        $this->setOutput(array('accion'=>'1','notas_id'=>$this->config_mdl->_get_last_id('doc_notas','notas_id')));
+        $this->setOutput(array('accion'=>'1','notas_id'=>$this->config_mdl->_get_last_id('doc_notas','notas_id') ));
     }
     public function TarjetaDeIdentificacion($Paciente) {
         $sql['info']= $this->config_mdl->sqlGetDataCondition('os_tarjeta_identificacion',array(
