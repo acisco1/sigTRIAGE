@@ -276,6 +276,11 @@ class Documentos extends Config{
         $sql['Documentos']= $this->config_mdl->_get_data_condition('pc_documentos',array(
             'doc_nombre'=>'Hoja Frontal'
         ));
+        $sql['Medicamentos'] = $this->config_mdl->_query("SELECT medicamento_id,
+                                                                 CONCAT(medicamento,' ',gramaje)medicamento,
+                                                                 interaccion_amarilla,interaccion_roja
+                                                          FROM catalogo_medicamentos");
+        $sql['Vias'] = array(IV,VO,IT,Enema,IM,Coliris,SC,Rectal,SB,IP,Tupilco,ID,Inhalatoria,Nasal,Otorrino,Ocular);
         $this->load->view('Documentos/HojaInicialAbierto',$sql);
     }
     public function AjaxHojaInicialAbierto() {
@@ -764,6 +769,7 @@ class Documentos extends Config{
     }
     /*Funcion para insertar el estado del paciente en la nota medica o editarla*/
     public function AjaxNotas() {
+      $id_nota = '';
       foreach ($this->input->post('nota_interconsulta') as $interconsulta_select) {
               $interconsulta.=$interconsulta_select.',';
       }
@@ -821,8 +827,9 @@ class Documentos extends Config{
 
 
         if($this->input->post('accion')=='add'){
-          $this->config_mdl->_insert('doc_notas',$dataNotas);
 
+          $this->config_mdl->_insert('doc_notas',$dataNotas);
+          $id_nota = $this->config_mdl->_get_last_id('doc_notas','notas_id');
           for($i = 0; $i < count($this->input->post('nombre_residente')); $i++){
             $datosResidente = array(
               'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
@@ -893,11 +900,13 @@ class Documentos extends Config{
             }
             $MaxNota=$sqlMax;
         }else{
+
             $this->config_mdl->_update_data('doc_notas',array(
                 'notas_medicotratante'=> $this->input->post('notas_medicotratante'),
             ),array(
                 'notas_id'=> $this->input->post('notas_id')
             ));
+            $id_nota = $this->input->post('notas_id');
             $this->config_mdl->_update_data('doc_nota',array(
                 'nota_motivoInterconsulta' => $this->input->post('nota_motivoInterconsulta'),
                 'nota_interrogatorio'=> $this->input->post('nota_interrogatorio'),
@@ -967,7 +976,7 @@ class Documentos extends Config{
             }
         }
 
-        $this->setOutput(array('accion'=>'1','notas_id'=>$this->config_mdl->_get_last_id('doc_notas','notas_id') ));
+        $this->setOutput(array('accion'=>'1','notas_id'=>$id_nota ));
     }
     public function TarjetaDeIdentificacion($Paciente) {
         $sql['info']= $this->config_mdl->sqlGetDataCondition('os_tarjeta_identificacion',array(

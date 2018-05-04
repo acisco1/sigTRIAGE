@@ -28,7 +28,7 @@
             }
 
             /*    .panel {
-            /* for text on pannel 
+            /* for text on pannel
             margin-top: 27px !important;
             } */
 
@@ -50,6 +50,19 @@
                 #modalTamanioG {
                     width: 67% !important;
                 }
+                td,th{
+                  text-align: center;
+                  border-bottom: 1px solid #ddd;
+                  color: black;
+                }
+                .label-input{
+                  text-align: center;
+                  border:none;
+                  background:none;
+                  margin:0;
+                  outline:0;
+                  width: 100%;
+                }
             </style>
                 <?php if($SignosVitales['sv_ta']==''){?>
                 <div class="row " style="margin-top: -10px;padding: 16px;">
@@ -63,30 +76,30 @@
                 <div class="row " style="margin-top: -30px;padding: 16px;">
                     <div class="col-md-12 col-centered " style="padding: 0px;margin-bottom: -7px;">
                         <h6 style="font-size: 8px;text-align: right">
-                            FECHA Y HORA DE REGISTRO: 
+                            FECHA Y HORA DE REGISTRO:
                             <b>
                                 <span style="font-size: 12px">
                                 <?=$info['triage_horacero_f']?> <?=$info['triage_horacero_h']?>
                                 </span>
                             </b>
                         </h6>
-                    </div>  
+                    </div>
                     <div class="panel-heading p teal-900 back-imss" style="padding-bottom: 6px;">
-                        <span style="font-size: 18px;font-weight: 500;text-transform: uppercase">  
+                        <span style="font-size: 18px;font-weight: 500;text-transform: uppercase">
                             <div class="row" style="margin-top: -20px;">
                                 <div style="position: relative">
                                     <div style="top: 4px;margin-left: -1px;position: absolute;height: 80px;width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
                                 </div>
                                 <div class="col-md-10" style="padding-left: 40px">
                                     <h4>
-                                        
+
                                         <b>PACIENTE:  <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?></b>
                                     </h4>
                                     <h5>
                                         <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
                                     </h5>
                                     <h5 style="margin-top: -5px;text-transform: uppercase">
-                                        <?php 
+                                        <?php
                                             if($info['triage_fecha_nac']!=''){
                                                 $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
                                                 if($fecha->y<15){
@@ -107,7 +120,7 @@
                                         <b>EDAD</b>
                                     </h5>
                                     <h3 style="margin-top: -10px">
-                                        <?php 
+                                        <?php
                                         if($info['triage_fecha_nac']!=''){
                                             $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
                                             echo $fecha->y.' <span style="font-size:20px"><b>Años</b></span>';
@@ -122,8 +135,8 @@
                     </div>
                 </div>
                 <?php }?>
-                
-                <div class="panel panel-default " style="margin-top: -16px">                    
+
+                <div class="panel panel-default " style="margin-top: -16px">
                     <div class="col-md-2 text-center back-imss" style="padding-left: 0px;padding: 5px;">
                         <h5 class=""><b>P.A</b></h5>
                         <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?></h4>
@@ -149,7 +162,7 @@
                         <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_dextrostix']?> (mg/dL)</h4>
                     </div>
                     <div class="panel-body b-b b-light">
-                        <div class="card-body" style="padding: 20px 0px;">     
+                        <div class="card-body" style="padding: 20px 0px;">
                             <form class="guardar-solicitud-hi-abierto" style="margin-top: 45px" oninput="x.value=parseInt(hf_eva.value)">
                                 <div class="row" >
                                     <div class="col-md-12 hide">
@@ -178,10 +191,10 @@
                                         <div class="form-group">
                                             <h4><span class = "label back-imss border-back-imss">EXPLORACIÓN FISICA</span></h4>
                                             <textarea class="form-control" rows="8" name="hf_exploracionfisica"><?=$hojafrontal[0]['hf_exploracionfisica']?></textarea>
-                                        </div>  
-                                    </div> 
-                                </div> 
-                    <div class="row">                                    
+                                        </div>
+                                    </div>
+                                </div>
+                    <div class="row">
                     <div class="col-md-3">
 <!-- Glasgow -->      <label><b>ESCALA DE GLASGOW</b></label>
                             <div class="input-group">
@@ -381,7 +394,7 @@
     </div>
 </div>
                 </div> <!-- cierre de fila de escalas medicas -->
-                <div class="row">    
+                <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
                            <h4><span class = "label back-imss border-back-imss">MÉTODOS AUXILARES DE DIAGNÓSTICO</span></h4>
@@ -390,50 +403,332 @@
                         <div class="form-group">
                            <h4><span class = "label back-imss border-back-imss">DIAGNÓSTICO DE INGRESO</span></h4>
                             <textarea class="form-control hf_textarea" rows="3" name="hf_diagnosticos_lechaga" required><?=$hojafrontal[0]['hf_diagnosticos_lechaga']?></textarea>
-                         </div>                 
+                         </div>
                         <div class="form-group">
                             <h4><span class = "label back-imss border-back-imss">DIAGNÓSTICOS SECUNDARIOS (COMORBILIDADES)</span></h4>
                             <i class="fa fa-plus-circle pointer plantilla-add icono-accion" onclick="AbrirDocumento(base_url+'Sections/Plantillas/SeleccionarContenido?plantilla=Diagnosticos&input=hf_diagnosticos&type=textarea')"></i>
-                            <textarea class="form-control hf_diagnosticos" rows="10" name="hf_diagnosticos"><?=$hojafrontal[0]['hf_diagnosticos']?></textarea>   
-                        </div>
-                        <div class="form-group">        
-                            <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4> 
-                                <div>
-                                  <label><b>a) Ayuno:</b></label>
-                                   <textarea class="form-control hf_ayuno" type="text" name="hf_ayuno" placeholder="Instrucciones de ayuno" rows="3"><?=$hojafrontal[0]['hf_ayuno']?></textarea>
-                                </div> 
-                                <br>
-                                <div>
-                                    <label><b>b) Signos vitales y cuidados de enfermeria</b></label>
-                                    <textarea class="form-control hf_signosycuidados" type="text" name="hf_signosycuidados" placeholder="Instrucciones de signos vitales y cuidados de enfermeria" rows="3"><?=$hojafrontal[0]['hf_signosycuidados']?></textarea>
-                                </div>
-                                <br>
-                                <div>
-                                    <label><b>c) Indicaciones y cuidados de enfermeria</b></label>
-                                    <textarea class="form-control hf_cuidadosenfermeria" name="hf_cuidadosenfermeria" placeholder="Cuidados especificos de enfermeria" rows="3"><?=$hojafrontal[0]['hf_cuidadosenfermeria']?></textarea>
-                                </div>
-                                <br>
-                                <div>
-                                    <label><b>d) Soluciones Parenterales</b></label>
-                                    <textarea class="form-control hf_solucionesp" name="hf_solucionesp" placeholder="Soluciones Parenterales" rows="3"><?=$hojafrontal[0]['hf_solucionesp']?></textarea>
-                                </div>
-                                <br>
-                                <div>
-                                    <label><b>e) Medicamentos</b></label>
-                                    <textarea class="form-control hf_medicamentos" name="hf_medicamentos" placeholder="Anote aquí los Medicamentos" rows="3"><?=$hojafrontal[0]['hf_medicamentos']?></textarea>
-                                </div>
-                        </div>                                                                             
-                        <div class="form-group">
-                            <h4><span class = "label back-imss border-back-imss">PRONÓSTICOS</span></h4>
-                            <!-- tabla de hf_indicaciones en --> 
-                            <textarea class="form-control" rows="3" name="hf_indicaciones"><?=$hojafrontal[0]['hf_indicaciones']?></textarea>
+                            <textarea class="form-control hf_diagnosticos" rows="10" name="hf_diagnosticos"><?=$hojafrontal[0]['hf_diagnosticos']?></textarea>
                         </div>
                         <div class="form-group">
-                            <h4><span class = "label back-imss border-back-imss">ESTADO DE SALUD</span></h4>
-                            <textarea class="form-control" rows="3" name="hf_interpretacion"><?=$hojafrontal[0]['hf_interpretacion']?></textarea>
+                            <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4>
+
+                              <div class="col-sm-12" id="divNutricion" style="padding:0">
+                                  <div class="col-sm-3" style="padding:0" id="divRadioNutricion">
+                                    <label><b>a) Instrucciones de nutricion:</b></label>
+                                    <?php
+                                    // Declara estado original del radio cuando se realiza nueva nota
+                                    $checkAyuno = '';
+                                    $checkDieta = '';
+                                    $divSelectDietas = 'hidden';
+                                    $select_dietas = '0';
+                                    $otraDieta = '';
+                                    $divOtraDieta = 'hidden';
+                                    if($_GET['a'] == 'edit'){
+                                      if($Nota['nota_nutricion'] == '0'){
+                                        $checkAyuno = 'checked';
+                                      }else if($Nota['nota_nutricion'] == '1' || $Nota['nota_nutricion'] == '2'
+                                      || $Nota['nota_nutricion'] == '3'|| $Nota['nota_nutricion'] == '4'|| $Nota['nota_nutricion'] == '5'
+                                      || $Nota['nota_nutricion'] == '6'|| $Nota['nota_nutricion'] == '7'|| $Nota['nota_nutricion'] == '8'
+                                      || $Nota['nota_nutricion'] == '9'|| $Nota['nota_nutricion'] == '10'|| $Nota['nota_nutricion'] == '11'
+                                      || $Nota['nota_nutricion'] == '12'){
+                                        $checkDieta = 'checked';
+                                        $divSelectDietas = '';
+                                        $select_dietas = $Nota['nota_nutricion'];
+                                      }else{
+                                        $divSelectDietas = '';
+                                        $checkDieta = 'checked';
+                                        $divOtraDieta = '';
+                                        $select_dietas = '13';
+                                        $otraDieta = $Nota['nota_nutricion'];
+                                      }
+                                    }
+                                     ?>
+                                    <div class="form-group radio">
+                                      <label class="md-check">
+                                        <input type="radio" class="has-value" value="0" id='radioAyuno' name="dieta" <?= $checkAyuno ?> ><i class="red"></i>Ayuno
+                                      </label>
+                                      <label class="md-check">
+                                        <input type="radio" class="has-value" value="" id='radioDieta' name="dieta" <?= $checkDieta ?> ><i class="red"></i>Dieta
+                                      </label>
+                                    </div>
+
+                                  </div>
+                                  <div  id="divSelectDietas" class="col-sm-3"  <?= $divSelectDietas ?>>
+                                    <div class="form-group">
+                                      <label>Tipos de dieta:</label>
+                                      <!-- El valor es numerico para distinguir si la opcion pertenece a los
+                                           radios, selects o input -->
+                                      <select name="tipoDieta" id="selectDietas" class="form-control" data-value="<?= $select_dietas ?>">
+                                        <option value="0">Seleccionar Dieta</option>
+                                        <option value="1">IB - Normal</option>
+                                        <option value="2">IIA - Blanda</option>
+                                        <option value="3">IIB - Astringente</option>
+                                        <option value="4">III - Diabetica</option>
+                                        <option value="5">IV - Hiposodica</option>
+                                        <option value="6">V - Hipograsa</option>
+                                        <option value="7">VI - Liquida clara</option>
+                                        <option value="8">VIA - Liquida general</option>
+                                        <option value="9">VIB - Licuada por sonda</option>
+                                        <option value="10">VIB - Licuada por sonda artesanal</option>
+                                        <option value="11">VII - Papilla</option>
+                                        <option value="12">VIII - Epecial</option>
+                                        <option value="13">Otros</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div  id='divOtraDieta' class="col-sm-6" style="padding:0" <?= $divOtraDieta ?> >
+                                    <div class="form-group">
+                                      <label>Otra dieta:</label>
+                                      <input type="text" class="form-control" name="otraDieta" value="<?= $otraDieta ?>" id="inputOtraDieta" placeholder="Otra dieta">
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <?php
+                                  // Declara estado original del select cuando se realiza nueva nota
+                                  $select_signos = 0;
+                                  $otras_indicaciones = 'hidden';
+                                  // El estado de las variables cambia al realizar un cambio, esto para determinar si el valor corresponde al select o textarea
+                                  if($_GET['a'] == 'edit'){
+                                    if($Nota['nota_svycuidados'] == '0' || $Nota['nota_svycuidados'] == '1' || $Nota['nota_svycuidados'] == '2' ){
+                                      $select_signos = $Nota['nota_svycuidados'];
+                                    }else{
+                                      $select_signos = "3";
+                                      $otras_indicaciones = '';
+                                    }
+                                  }
+                                ?>
+
+                                <div class="col-sm-12" id="divSignos" style="padding:0">
+                                  <div class="col-sm-4 form-group" style="padding:0" id="divTomaSignos">
+                                    <label><b>b) Toma de signos vitales: </b></label>
+                                    <select  id="selectTomaSignos" class="form-control" data-value="<?= $select_signos ?>" name="tomaSignos">
+                                      <option value="0">Toma de signos</option>
+                                      <option value="1">Por turno</option>
+                                      <option value="2">Cada 4 horas</option>
+                                      <option value="3">Otros</option>
+                                    </select>
+                                  </div>
+
+                                  <div id="divOtrasInidcacionesSignos"  <?= $otras_indicaciones ?>>
+                                    <div class="col-sm-8 form-group" style="padding-right: 0">
+                                    <label>Otras inidcaciones:</label>
+                                    <input type="text" name="otrasIndicacionesSignos" class="form-control" placeholder="Otras indicaciones" value="<?=$Nota['nota_svycuidados']?>">
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-sm-12" style="padding:0">
+                                  <div class="col-sm-12" style="padding:0" id="divCuidadosGenerales">
+                                    <div class="form-group ">
+                                      <label><b>c) Cuidades Generales de enfermeria:</b>
+                                          <?php
+                                          // Declara el estado original checkbox de cuidados generales de enfermeria
+                                          $labelCheck = 'NO';
+                                          $hiddenCheck = 'hidden';
+                                          // Al editar, modifica el estado del checkbox
+                                          if($Nota['nota_cgenfermeria'] == 1){
+                                            $check_generales = 'checked';
+                                            $labelCheck = 'SI';
+                                            $hiddenCheck = '';
+                                          }
+                                          ?>
+                                        <input type="checkbox" id="checkCuidadosGenerales" name="nota_cgenfermeria" value="1" <?= $check_generales ?> > -
+                                        <label id="labelCheckCuidadosGenerales"><?= $labelCheck ?></label>
+                                      </label>
+                                      <ul id="listCuidadosGenerales" <?= $hiddenCheck ?> >
+                                        <li>a. Estado neurológico</li>
+                                        <li>b. Cama Con barandales</li>
+                                        <li>c. Calificación del dolor</li>
+                                        <li>d. Calificación de riesgo de caida</li>
+                                        <li>e. Control de liquidos por turno</li>
+                                        <li>f. Vigilar riesgo de ulceras por presión</li>
+                                        <li>g. Aseo bucal</li>
+                                        <li>h. Lavado de manos</li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+                                <div class="col-sm-12" id="divCuidadesEspeciales" style="padding:0">
+                                  <div class="col-sm-12" style="padding:0">
+                                    <div class="form-group">
+                                      <label><b>d) Cuidades especiales de enfermeria</b></label>
+                                      <textarea class="form-control" name="nota_cuidadosenfermeria" placeholder="Cuidados especiales de enfermeria"><?=$Nota['nota_cuidadosenfermeria']?></textarea>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+                                <div class="col-sm-12" id="divCuidadosGenerales" style="padding:0">
+                                  <div class="col-sm-12" style="padding:0">
+                                    <div class="form-group">
+                                      <label><b>e) Soluciones Parenterales</b></label>
+                                      <textarea class="form-control" name="nota_solucionesp" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <label><b>f) Prescripcion</b></label>
+                                <div>
+                                  <div class="col-sm-12" style="padding:0">
+                                    <div class="col-sm-10" style="padding: 0;">
+                                      <div class="form-group">
+                                      <label><b>Medicamento</b>
+                                        <button type="button" class="back-imss" onclick="agregarPrescripcion()"> Nueva </button>
+                                        <button type="button" hidden id="btnActualizarPrescripcion" class="back-imss" onclick="actualizarPrescripcion()"> Actualizar </button>
+                                      </label>
+                                      <div id="borderMedicamento">
+                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
+                                            <option value="0">-Seleccionar-</option>
+                                            <?php foreach ($Medicamentos as $value) {?>
+                                            <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
+                                            <?php } ?>
+                                        </select>
+                                      </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-right: 0;">
+                                      <div class="form-group">
+                                        <label >Dosis</label>
+                                        <input type="text" class="form-control">
+                                      </div>
+                                    </div>
+                                    <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
+                                         el select se llena al seleccionar un medicamento -->
+                                    <div hidden class="col-sm-2" style="padding: 1;">
+                                        <label><b>interaccion_amarilla</b></label>
+                                        <div id="borderMedicamento">
+                                          <select id="interaccion_amarilla" class="" style="width: 100%" >
+                                              <option value="0">-Seleccionar-</option>
+                                              <?php foreach ($Medicamentos as $value) {?>
+                                              <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_amarilla']?></option>
+                                              <?php } ?>
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <div hidden class="col-sm-2" style="padding: 1;">
+                                        <label><b>interaccion_roja</b></label>
+                                        <div id="borderMedicamento">
+                                          <select id="interaccion_roja" class="" style="width: 100%" >
+                                              <option value="0">-Seleccionar-</option>
+                                              <?php foreach ($Medicamentos as $value) {?>
+                                              <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_roja']?></option>
+                                              <?php } ?>
+                                          </select>
+                                        </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12" style="padding:0">
+                                    <div class="col-sm-2" style="padding: 0;">
+                                        <label><b>Via Administración</b></label>
+                                        <div id="borderVia">
+                                        <select class="select2 selectpicker" id="via_administracion" style="width: 100%" >
+                                            <option value="0">-Seleccionar-</option>
+                                            <?php foreach ($Vias as $value) {?>
+                                            <option ><?=$value?></option>
+                                            <?php } ?>
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <label><b>Frecuencia</b></label>
+                                      <div id="borderFrecuencia">
+                                      <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
+                                        <option value="0">- Frecuencia -</option>
+                                        <option value="6 hrs">6 hrs</option>
+                                        <option value="8 hrs">8 hrs</option>
+                                        <option value="12 hrs">12 hrs</option>
+                                        <option value="24 hrs">24 hrs</option>
+                                        <option value="48 hrs">48 hrs</option>
+                                        <option value="72 hrs">72 hrs</option>
+                                      </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-3" style="padding-left: 0;">
+                                      <label><b>Aplicacion</b></label>
+                                      <div id="borderAplicacion">
+                                      <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-2" style="padding: 1; padding-left: 0;">
+                                      <label><b>Fecha Inicio</b></label>
+                                      <div id="borderFechaInicio">
+                                      <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-1" style="padding: 0;" >
+                                      <label><b>Dias</b></label>
+                                      <div id="borderDuracion">
+                                      <select id="duracion" onchange="mostrarFechaFin()" class="form-control ">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                      </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-2" style="padding-right: 0; padding-left: 1;">
+                                      <label><b>Fecha Fin</b></label>
+                                      <div id="borderFechaFin">
+                                      <input class="form-control" id="fechaFin"   name="" >
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+
+                                  <div class="col-sm-12" style="padding: 0;" >
+                                    <label><b>Observaciones para la Prescripcion</b></label>
+                                    <div id="borderFechaFin">
+                                    <input name="observacion_prescripcion" class="form-control" id="observacion"   name="" >
+                                    </div>
+                                  </div>
+                                  <table style="width:100%;">
+                                    <thead >
+                                      <tr>
+                                        <th hidden >ID</th>
+                                        <th>Medicamento</th>
+                                        <th>Via</th>
+                                        <th>Frecuencia</th>
+                                        <th>Aplicacion</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Dias</th>
+                                        <th>Fecha Fin</th>
+                                        <th>Opciones  </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tablaPrescripcion">
+                                    </tbody>
+                                  </table>
+                                  <br/>
+
+                                </div>
+
+                        </div>
+                        <div class="col-sm-12" style="padding: 0;">
+                          <div class="form-group">
+                              <h4><span class = "label back-imss border-back-imss">PRONÓSTICOS</span></h4>
+                              <!-- tabla de hf_indicaciones en -->
+                              <textarea class="form-control" rows="3" name="hf_indicaciones"><?=$hojafrontal[0]['hf_indicaciones']?></textarea>
+                          </div>
+                        </div>
+                        <div class="col-sm-12" style="padding: 0;">
+                          <div class="form-group">
+                              <h4><span class = "label back-imss border-back-imss">ESTADO DE SALUD</span></h4>
+                              <textarea class="form-control" rows="3" name="hf_interpretacion"><?=$hojafrontal[0]['hf_interpretacion']?></textarea>
+                          </div>
                         </div>
                     </div>
-            </div>        
+            </div>
             <div class="row">
                     <div class="col-md-6">
                         <?php if( $_GET['tipo']=='Consultorios'){?>
@@ -459,11 +754,11 @@
                         </div>
                     <div class="col-md-6 hf_alta_otros hide">
                         <div class="form-group">
-                            <label class="text-color-white"><b>ACCION</b></label>                         
+                            <label class="text-color-white"><b>ACCION</b></label>
                             <input type="text" name="hf_alta_otros" placeholder="Indique otra acción" value="<?=$hojafrontal[0]['hf_alta_otros']?>" class="form-control">
                         </div>
                     </div>
-                        
+
                     <div class="col-md-12">
                         <div class="form-group">
                            <h4><span class = "label back-imss border-back-imss">VALORACION POR:</span></h4>
@@ -474,11 +769,11 @@
                                    <option value="<?=$value['especialidad_id']?>"><?=$value['especialidad_nombre']?></option>
                                     <?php }?>
                                       </select>
-                                </div> -->                
+                                </div> -->
                             <input type="text" name="hf_interconsulta" placeholder="Indique si necesita interconsulta" value="<?=$hojafrontal[0]['hf_interconsulta']?>" class="form-control">
                         </div>
                     </div>
-                            
+
                     <div class="col-md-12">
                             <div class="form-group">
                                 <div class="row">
@@ -528,43 +823,43 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label><b>TELÉFONO (LADA)</b></label>
-                                                    <input type="text" value="<?=$DirEmpresa['directorio_telefono']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$DirEmpresa['directorio_telefono']?>" readonly="" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label><b>COLONIA</b></label>
-                                                    <input type="text" value="<?=$DirEmpresa['directorio_colonia']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$DirEmpresa['directorio_colonia']?>" readonly="" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label><b>HORA ENTRADA</b></label>
-                                                    <input type="text" value="<?=$Empresa['empresa_he']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$Empresa['empresa_he']?>" readonly="" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label><b>CÓDIGO POSTAL</b></label>
-                                                    <input type="text" value="<?=$DirEmpresa['directorio_cp']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$DirEmpresa['directorio_cp']?>" readonly="" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label><b>MUNICIPIO</b></label>
-                                                    <input type="text" value="<?=$DirEmpresa['directorio_municipio']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$DirEmpresa['directorio_municipio']?>" readonly="" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label><b>HORA SALIDA</b></label>
-                                                    <input type="text" value="<?=$Empresa['empresa_he']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$Empresa['empresa_he']?>" readonly="" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label><b>CALLE Y NÚMERO</b></label>
-                                                    <input type="text" value="<?=$DirEmpresa['directorio_cn']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$DirEmpresa['directorio_cn']?>" readonly="" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label><b>ESTADO</b></label>
-                                                    <input type="text" value="<?=$DirEmpresa['directorio_estado']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$DirEmpresa['directorio_estado']?>" readonly="" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label><b>DÍA DE DESCANCO P. AL ACCIDENTE</b></label>
-                                                    <input type="text" value="<?=$Empresa['empresa_he']?>" readonly="" class="form-control"> 
+                                                    <input type="text" value="<?=$Empresa['empresa_he']?>" readonly="" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -605,7 +900,7 @@
                                             <textarea name="asistentesmedicas_tratamientos" required="" maxlength="400" class="form-control  hojafrontal-info" rows="3"><?=$am[0]['asistentesmedicas_tratamientos']?></textarea>
                                         </div>
                                         <div class="form-group asistentesmedicas_omitir">
-                                            
+
                                             <div class="row">
                                                 <div class="col-md-8">
                                                     <label><b>SIGNOS Y SINTOMAS</b></label>
@@ -631,7 +926,7 @@
                                                                 <input type="radio" name="asistentesmedicas_ss_ie" checked="" data-value="<?=$am[0]['asistentesmedicas_ss_ie']?>" required="" value="No" class="has-value  hojafrontal-info">
                                                                 <i class="pink"></i>No
                                                             </label>
-                                                        </div>        
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -648,7 +943,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                         
+
                                         <div class="form-group asistentesmedicas_omitir">
                                             <label><b>ATENCIÓN MÉDICA PREVIA EXTRAINSTITUCIONAL</b></label>
                                             <textarea name="asistentesmedicas_am" maxlength="200" class="form-control hojafrontal-info" required="" rows="2"><?=$am[0]['asistentesmedicas_am']?></textarea>
@@ -678,7 +973,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    
+
                                     <?php }?>
                                     <div class="col-md-offset-6 col-md-3">
                                         <button type="button" class="btn btn-imms-cancel btn-block" onclick="window.top.close()">Cancelar</button>
@@ -690,9 +985,9 @@
                                         <input type="hidden" name="accion" value="<?=$_GET['a']?>">
                                         <input type="hidden" name="tipo" value="<?=$_GET['tipo']?>">
                                         <input type="hidden" name="ce_status" value="<?=$ce[0]['ce_status']?>">
-                                        <button class="btn back-imss btn-block" type="submit">Guardar</button>                     
+                                        <button class="btn back-imss btn-block" type="submit">Guardar</button>
                                     </div>
-                            
+
                             </form>
                         </div>
                     </div>
@@ -705,6 +1000,3 @@
 <script type="text/javascript" src="<?= base_url()?>assets/libs/light-bootstrap/shieldui-all.min.js"></script>
 <script src="<?= base_url('assets/js/sections/CIE10.js?md5='). md5(microtime())?>" type="text/javascript"></script>
 <script src="<?= base_url('assets/js/sections/Documentos.js?md5'). md5(microtime())?>" type="text/javascript"></script>
-
-
-

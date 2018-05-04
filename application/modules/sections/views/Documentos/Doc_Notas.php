@@ -468,7 +468,7 @@
                                         <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4>
 
                                               <div class="col-sm-12" id="divNutricion" style="padding:0">
-                                                <div class="col-sm-2" style="padding:0" id="divRadioNutricion">
+                                                <div class="col-sm-3" style="padding:0" id="divRadioNutricion">
                                                   <label><b>a) Instrucciones de nutricion:</b></label>
                                                   <?php
                                                   // Declara estado original del radio cuando se realiza nueva nota
@@ -478,24 +478,27 @@
                                                   $select_dietas = '0';
                                                   $otraDieta = '';
                                                   $divOtraDieta = 'hidden';
-                                                  if($Nota['nota_nutricion'] == '0'){
-                                                    $checkAyuno = 'checked';
-                                                  }else if($Nota['nota_nutricion'] == '1' || $Nota['nota_nutricion'] == '2'
-                                                  || $Nota['nota_nutricion'] == '3'|| $Nota['nota_nutricion'] == '4'|| $Nota['nota_nutricion'] == '5'
-                                                  || $Nota['nota_nutricion'] == '6'|| $Nota['nota_nutricion'] == '7'|| $Nota['nota_nutricion'] == '8'
-                                                  || $Nota['nota_nutricion'] == '9'|| $Nota['nota_nutricion'] == '10'|| $Nota['nota_nutricion'] == '11'
-                                                  || $Nota['nota_nutricion'] == '12'){
-                                                    $checkDieta = 'checked';
-                                                    $divSelectDietas = '';
-                                                    $select_dietas = $Nota['nota_nutricion'];
-                                                  }else{
-                                                    $divSelectDietas = '';
-                                                    $checkDieta = 'checked';
-                                                    $divOtraDieta = '';
-                                                    $select_dietas = '13';
-                                                    $otraDieta = $Nota['nota_nutricion'];
+                                                  if($_GET['a'] == 'edit'){
+                                                    if($Nota['nota_nutricion'] == '0'){
+                                                      $checkAyuno = 'checked';
+                                                    }else if($Nota['nota_nutricion'] == '1' || $Nota['nota_nutricion'] == '2'
+                                                    || $Nota['nota_nutricion'] == '3'|| $Nota['nota_nutricion'] == '4'|| $Nota['nota_nutricion'] == '5'
+                                                    || $Nota['nota_nutricion'] == '6'|| $Nota['nota_nutricion'] == '7'|| $Nota['nota_nutricion'] == '8'
+                                                    || $Nota['nota_nutricion'] == '9'|| $Nota['nota_nutricion'] == '10'|| $Nota['nota_nutricion'] == '11'
+                                                    || $Nota['nota_nutricion'] == '12'){
+                                                      $checkDieta = 'checked';
+                                                      $divSelectDietas = '';
+                                                      $select_dietas = $Nota['nota_nutricion'];
+                                                    }else{
+                                                      $divSelectDietas = '';
+                                                      $checkDieta = 'checked';
+                                                      $divOtraDieta = '';
+                                                      $select_dietas = '13';
+                                                      $otraDieta = $Nota['nota_nutricion'];
+                                                    }
                                                   }
-                                                   ?>
+                                                  ?>
+
                                                   <div class="form-group radio">
                                                     <label class="md-check">
                                                       <input type="radio" class="has-value" value="0" id='radioAyuno' name="dieta" <?= $checkAyuno ?> ><i class="red"></i>Ayuno
@@ -506,7 +509,7 @@
                                                   </div>
 
                                                 </div>
-                                                <div  id="divSelectDietas" class="col-sm-4"  <?= $divSelectDietas ?>>
+                                                <div  id="divSelectDietas" class="col-sm-3"  <?= $divSelectDietas ?>>
                                                   <div class="form-group">
                                                     <label>Tipos de dieta:</label>
                                                     <!-- El valor es numerico para distinguir si la opcion pertenece a los
@@ -541,12 +544,15 @@
                                                 $select_signos = 0;
                                                 $otras_indicaciones = 'hidden';
                                                 // El estado de las variables cambia al realizar un cambio, esto para determinar si el valor corresponde al select o textarea
-                                                if($Nota['nota_svycuidados'] == '0' || $Nota['nota_svycuidados'] == '1' || $Nota['nota_svycuidados'] == '2' ){
-                                                  $select_signos = $Nota['nota_svycuidados'];
-                                                }else{
-                                                  $select_signos = "3";
-                                                  $otras_indicaciones = '';
+                                                if($_GET['a'] == 'edit'){
+                                                  if($Nota['nota_svycuidados'] == '0' || $Nota['nota_svycuidados'] == '1' || $Nota['nota_svycuidados'] == '2' ){
+                                                    $select_signos = $Nota['nota_svycuidados'];
+                                                  }else{
+                                                    $select_signos = "3";
+                                                    $otras_indicaciones = '';
+                                                  }
                                                 }
+
                                               ?>
                                               <div class="col-sm-12" id="divSignos" style="padding:0">
                                                 <div class="col-sm-4 form-group" style="padding:0" id="divTomaSignos">
@@ -566,6 +572,7 @@
                                                   </div>
                                                 </div>
                                               </div>
+
                                               <div class="col-sm-12" style="padding:0">
                                                 <div class="col-sm-12" style="padding:0" id="divCuidadosGenerales">
                                                   <div class="form-group ">
@@ -597,6 +604,8 @@
                                                   </div>
                                                 </div>
                                               </div>
+
+
                                               <div class="col-sm-12" id="divCuidadesEspeciales" style="padding:0">
                                                 <div class="col-sm-12" style="padding:0">
                                                   <div class="form-group">
@@ -605,6 +614,8 @@
                                                   </div>
                                                 </div>
                                               </div>
+
+
                                               <div class="col-sm-12" id="divCuidadosGenerales" style="padding:0">
                                                 <div class="col-sm-12" style="padding:0">
                                                   <div class="form-group">
@@ -613,6 +624,7 @@
                                                   </div>
                                                 </div>
                                               </div>
+
                                             <div>
 
                                             <label><b>f) Prescripcion: </b></label>
@@ -671,20 +683,21 @@
                                         <input hidden type="text" id="servicioUsuario" value="<?=$Usuario[0]['empleado_servicio']?>"/>
                                         <input hidden type="text" id="indiceArrayPrescripcion" value=""/>
                                         <div class="col-sm-12">
-                                            <label><b>Medicamento</b>
-                                              <button type="button" class="back-imss" onclick="agregarPrescripcion()"> Nueva </button>
-                                              <button type="button" hidden id="btnActualizarPrescripcion" class="back-imss" onclick="actualizarPrescripcion()"> Actualizar </button>
-                                            </label>
-                                            <div id="borderMedicamento">
-                                              <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
-                                                  <option value="0">-Seleccionar-</option>
-                                                  <?php foreach ($Medicamentos as $value) {?>
-                                                  <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
-                                                  <?php } ?>
-                                              </select>
-                                            </div>
-
+                                          <label><b>Medicamento</b>
+                                            <button type="button" class="back-imss" onclick="agregarPrescripcion()"> Nueva </button>
+                                            <button type="button" hidden id="btnActualizarPrescripcion" class="back-imss" onclick="actualizarPrescripcion()"> Actualizar </button>
+                                          </label>
+                                          <div id="borderMedicamento">
+                                            <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
+                                                <option value="0">-Seleccionar-</option>
+                                                <?php foreach ($Medicamentos as $value) {?>
+                                                <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
+                                                <?php } ?>
+                                            </select>
+                                          </div>
                                         </div>
+                                        <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
+                                             el select se llena al seleccionar un medicamento -->
                                         <div hidden class="col-sm-2">
                                             <label><b>interaccion_amarilla</b></label>
                                             <div id="borderMedicamento">
@@ -707,6 +720,7 @@
                                               </select>
                                             </div>
                                         </div>
+
                                         <div class="col-sm-2">
                                             <label><b>Via Administración</b></label>
                                             <div id="borderVia">
@@ -718,7 +732,7 @@
                                             </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" style="padding-left: 0;">
                                           <label><b>Frecuencia</b></label>
                                           <div id="borderFrecuencia">
                                           <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
@@ -732,19 +746,19 @@
                                           </select>
                                           </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3" style="padding-left: 0;">
                                           <label><b>Aplicacion</b></label>
                                           <div id="borderAplicacion">
                                           <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
                                           </div>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" style="padding-left: 0;">
                                           <label><b>Fecha Inicio</b></label>
                                           <div id="borderFechaInicio">
                                           <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
                                           </div>
                                         </div>
-                                        <div class="col-sm-1" >
+                                        <div class="col-sm-1" style="padding-left: 0;" >
                                           <label><b>Dias</b></label>
                                           <div id="borderDuracion">
                                           <select id="duracion" onchange="mostrarFechaFin()" class="form-control ">
@@ -762,7 +776,7 @@
                                           </select>
                                           </div>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" style="padding-left: 0;">
                                           <label><b>Fecha Fin</b></label>
                                           <div id="borderFechaFin">
                                           <input class="form-control" id="fechaFin"   name="" >
