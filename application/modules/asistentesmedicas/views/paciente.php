@@ -191,7 +191,12 @@
                                   <div class="col-md-4">
                                       <div class="form-group" >
                                           <label style="text-transform: uppercase;font-weight: bold">Código Postal</label>
-                                          <input class="form-control" type="number" required name="directorio_cp" placeholder="" value="<?=$DirPaciente['directorio_cp']?>">
+                                          <div class="input-group">
+                                          <input class="form-control" required name="directorio_cp" placeholder="" value="<?=$DirPaciente['directorio_cp']?>">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-secondary" id="buscarCP" ><i class="glyphicon glyphicon-search"></i></button>
+                                          </span>
+                                          </div>
                                       </div>
                                   </div>
                                   <div class="col-md-4">
@@ -250,8 +255,13 @@
                                   </div>
                                   <div class="col-md-4">
                                       <div class="form-group" >
-                                          <label style="text-transform: uppercase;font-weight: bold">Teléfono del acompañante</label>
-                                          <input class="form-control" required type="number" name="pic_responsable_telefono" placeholder="" value="<?=$PINFO['pic_responsable_telefono']?>">
+                                          <label style="text-transform: uppercase;font-weight: bold">Teléfono Responsable:</label>
+                                          <div class="input-group">
+                                            <input class="form-control" type="number" name="pic_responsable_telefono" placeholder="" value="<?=$PINFO['pic_responsable_telefono']?>">
+                                            <span class="input-group-btn">
+                                              <button target="_blank"  data-original-title="Dar click cuando el responsable tenga el mismo número que el paciente" type="button" class="btn btn-secondary tip" id="btnTelefonoPaciente" ><i class="glyphicon glyphicon-earphone"></i></button>
+                                            </span>
+                                          </div>
                                       </div>
                                   </div>
 
@@ -269,13 +279,18 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label style="text-transform: uppercase;font-weight: bold">Médico Tratante</label>
-                                            <input class="form-control" name="pic_mt" required="" placeholder="" value="<?=$PINFO['pic_mt']?>">
+                                            <input class="form-control" list="list_medicos" name="pic_mt" required="" placeholder="" value="<?=$PINFO['pic_mt']?>">
+                                            <datalist id="list_medicos">
+                                              <?php foreach($MedicosTratantes as $value){ ?>
+                                                <option value="<?= $value['empleado_nombre'] ?> <?= $value['empleado_apellidos'] ?>"></option>
+                                              <?php } ?>
+                                            </datalist>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group" >
                                             <label style="text-transform: uppercase;font-weight: bold">Asistente Médica</label>
-                                            <input class="form-control" name="pic_am" required="" readonly="" placeholder="" value="<?=$empleado[0]['empleado_nombre'].' '.$empleado[0]['empleado_apellidos']?>">
+                                            <input class="form-control"  name="pic_am" required="" readonly="" placeholder="" value="<?=$empleado[0]['empleado_nombre'].' '.$empleado[0]['empleado_apellidos']?>">
                                         </div>
                                     </div>
                                 </div>

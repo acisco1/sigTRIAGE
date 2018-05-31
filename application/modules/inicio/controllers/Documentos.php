@@ -179,6 +179,15 @@ class Documentos extends Config{
             'sv_tipo'=>'Triage',
             'triage_id'=>$Paciente
         ))[0];
+
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT medicamento,gramaje, via_administracion,frecuencia,
+          aplicacion, fecha_inicio, dias, observacion,fecha_fin,dosis
+          FROM prescripcion INNER JOIN nm_hojafrontal_prescripcion ON
+          prescripcion.prescripcion_id = nm_hojafrontal_prescripcion.prescripcion_id
+          INNER JOIN catalogo_medicamentos
+	        ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+          WHERE triage_id = ".$Paciente);
+
         $this->load->view('documentos/HojaFrontal430128Abierto',$sql);
     }
     public function FormatosJefaAsistentesMedicas() {
@@ -655,9 +664,8 @@ class Documentos extends Config{
         ));
         $sql['Prescripcion'] = $this->config_mdl->_query(
           "SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
-          CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,
-          via_administracion,frecuencia,aplicacion, fecha_inicio, dias, observacion,
-          fecha_fin, estado,doc_notas.notas_id
+          CONCAT(medicamento,' ',gramaje)medicamento, dosis, via_administracion, frecuencia,
+          aplicacion, fecha_inicio, dias, observacion,fecha_fin, estado,doc_notas.notas_id
           FROM prescripcion
           INNER JOIN nm_notas_prescripcion
           	ON prescripcion.prescripcion_id = nm_notas_prescripcion.prescripcion_id

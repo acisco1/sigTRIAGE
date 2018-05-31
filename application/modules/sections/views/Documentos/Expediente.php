@@ -122,7 +122,9 @@
                             <div class="panel-group" id="acordeon" hidden>
                                <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
                                  <h5 style="padding-left:5px"><a id ='prescripcionInactiva' data-toggle="collapse" data-parent="#acordeon" href="#collapse1">
-                                 Prescripciones inactivas </a></h5>
+                                 Prescripciones inactivas:
+                                 <label id="total_prescripciones_inactivas"> <?= $Prescripcion[0]['total_prescripcion'] ?> </label>
+                                </a></h5>
                                </div>
                                <div id="collapse1" class="panel-collapse collapse" >
                                    <table style="width:100%;">
@@ -131,12 +133,12 @@
                                          <th>Fecha</th>
                                          <th>Médico</th>
                                          <th>Medicamento</th>
+                                         <th>Dosis</th>
                                          <th>Via</th>
                                          <th>Frecuencia</th>
                                          <th>Aplicacion</th>
                                          <th>Inicio</th>
                                          <th>Fin</th>
-                                         <th>Accion</th>
                                        </tr>
                                      </thead>
                                      <tbody id='tablaPrescripcionInactiva'>
@@ -232,7 +234,9 @@
                                         <td><?=$value['empleado_nombre']?> <?=$value['empleado_apellidos']?></td>
 
                                         <td>
-                                            <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>')" data-original-title="Generar <?=$value['notas_tipo']?>"></i>
+                                            <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>&indicaciones=0')" data-original-title="Generar <?=$value['notas_tipo']?>"></i>
+                                            &nbsp;
+                                            <i class="glyphicon glyphicon-list-alt icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>&indicaciones=1')" data-original-title="ORDENES MEDICAS <?=$value['notas_tipo']?>"></i>
                                             &nbsp;
                                             <?php if($value['empleado_id']==$_SESSION['UMAE_USER']){?>
                                                 <a onclick="AbrirVista(base_url+'Sections/Documentos/Notas/<?=$value['notas_id']?>/?a=edit&TipoNota=<?=$value['notas_tipo']?>&folio=<?=$this->uri->segment(4)?>&via=<?=$_GET['via']?>&doc_id=<?=$_GET['doc_id']?>&inputVia=<?=$_GET['tipo']?>',1100)">
@@ -281,6 +285,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!--Inico modal confirmacion -->
                 <div class="modal fade" id="ModalConfirmar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog" id="modalTamanioG">
@@ -338,7 +343,6 @@
                                                             <label class="md-check">
                                                             <input type="checkbox" class='sum' name="hf_glasgow_arespuesta" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_arespuesta']?>" class="has-value"><i class="indigo"></i>Ausencia de respuesta</label>
                                                         </div>
-
                                                     <div class="form-group">PUNTUACIÓN TOTAL: &nbsp;<input type="text" name="hf_escala_glasgow" size="3" data-value="<?=$Nota[0]['hf_escala_glasgow']?>" disable></div>
                                     </fieldset>
 
@@ -351,7 +355,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div><!-- Fin modal -->
 
 
 

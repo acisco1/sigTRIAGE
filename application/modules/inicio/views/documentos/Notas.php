@@ -1,9 +1,13 @@
 <?php ob_start();
 $margenBajo = "50mm";
-if(count($Residentes) > 0){
-$margenBajo = "75mm";
+if(count($Residentes) == 3){
+  $margenBajo = "78mm";
+}else if(count($Residentes) == 2){
+  $margenBajo = "71mm";
+}else if(count($Residentes) == 1){
+  $margenBajo = "60mm";
 }?>
-<page backtop="80mm" backbottom="<?=$margenBajo ?>" backleft="53" backright="6mm">
+<page backtop="80mm" backbottom="<?=$margenBajo ?>" backleft="49" backright="10mm">
     <page_header>
         <img src="<?=  base_url()?>assets/doc/DOC430128.png" style="position: absolute;width: 805px;margin-top: 0px;margin-left: -10px;">
         <div style="position: absolute;margin-top: 15px">
@@ -118,14 +122,21 @@ $margenBajo = "75mm";
             ?>
             <?php
             if(count($Residentes) > 0){ ?>
-            <div style="position: absolute;top: 783px;left: 215px;width: 240px;font-size: 11px;text-align: center">
+              <?php if(count($Residentes) == 3){
+                $top = 783;
+              }else if( count($Residentes) == 2){
+                $top = 813;
+              }else if( count($Residentes) == 1){
+                $top = 853;
+              }?>
+            <div style="position: absolute;top: <?=$top?>px;left: 215px;width: 240px;font-size: 11px;text-align: center">
             <b>NOMBRE MÉDICO RESIDENTE</b><br><br>
             <?php foreach ($Residentes as $value){?>
                   <?=$value['nombre_residente']?> <?=$value['apellido_residente']?><br><br><br>
             <?php } ?>
 
             </div>
-            <div style="position: absolute;top: 783px;left: 480px;width: 110px;font-size: 11px;text-align: center">
+            <div style="position: absolute;top: <?=$top?>px;left: 480px;width: 110px;font-size: 11px;text-align: center">
             <b>CEDULA</b><br><br>
 
             <?php foreach ($Residentes as $value){?>
@@ -133,7 +144,7 @@ $margenBajo = "75mm";
             <?php } ?>
 
             </div>
-            <div style="position: absolute;top: 783px;left: 590px;width: 110px;font-size: 11px;text-align: center">
+            <div style="position: absolute;top: <?=$top?>px;left: 590px;width: 110px;font-size: 11px;text-align: center">
             <b>FIRMA</b><br><br>
             <?php for($i = 0; $i < count($Residentes); $i++){ ?>
               _________________<br><br><br>
@@ -172,39 +183,58 @@ $margenBajo = "75mm";
     </page_header>
 
     <span style="text-align: justify">
-        <?php if($Nota['nota_interrogatorio']!=''){?>
-            <h5 style="margin-bottom: -6px">INTERROGATORIO</h5>
-            <?=$Nota['nota_interrogatorio']?>
-        <?php }?>
-        <?php if($Nota['nota_exploracionf']!=''){?>
-            <h5 style="margin-bottom: -6px">EXPLORACION FISICA</h5>
-            <?=$Nota['nota_exploracionf']?><br>
-        <?php }?>
-        <?php if($Nota['nota_escala_glasgow']!=''){?>
-            <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$Nota['nota_escala_glasgow']?> </h5>
-        <?php }?>
-        <?php if($Nota['nota_auxiliaresd']!=''){?>
-            <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5>
-            <?=$Nota['nota_auxiliaresd']?><br>
-        <?php }?>
-        <?php if($Nota['nota_procedimientos']!=''){?>
-            <h5 style="margin-bottom: -6px">PROCEDIMIENTOS REALIZADOS</h5>
-            <?=$Nota['nota_procedimientos']?><br>
-        <?php }?>
-        <?php if($Nota['nota_diagnostico']!=''){?>
-            <h5 style="margin-botton: -6px">ACTUALIZACIÓN DE DIAGNOSTICO(S) Y PROBLEMAS CLÍNICOS</h5>
-            <?=$Nota['nota_diagnostico']?><br>
-        <?php }?>
-        <?php if($Nota['nota_pronosticos']!=''){?>
-               <h5 style="margin-botton: -6px">PRONOSTICOS</h5>
-               <?=$Nota['nota_pronosticos']?><br>
-        <?php }?>
-        <?php if($Nota['nota_estadosalud']!=''){ ?>
-           <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
-        <?php } ?>
-        <h5 style="margin-botton: -6px">ORDENES MEDICAS:</h5>
-        <?php if($Nota['nota_ayuno']!=''){ ?>
-        AYUNO:<?=$Nota['nota_ayuno']?><br>
+        <?php if($_GET['indicaciones'] == 1){ ?>
+            <h4>INDICACIONES Y ORDENES MEDICAS</h4>
+        <?php }else{ ?> <!-- Informacion general de la nota evolucion -->
+          <?php if($Nota['nota_problema']!=''){?>
+              <h5 style="margin-bottom: -6px">PROBLEMA</h5>
+              <?=$Nota['nota_problema']?>
+          <?php }?>
+          <?php if($Nota['nota_interrogatorio']!=''){?>
+            <?php
+            // Asigna nombre subjetivo y objetivo si es Nota evolucion
+            // o interrogatorio y exploracion fisica si es interconsulta
+            $subjetivo = 'SUBJETIVO';
+            $objetivo = 'OBJETIVO';
+            if($Nota['notas_tipo'] == 'NOTA DE INTERCONSULTA'){
+              $subjetivo = 'INTERROGATORIO';
+              $objetivo = 'EXPLORACION FISICA';
+            } ?>
+
+              <h5 style="margin-bottom: -6px"><?= $subjetivo ?></h5>
+              <?= $Nota['nota_interrogatorio'] ?>
+          <?php }?>
+          <?php if($Nota['nota_exploracionf']!=''){?>
+              <h5 style="margin-bottom: -6px"><?= $objetivo ?></h5>
+              <?=$Nota['nota_exploracionf']?>
+          <?php }?>
+          <?php if($Nota['nota_analisis']!=''){?>
+              <h5 style="margin-bottom: -6px">ANALISIS</h5>
+              <?=$Nota['nota_analisis']?>
+          <?php }?>
+          <?php if($Nota['nota_escala_glasgow']!=''){?>
+              <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$Nota['nota_escala_glasgow']?> </h5>
+          <?php }?>
+          <?php if($Nota['nota_auxiliaresd']!=''){?>
+              <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5>
+              <?=$Nota['nota_auxiliaresd']?>
+          <?php }?>
+          <?php if($Nota['nota_procedimientos']!=''){?>
+              <h5 style="margin-bottom: -6px">PROCEDIMIENTOS REALIZADOS</h5>
+              <?=$Nota['nota_procedimientos']?>
+          <?php }?>
+          <?php if($Nota['nota_diagnostico']!=''){?>
+              <h5 style="margin-botton: -6px">ACTUALIZACIÓN DE DIAGNOSTICO(S) Y PROBLEMAS CLÍNICOS</h5>
+              <?=$Nota['nota_diagnostico']?>
+          <?php }?>
+          <?php if($Nota['nota_pronosticos']!=''){?>
+                 <h5 style="margin-botton: -6px">PRONOSTICOS</h5>
+                 <?=$Nota['nota_pronosticos']?>
+          <?php }?>
+          <?php if($Nota['nota_estadosalud']!=''){ ?>
+             <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
+          <?php } ?>
+          <h5 style="margin-botton: -6px">ORDENES MEDICAS:</h5>
         <?php } ?>
 
         <?php if($Nota['nota_nutricion'] == '0') {
@@ -247,7 +277,12 @@ $margenBajo = "75mm";
           $toma_signos = $Nota['nota_svycuidados'];
         }
         ?>
-        TOMA DE SIGNOS: <?= $toma_signos ?> <br><br>
+
+        <?php if($goma_signos != 0){ ?>
+          TOMA DE SIGNOS: <?= $toma_signos ?> <br><br>
+        <?php } ?>
+
+
 
         <?php if($Nota['nota_cgenfermeria'] == '1'){ ?>
           CUIDADOS GENERALES:<br><br>
@@ -259,29 +294,74 @@ $margenBajo = "75mm";
           <label style="margin-left:20px;" >f. Vigilar riesgo de ulceras por presión</label><br>
           <label style="margin-left:20px;" >g. Aseo bucal</label><br>
           <label style="margin-left:20px;" >h. Lavado de manos</label><br><br>
-        <?php }else{ ?>
-          CUIDADOS GENERALES: No hay<br><br>
         <?php } ?>
 
-        CUIDADOS ESPECIALES: <?= $Nota['nota_cuidadosenfermeria'] ?><br><br>
+        <?php if($Nota['nota_cuidadosenfermeria'] != ''){ ?>
+        CUIDADOS ESPECIALES:<br> <?= $Nota['nota_cuidadosenfermeria'] ?><br><br>
+        <?php } ?>
 
-        SOLUCIONES PARENTERALES: <?= $Nota['nota_solucionesp'] ?><br>
-
-
+        <?php if($Nota['nota_solucionesp'] != ''){ ?>
+        SOLUCIONES PARENTERALES:<br> <?= $Nota['nota_solucionesp'] ?><br>
+        <?php } ?>
 
         <h5 style="margin-bottom: -6px">PRESCRIPCIONES:</h5><br>
-          <?php for($x = 0; $x < count($Prescripcion); $x++){ ?>
-              <?= $x+1 ?>.-
-              <label style="">MEDICAMENTO: <?= $Prescripcion[$x]['medicamento'] ?></label><br>
-              <label style="margin-left:20px;">FECHA PRESCRIPCION: <?= $Prescripcion[$x]['fecha_prescripcion'] ?></label><br>
-              <label style="margin-left:20px;">VIA: <?= $Prescripcion[$x]['via_administracion'] ?></label><br>
-              <label style="margin-left:20px;">FRECUENCIA: <?= $Prescripcion[$x]['frecuencia'] ?></label><br>
-              <label style="margin-left:20px;">HORARIO DE APLICACION: <?= $Prescripcion[$x]['aplicacion'] ?></label><br>
-              <label style="margin-left:20px;">INICIO TRATAMIENTO: <?= $Prescripcion[$x]['fecha_inicio'] ?></label><br>
-              <label style="margin-left:20px;">FIN TRATAMIENTO: <?= $Prescripcion[$x]['fecha_fin'] ?></label><br>
-              <label style="margin-left:20px;">TOTAL DIAS: <?= $Prescripcion[$x]['dias'] ?></label><br>
-              <label style="margin-left:20px;">OBSERVACIONES: <?= $Prescripcion[$x]['observacion'] ?></label><br><br>
-          <?php } ?>
+        <?php if(count($Prescripcion) > 0){?>
+        <style media="screen">
+          td,th{
+            text-align: center;
+            width: 100%;
+          }
+          td{padding-bottom: 10px;}
+          th{
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            padding-left: 3px;
+            padding-right: 3px;
+           }
+        </style>
+        <table style="font-size:10;">
+          <tr>
+            <th style="text-align:left;">Medicamento</th>
+            <th>Dosis</th>
+            <th>Via</th>
+            <th>Frecuencia</th>
+            <th>Aplicacion</th>
+            <th>Fecha inicio</th>
+            <th>Tiempo transcurrido</th>
+          </tr>
+        <?php
+
+
+         for($x = 0; $x < count($Prescripcion); $x++){
+          $new_format_fecha_prescripcion = str_replace('/','-',$Prescripcion[$x]['fecha_inicio']);
+          $new_fecha_prescripcion = date('Y-m-d',strtotime($new_format_fecha_prescripcion));
+          $calcular_tiempo = Modules::run('Config/CalcularTiempoTranscurrido',
+          array('Tiempo1' => $new_fecha_prescripcion,
+                'Tiempo2' => $Nota['notas_fecha']
+               ));
+          $tiempo = $calcular_tiempo->format('%R%a');
+          if($tiempo < 0 ){
+            $tiempo = "Sin iniciar";
+          }else{
+            $tiempo = str_replace('+','',$tiempo)." dias";
+          }
+          ?>
+
+          <tr>
+            <td><?= $Prescripcion[$x]['medicamento']." ".$Prescripcion[$x]['gramaje'] ?></td>
+            <td><?= $Prescripcion[$x]['dosis'] ?></td>
+            <td><?= $Prescripcion[$x]['via_administracion'] ?></td>
+            <td><?= $Prescripcion[$x]['frecuencia'] ?></td>
+            <td><?= $Prescripcion[$x]['aplicacion'] ?></td>
+            <td><?= $Prescripcion[$x]['fecha_inicio'] ?></td>
+            <td><?= $tiempo ?></td>
+          </tr>
+          <tr>
+            <td colspan="8" style="text-align: left; border-bottom: 1px solid #ddd;">Observacion: <?= $Prescripcion[$x]['observacion'] ?></td>
+          </tr>
+        <?php } ?>
+        </table>
+        <?php }?>
 
         <?php if($Nota['nota_interconsultas']!=''){?>
          <h5 style="margin-botton: -6px">INTERCONSULTAS</h5>

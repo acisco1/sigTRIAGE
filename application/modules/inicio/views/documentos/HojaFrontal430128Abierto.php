@@ -1,5 +1,5 @@
 <?php ob_start(); ?>
-<page backtop="80mm" backbottom="50mm" backleft="56" backright="15mm">
+<page backtop="80mm" backbottom="50mm" backleft="48" backright="1mm">
     <page_header>
         <style>
             table, td, th {text-align: left;}
@@ -29,9 +29,9 @@
                     <b>UMF:</b> <?=$PINFO['pum_umf']?>/<?=$PINFO['pum_delegacion']?>
                 </p>
                 <p style="margin-top: -10px">
-                    <b><?=$hoja['hf_atencion']?></b> 
+                    <b><?=$hoja['hf_atencion']?></b>
                 </p>
-                
+
             </div>
             <div style="position: absolute;margin-left: 540px;margin-top: 95px;width: 270px;text-transform: uppercase;font-size: 11px;">
                 <p style="margin-top: -2px">
@@ -47,13 +47,13 @@
 
             <div style="position: absolute;margin-left: 437px;margin-top: 136px;width: 270px;text-transform: uppercase;font-size: 11px;">
              <?php if($PINFO['pia_procedencia_espontanea']=='No'){?>
-           
+
                 <p style="margin-top: -7px">
                     <b>4-30-8/NM:</b> <?=$PINFO['pia_procedencia_hospital']?> <?=$PINFO['pia_procedencia_hospital_num']?>
                 </p>
                  <?php }?>
             </div>
-            
+
             <div style="position: absolute;margin-left: 437px;margin-top: 154px;width: 270px;text-transform: uppercase;font-size: 11px;">
                 <p style="margin-top: -10px">
                    <b>DOMICILIO: </b> <?=$DirPaciente['directorio_cn']?>, <?=$DirPaciente['directorio_colonia']?>, <?=$DirPaciente['directorio_cp']?>, <?=$DirPaciente['directorio_municipio']?>, <?=$DirPaciente['directorio_estado']?> <B>TEL:</B><?=$DirPaciente['directorio_telefono']?>
@@ -61,7 +61,7 @@
             </div>
             <div style="position: absolute;margin-left: 437px;margin-top: 185px;width: 270px;text-transform: uppercase;font-size: 11px;">
                 <p style="margin-top: -1px">
-                    <b>FOLIO:</b> <?=$info['triage_id']?> 
+                    <b>FOLIO:</b> <?=$info['triage_id']?>
                 </p>
                 <p style="margin-top: -10px">
                     <b>HORA CERO:</b> <?=$info['triage_horacero_f']?> <?=$info['triage_horacero_h']?>
@@ -80,9 +80,9 @@
             <div style="position: absolute;margin-left: 437px;margin-top: 263px;width: 270px;text-transform: uppercase;font-size: 13px;">
                 <b>NOTA INICIAL</b>
             </div>
-            
+
             <div style="position: absolute;margin-top:229px;margin-left: 134px ">
-                <?php 
+                <?php
                 $sqlChoque=$this->config_mdl->_get_data_condition('os_choque_v2',array(
                     'triage_id'=>$info['triage_id']
                 ));
@@ -153,10 +153,11 @@
             <div style="margin-left: 280px;margin-top: 980px">
                 <barcode type="C128A" value="<?=$info['triage_id']?>" style="height: 40px;" ></barcode>
             </div>
-        </div>         
+        </div>
     </page_header>
-       <div style="position:absolute; left: -35px;margin-top: -10px; font-size: 13px;">
-        <span style="text-align: justify">
+
+       <div style="left: 1px; right: -2000px; margin-top: -15px; font-size: 12px;">
+        <span style="text-align: justify;">
         <?php if($hoja['hf_motivo']!=''){?>
         <h5 style="margin-bottom: -6px">MOTIVO DE CONSULTA</h5>
         <?=$hoja['hf_motivo']?>
@@ -187,28 +188,111 @@
         <?php }?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
         <?=$hoja['hf_diagnosticos_lechaga']?>
-        
+
         <?php if($hoja['hf_diagnosticos']!=''){?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
         <?=$hoja['hf_diagnosticos']?>
         <?php }?>
         <h5 style="margin-bottom: -6px">INDICACIONES Y ORDENES MÉDICAS</h5>
-        <?php if($hoja['hf_ayuno']!=''){?>
-        DIETA:<?=$hoja['hf_ayuno']?>
-        <?php }?>
-        <?php if($hoja['hf_signosycuidados']!=''){?>
-        SIGNOS:<?=$hoja['hf_signosycuidados']?><BR>
-        <?php }?>
+
+
+        <?php if($hoja['hf_nutricion'] == '0') {
+          $nutricion = 'Ayuno';
+        }else if($hoja['hf_nutricion'] == '1'){
+          $nutricion = 'IB - Normal';
+        }else if($hoja['hf_nutricion'] == '2'){
+          $nutricion = 'IIA - Blanda';
+        }else if($hoja['hf_nutricion'] == '3'){
+          $nutricion = 'IIB - Astringente';
+        }else if($hoja['hf_nutricion'] == '4'){
+          $nutricion = 'III - Diabetica';
+        }else if($hoja['hf_nutricion'] == '5'){
+          $nutricion = 'IV - Hiposodica';
+        }else if($hoja['hf_nutricion'] == '6'){
+          $nutricion = 'V - Hipograsa';
+        }else if($hoja['hf_nutricion'] == '7'){
+          $nutricion = 'VI - Liquida clara';
+        }else if($hoja['hf_nutricion'] == '8'){
+          $nutricion = 'VIA - Liquida general';
+        }else if($hoja['hf_nutricion'] == '9'){
+          $nutricion = 'VIB - Licuada por sonda';
+        }else if($hoja['hf_nutricion'] == '10'){
+          $nutricion = 'VIB - Licuada por sonda artesanal';
+        }else if($hoja['hf_nutricion'] == '11'){
+          $nutricion = 'VII - Papilla';
+        }else if($hoja['hf_nutricion'] == '12'){
+          $nutricion = 'VIII - Epecial';
+        }else{
+          $nutricion = $hoja['hf_nutricion'];
+        }
+        ?>
+        Dieta: <?= $nutricion ?> <br><br>
+
+
+
+        <?php
+        if($hoja['hf_signosycuidados'] == '1'){
+          $toma_signos = 'Por turno';
+        }else if($hoja['hf_signosycuidados'] == '2'){
+          $toma_signos = 'Cada 4 horas';
+        }else{
+          $toma_signos = $hoja['hf_signosycuidados'];
+        }
+        ?>
+        SIGNOS:<?=$toma_signos?><br><br>
+        <?php if($hoja['hf_cgenfermeria'] == '1'){ ?>
+          CUIDADOS GENERALES:<br><br>
+          <label style="margin-left:20px;" >a. Estado neurológico</label><br>
+          <label style="margin-left:20px;" >b. Cama Con barandales</label><br>
+          <label style="margin-left:20px;" >c. Calificación del dolor</label><br>
+          <label style="margin-left:20px;" >d. Calificación de riesgo de caida</label><br>
+          <label style="margin-left:20px;" >e. Control de liquidos por turno</label><br>
+          <label style="margin-left:20px;" >f. Vigilar riesgo de ulceras por presión</label><br>
+          <label style="margin-left:20px;" >g. Aseo bucal</label><br>
+          <label style="margin-left:20px;" >h. Lavado de manos</label><br><br>
+        <?php } ?>
         <?php if($hoja['hf_cuidadosenfermeria']!=''){?>
-        CUIDADOS ESPECIFICOS DE ENFERMERIA: <?=$hoja['hf_cuidadosenfermeria']?>
+        CUIDADOS ESPECIFICOS DE ENFERMERIA:<br> <?=$hoja['hf_cuidadosenfermeria']?><br><br>
         <?php }?>
         <?php if($hoja['hf_solucionesp']!=''){?>
-        SOLUCIONES PARENTERALES:<?=$hoja['hf_solucionesp']?>
+        SOLUCIONES PARENTERALES:<br><?=$hoja['hf_solucionesp']?>
         <?php }?>
-        <?php if($hoja['hf_medicamentos']!=''){?>
-        MEDICAMENTOS:<?=$hoja['hf_medicamentos']?>
+        <?php if(count($Prescripcion) > 0){?>
+        <br><br>MEDICAMENTOS:<br><br>
+        <style media="screen">
+          td,th{
+            text-align: center;
+          }
+        </style>
+        <table style="font-size:10;">
+          <tr>
+            <th style="text-align:left;">Medicamento</th>
+            <th>Dosis</th>
+            <th>Via</th>
+            <th>Frecuencia</th>
+            <th>Aplicacion</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Dias</th>
+          </tr>
+        <?php for($x = 0; $x < count($Prescripcion); $x++){ ?>
+          <tr>
+            <td style="text-align:left;"><?= $Prescripcion[$x]['medicamento']." ".$Prescripcion[$x]['gramaje'] ?></td>
+            <td><?= $Prescripcion[$x]['dosis'] ?></td>
+            <td style="width: 41px;"><?= $Prescripcion[$x]['via_administracion'] ?></td>
+            <td><?= $Prescripcion[$x]['frecuencia'] ?></td>
+            <td style="width: 60px;" ><?= $Prescripcion[$x]['aplicacion'] ?></td>
+            <td><?= $Prescripcion[$x]['fecha_inicio'] ?></td>
+            <td style="width: 50px; height:0px;"><?= $Prescripcion[$x]['fecha_fin'] ?></td>
+            <td><?= $Prescripcion[$x]['dias'] ?></td>
+          </tr>
+          <tr>
+            <td colspan="9" style="text-align: left; border-bottom: 1px solid #ddd;">Observacion: <?= $Prescripcion[$x]['observacion'] ?></td>
+          </tr>
+        <?php } ?>
+        </table>
         <?php }?>
-        <?php if($hoja['hf_indicaciones']!=''){?>  
+        <?php if($hoja['hf_indicaciones']!=''){?>
         <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
         <?=$hoja['hf_indicaciones']?>
         <?php }?>
@@ -227,7 +311,7 @@
 
     </page_footer>
 </page>
-<?php 
+<?php
     $html=  ob_get_clean();
     $pdf=new HTML2PDF('P','A4','fr','UTF-8');
     $pdf->writeHTML($html);

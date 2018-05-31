@@ -18,6 +18,15 @@
                 padding: 0 0.20em;
                 background: white;
               }
+              #acordeon_prescripciones_activas, #acordeon_prescripciones_canceladas{
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+              }
+              #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover{
+                background-color: rgba(0, 0, 0, 0.12);
+              }
           </style>
             <style type="text/css">
                 fieldset.scheduler-border {
@@ -208,16 +217,23 @@
                     <textarea class="form-control" name="nota_motivoInterconsulta" rows="2" placeholder="Anote el motivo de la interconsulta"><?=$Nota['nota_motivoInterconsulta']?></textarea>
                 </div>
                     <div class="col-sm-12" >
-                                <h4><span class = "label back-imss border-back-imss">EVOLUCION Y/O ACTUALIZACION DEL CUADRO CLINICO</span></h4>
-
-                                    <div class="form-group">
-                                        <label><b>INTERROGATORIO</b></label>
-                                        <textarea class="form-control" name="nota_interrogatorio" rows="10" placeholder="Interrogatorio directo o indirecto"><?=$Nota['nota_interrogatorio']?></textarea>
-                                    </div>
-                                <div class="form-group">
-                                        <label><b>EXPLORACION FISICA</b></label>
-                                        <textarea class="form-control" name="nota_exploracionf" rows="10" placeholder=""><?=$Nota['nota_exploracionf']?></textarea>
-                                </div>
+                      <h4><span class = "label back-imss border-back-imss">EVOLUCION Y/O ACTUALIZACION DEL CUADRO CLINICO</span></h4>
+                      <div class="form-group evolucion-psoap ">
+                        <label><b>PROBLEMA (Diagnostico):</b></label>
+                        <textarea class="form-control" name="nota_problema" rows="5" placeholder="Problema o Diagnosticos"> <?=$Nota['nota_problema']?> </textarea>
+                      </div>
+                      <div class="form-group">
+                        <label><b id="psoap_subjetivo" >SUBJETIVO (Interrogatorio):</b></label>
+                        <textarea class="form-control" name="nota_interrogatorio" rows="5" placeholder="Interrogatorio directo o indirecto"> <?=$Nota['nota_interrogatorio']?> </textarea>
+                      </div>
+                      <div class="form-group">
+                        <label><b id="psoap_objetivo" >OBJETIVO (Exploracion fisica):</b></label>
+                        <textarea class="form-control" name="nota_exploracionf" rows="5" placeholder=""><?=$Nota['nota_exploracionf']?></textarea>
+                      </div>
+                      <div class="form-group evolucion-psoap ">
+                        <label><b>ANALISIS:</b></label>
+                        <textarea class="form-control" name="nota_analisis" rows="2" placeholder=""><?=$Nota['nota_analisis']?></textarea>
+                      </div>
                     </div>
                     <div class="col-md-3">
                         <label><b>ESCALA DE GLASGOW</b></label>
@@ -318,10 +334,15 @@
                                             <label><b>ESCALA DE DOLOR (EVA)</b></label><br>
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                 <input type="range" name="nota_eva" value="<?=$Nota['nota_eva']?>" min="0" max="10" value="0">
+                                                  <?php if($Nota['nota_eva'] == ''){
+                                                    $nota_eva = 0;
+                                                  }else{
+                                                    $nota_eva = $Nota['nota_eva'];
+                                                  }?>
+                                                 <input type="range" name="nota_eva" value="<?=$nota_eva?>" min="0" max="10" value="0">
                                                 </div>
                                                 <div class="col-sm-6" style="width:10px;height:30px;border:1px solid blue;">
-                                                    <output name="x" for="nota_eva"><?=$Nota['nota_eva']?></output>
+                                                    <output name="x" for="nota_eva"><?=$nota_eva?></output>
                                                 </div>
                                             </div>
                                         </div>
@@ -461,8 +482,8 @@
                                     </label>&nbsp;&nbsp;&nbsp;
                                 </div>
                                 <div class="form-group">
-                                        <h4><span class = "label back-imss border-back-imss">PRONÓSTICO(S)</span></h4>
-                                        <textarea class="form-control" name="nota_pronosticos" rows="2" placeholder="Anote diagnóstico y problemas clinicos"><?=$Nota['nota_pronosticos']?></textarea>
+                                  <h4><span class = "label back-imss border-back-imss">PRONÓSTICO(S)</span></h4>
+                                  <textarea class="form-control" name="nota_pronosticos" rows="2" placeholder="Anote diagnóstico y problemas clinicos"><?=$Nota['nota_pronosticos']?></textarea>
                                 </div>
 
                                         <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4>
@@ -576,15 +597,15 @@
                                               <div class="col-sm-12" style="padding:0">
                                                 <div class="col-sm-12" style="padding:0" id="divCuidadosGenerales">
                                                   <div class="form-group ">
-                                                    <label><b>c) Cuidades Generales de enfermeria:</b>
+                                                    <label><b>c) Cuidados Generales de enfermeria:</b>
                                                         <?php
                                                         // Declara el estado original checkbox de cuidados generales de enfermeria
-                                                        $labelCheck = 'NO';
+                                                        $labelCheck = 'SI';
                                                         $hiddenCheck = 'hidden';
                                                         // Al editar, modifica el estado del checkbox
                                                         if($Nota['nota_cgenfermeria'] == 1){
                                                           $check_generales = 'checked';
-                                                          $labelCheck = 'SI';
+                                                          $labelCheck = '';
                                                           $hiddenCheck = '';
                                                         }
                                                         ?>
@@ -593,7 +614,7 @@
                                                     </label>
                                                     <ul id="listCuidadosGenerales" <?= $hiddenCheck ?> >
                                                       <li>a. Estado neurológico</li>
-                                                      <li>b. Cama Con barandales</li>
+                                                      <li>b. Cama con barandales</li>
                                                       <li>c. Calificación del dolor</li>
                                                       <li>d. Calificación de riesgo de caida</li>
                                                       <li>e. Control de liquidos por turno</li>
@@ -606,11 +627,11 @@
                                               </div>
 
 
-                                              <div class="col-sm-12" id="divCuidadesEspeciales" style="padding:0">
+                                              <div class="col-sm-12"  style="padding:0">
                                                 <div class="col-sm-12" style="padding:0">
                                                   <div class="form-group">
-                                                    <label><b>d) Cuidades especiales de enfermeria</b></label>
-                                                    <textarea class="form-control" name="nota_cuidadosenfermeria" placeholder="Cuidados especiales de enfermeria"><?=$Nota['nota_cuidadosenfermeria']?></textarea>
+                                                    <label><b>d) Cuidados especiales de enfermeria</b></label>
+                                                    <textarea class="form-control" name="nota_cuidadosenfermeria" rows="5" placeholder="Cuidados especiales de enfermeria"><?=$Nota['nota_cuidadosenfermeria']?></textarea>
                                                   </div>
                                                 </div>
                                               </div>
@@ -620,191 +641,209 @@
                                                 <div class="col-sm-12" style="padding:0">
                                                   <div class="form-group">
                                                     <label><b>e) Soluciones Parenterales</b></label>
-                                                    <textarea class="form-control" name="nota_solucionesp" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
+                                                    <textarea class="form-control" name="nota_solucionesp" rows="5" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
                                                   </div>
                                                 </div>
                                               </div>
 
                                             <div>
 
-                                            <label><b>f) Prescripcion: </b></label>
+                                            <label><b>f) Prescripcion: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
                                             <!-- Panel con el historial de prescripciones -->
                                             <div class="panel-group" id="acordeon">
                                                <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
-                                                 <h4 style="padding-left:5px"><a data-toggle="collapse" data-parent="#acordeon" href="#collapse1">
-                                                 Historial prescripciones </a> Total: <?= count($Prescripcion) ?></h4>
+                                                 <h4 style="padding-left:5px">
+                                                   <a data-toggle="" id="acordeon_prescripciones_activas" data-parent="#acordeon" href="#collapse1">
+                                                     Prescripciones activas:&nbsp;<label id="label_total_activas" ><?= $Prescripciones_activas[0]['activas'] ?></label>
+                                                   </a>
+                                                   <a data-toggle="" id="acordeon_prescripciones_canceladas" data-parent="#acordeon" href="#collapse1">
+                                                      Canceladas o modificadas:&nbsp;<label id="label_total_canceladas" ><?= $Prescripciones_canceladas[0]['canceladas'] ?></label>
+                                                   </a>
+                                                  </h4>
                                                </div>
-                                               <div id="collapse1" class="panel-collapse collapse" >
+                                               <div id="collapse1" class="panel-collapse " >
                                                    <table style="width:100%;">
-                                                     <thead >
+                                                     <thead id="historial_prescripcion" hidden>
                                                        <tr>
                                                          <th>Medicamento</th>
                                                          <th>Fecha prescripción</th>
-                                                         <th>Via</th>
+                                                         <th>Dosis</th>
+                                                         <th>Vía</th>
                                                          <th>Frecuencia</th>
-                                                         <th>Aplicacion</th>
+                                                         <th>Aplicación</th>
                                                          <th>Fecha Inicio</th>
-                                                         <th>Dias</th>
-                                                         <th>Fecha Fin</th>
-                                                         <th>Estado</th>
+                                                         <th>Días Transcurridos</th>
+                                                         <th>Acciones</th>
                                                        </tr>
                                                      </thead>
-                                                     <tbody >
-                                                       <?php
-                                                        foreach($Prescripcion as $value){
-                                                          if($value['estado'] == 1){
-                                                            $colorEstado = "background:rgb(162, 255, 156); ";
-                                                          }else{
-                                                            $colorEstado = "background:rgb(255, 195, 195); ";
-                                                          } ?>
-                                                          <tr style="<?= $colorEstado ?>" >
-                                                            <td><?= $value['medicamento'] ?></td>
-                                                            <td><?= $value['fecha_prescripcion'] ?></td>
-                                                            <td><?= $value['via_administracion'] ?></td>
-                                                            <td><?= $value['frecuencia'] ?></td>
-                                                            <td><?= $value['aplicacion'] ?></td>
-                                                            <td><?= $value['fecha_inicio'] ?></td>
-                                                            <td><?= $value['dias'] ?></td>
-                                                            <td><?= $value['fecha_fin'] ?></td>
-                                                            <td><?= $value['estado'] ?></td>
-                                                          </tr>
-                                                       <?php } ?>
+                                                     <tbody id="table_prescripcion_historial">
+
                                                      </tbody>
                                                    </table>
                                                </div>
                                             </div> <!-- Fin panel prescripciones -->
+                                            <!-- Inicio formulario prescripcion -->
+                                            <div class="formulario_prescripcion" hidden>
+                                              <div class="col-sm-12" style="padding:0">
+                                                <div class="col-sm-8" style="padding: 0;">
+                                                  <div class="form-group">
+                                                  <label><b>Medicamento</b></label>
+                                                  <div id="borderMedicamento">
+                                                    <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
+                                                        <option value="0">-Seleccionar-</option>
+                                                        <?php foreach ($Medicamentos as $value) {?>
+                                                        <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                  </div>
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-2" style="padding-right: 0;">
+                                                  <div class="form-group" >
+                                                    <label >Dosis</label>
+                                                    <div id="borderDosis">
+                                                    <input type="number" id="input_dosis" class="form-control">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-2" style="padding-right: 0;">
+                                                  <div class="form-group" >
+                                                    <label >Unidad</label>
+                                                    <div id="borderUnidad">
+                                                    <select name="" id="select_unidad" class="form-control">
+                                                      <option value="0">- Unidad -</option>
+                                                      <option value="mg">mg</option>
+                                                      <option value="g">g</option>
+                                                      <option value="UI">UI</option>
+                                                    </select>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
+                                                     el select se llena al seleccionar un medicamento -->
+                                                <div hidden class="col-sm-2" style="padding: 1;">
+                                                    <label><b>interaccion_amarilla</b></label>
+                                                    <div id="borderMedicamento">
+                                                      <select id="interaccion_amarilla" class="" style="width: 100%" >
+                                                          <option value="0">-Seleccionar-</option>
+                                                          <?php foreach ($Medicamentos as $value) {?>
+                                                          <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_amarilla']?></option>
+                                                          <?php } ?>
+                                                      </select>
+                                                    </div>
+                                                </div>
+                                                <div hidden class="col-sm-2" style="padding: 1;">
+                                                    <label><b>interaccion_roja</b></label>
+                                                    <div id="borderMedicamento">
+                                                      <select id="interaccion_roja" class="" style="width: 100%" >
+                                                          <option value="0">-Seleccionar-</option>
+                                                          <?php foreach ($Medicamentos as $value) {?>
+                                                          <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_roja']?></option>
+                                                          <?php } ?>
+                                                      </select>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-12" style="padding:0">
+                                                <div class="col-sm-2" style="padding: 0;">
+                                                    <label><b>Via Administración</b></label>
+                                                    <div id="borderVia">
+                                                    <select class="select2 selectpicker" id="via_administracion" style="width: 100%" >
+                                                        <option value="0">-Seleccionar-</option>
+                                                        <?php foreach ($Vias as $value) {?>
+                                                        <option ><?=$value?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                  <label><b>Frecuencia</b></label>
+                                                  <div id="borderFrecuencia">
+                                                  <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
+                                                    <option value="0">- Frecuencia -</option>
+                                                    <option value="6 hrs">6 hrs</option>
+                                                    <option value="8 hrs">8 hrs</option>
+                                                    <option value="12 hrs">12 hrs</option>
+                                                    <option value="24 hrs">24 hrs</option>
+                                                    <option value="48 hrs">48 hrs</option>
+                                                    <option value="72 hrs">72 hrs</option>
+                                                  </select>
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-3" style="padding-left: 0;">
+                                                  <label><b>Aplicacion</b></label>
+                                                  <div id="borderAplicacion">
+                                                  <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-2" style="padding: 1; padding-left: 0;">
+                                                  <label><b>Fecha Inicio</b></label>
+                                                  <div id="borderFechaInicio">
+                                                  <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-1" style="padding: 0;" >
+                                                  <label><b>Dias</b></label>
+                                                  <div id="borderDuracion">
+                                                  <select id="duracion" onchange="mostrarFechaFin()" class="form-control ">
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                  </select>
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-2" style="padding-right: 0; padding-left: 1;">
+                                                  <label><b>Fecha Fin</b></label>
+                                                  <div id="borderFechaFin">
+                                                  <input class="form-control" id="fechaFin"   name="" >
+                                                  </div>
+                                                </div>
+                                              </div>
 
+                                              <div class="col-sm-8" style="padding: 0;" >
+                                                <label><b>Observaciones para la Prescripcion</b></label>
+                                                <div id="borderFechaFin">
+                                                <input name="observacion_prescripcion" class="form-control" id="observacion"   name="" >
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-2">
+                                                <div class="form-group" style="padding-top:23px;" hidden id="div_btnActualizarPrescripcion">
+                                                  <button type="button"  id="btnActualizarPrescripcion" class="btn back-imss btn-block" onclick="actualizarPrescripcion()"> MODIFICAR </button>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-2" style="padding-right: 0">
+                                                <div class="form-group" style="padding-top:23px;" >
+                                                  <button type="button" class="btn back-imss btn-block" onclick="agregarPrescripcion()"> AGREGAR </button>
+                                                </div>
+                                              </div>
+                                              <table style="width:100%;">
+                                                <thead >
+                                                  <tr>
+                                                    <th hidden >ID</th>
+                                                    <th>Medicamento</th>
+                                                    <th>Dosis</th>
+                                                    <th>Vía</th>
+                                                    <th>Frecuencia</th>
+                                                    <th>Aplicación</th>
+                                                    <th>Fecha Inicio</th>
+                                                    <th>Dias</th>
+                                                    <th>Fecha Fin</th>
+                                                    <th>Opciones</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="tablaPrescripcion">
+                                                </tbody>
+                                              </table>
+                                            </div><!-- Fin formulario prescripcion-->
 
-
-
-
-                                        <div class="row" id="contenedorFormularios">
-                                        <input hidden type="text" id="nombreUsuario" value="<?=$Usuario[0]['empleado_nombre']?>"/>
-                                        <input hidden type="text" id="servicioUsuario" value="<?=$Usuario[0]['empleado_servicio']?>"/>
-                                        <input hidden type="text" id="indiceArrayPrescripcion" value=""/>
-                                        <div class="col-sm-12">
-                                          <label><b>Medicamento</b>
-                                            <button type="button" class="back-imss" onclick="agregarPrescripcion()"> Nueva </button>
-                                            <button type="button" hidden id="btnActualizarPrescripcion" class="back-imss" onclick="actualizarPrescripcion()"> Actualizar </button>
-                                          </label>
-                                          <div id="borderMedicamento">
-                                            <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
-                                                <option value="0">-Seleccionar-</option>
-                                                <?php foreach ($Medicamentos as $value) {?>
-                                                <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
-                                                <?php } ?>
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
-                                             el select se llena al seleccionar un medicamento -->
-                                        <div hidden class="col-sm-2">
-                                            <label><b>interaccion_amarilla</b></label>
-                                            <div id="borderMedicamento">
-                                              <select id="interaccion_amarilla" class="" style="width: 100%" >
-                                                  <option value="0">-Seleccionar-</option>
-                                                  <?php foreach ($Medicamentos as $value) {?>
-                                                  <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_amarilla']?></option>
-                                                  <?php } ?>
-                                              </select>
-                                            </div>
-                                        </div>
-                                        <div hidden class="col-sm-2">
-                                            <label><b>interaccion_roja</b></label>
-                                            <div id="borderMedicamento">
-                                              <select id="interaccion_roja" class="" style="width: 100%" >
-                                                  <option value="0">-Seleccionar-</option>
-                                                  <?php foreach ($Medicamentos as $value) {?>
-                                                  <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_roja']?></option>
-                                                  <?php } ?>
-                                              </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-2">
-                                            <label><b>Via Administración</b></label>
-                                            <div id="borderVia">
-                                            <select class="select2 selectpicker" id="via_administracion" style="width: 100%" >
-                                                <option value="0">-Seleccionar-</option>
-                                                <?php foreach ($Vias as $value) {?>
-                                                <option ><?=$value?></option>
-                                                <?php } ?>
-                                            </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2" style="padding-left: 0;">
-                                          <label><b>Frecuencia</b></label>
-                                          <div id="borderFrecuencia">
-                                          <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
-                                            <option value="0">- Frecuencia -</option>
-                                            <option value="6 hrs">6 hrs</option>
-                                            <option value="8 hrs">8 hrs</option>
-                                            <option value="12 hrs">12 hrs</option>
-                                            <option value="24 hrs">24 hrs</option>
-                                            <option value="48 hrs">48 hrs</option>
-                                            <option value="72 hrs">72 hrs</option>
-                                          </select>
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-3" style="padding-left: 0;">
-                                          <label><b>Aplicacion</b></label>
-                                          <div id="borderAplicacion">
-                                          <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-2" style="padding-left: 0;">
-                                          <label><b>Fecha Inicio</b></label>
-                                          <div id="borderFechaInicio">
-                                          <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-1" style="padding-left: 0;" >
-                                          <label><b>Dias</b></label>
-                                          <div id="borderDuracion">
-                                          <select id="duracion" onchange="mostrarFechaFin()" class="form-control ">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                          </select>
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-2" style="padding-left: 0;">
-                                          <label><b>Fecha Fin</b></label>
-                                          <div id="borderFechaFin">
-                                          <input class="form-control" id="fechaFin"   name="" >
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                          <label><b>Observaciones para la Prescripcion</b></label>
-                                          <div id="borderFechaFin">
-                                          <input name="observacion_prescripcion" class="form-control" id="observacion"   name="" >
-                                          </div>
-                                        </div>
-                                        <table style="width:100%;">
-                                          <thead >
-                                            <tr>
-                                              <th hidden >ID</th>
-                                              <th>Medicamento</th>
-                                              <th>Via</th>
-                                              <th>Frecuencia</th>
-                                              <th>Aplicacion</th>
-                                              <th>Fecha Inicio</th>
-                                              <th>Dias</th>
-                                              <th>Fecha Fin</th>
-                                              <th>Opciones  </th>
-                                            </tr>
-                                          </thead>
-                                          <tbody id="tablaPrescripcion">
-                                          </tbody>
-                                        </table>
                                         <br/>
                                 <div class="form-group">
                                     <h4><span class = "label back-imss border-back-imss">SOLICITUD DE INTERCONSULTAS</span></h4>
@@ -959,10 +998,5 @@ $(document).ready(function() {
             }
         },'','No');
     });
-
 });
-
-
-
-
 </script>

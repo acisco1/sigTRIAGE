@@ -45,7 +45,7 @@ class Documentos extends Config{
         ))[0];
         $sql['NotasAll']= $this->config_mdl->_query("SELECT * FROM doc_notas, os_empleados WHERE
             doc_notas.empleado_id=os_empleados.empleado_id AND
-            doc_notas.triage_id=".$paciente." GROUP BY notas_fecha DESC");
+            doc_notas.triage_id=".$paciente." ORDER BY notas_fecha DESC");
         $sql['info']=  $this->config_mdl->_get_data_condition('os_triage',array(
             'triage_id'=> $paciente
         ))[0];
@@ -59,14 +59,31 @@ class Documentos extends Config{
             'doc_nombre'=>'Hoja Frontal'
         ));
         $sql['DocumentosNotas']= $this->config_mdl->_query("SELECT * FROM pc_documentos WHERE doc_nombre!='Hoja Frontal'");
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT count(prescripcion_id)total_prescripcion
+                                                          FROM prescripcion WHERE estado = 0 and triage_id = ".$paciente);
         $this->load->view('Documentos/Expediente',$sql);
     }
+    public function AjaxRegistrarBitacoraPrescripcion(){
+      $datos = array(
+        "empleado_id" => $this->UMAE_USER,
+        "prescripcion_id" => $_GET['prescripcion_id'],
+        "fecha" => date('Y-m-d')." ".date('H:i'),
+        "tipo_accion" => $_GET['tipo_accion'],
+        "motivo" => $_GET['motivo']
+      );
+      $sql = $this->config_mdl->_insert("btcr_prescripcion" , $datos);
+      print json_encode($sql);
+    }
+
+
     /*Retorna JSON con las prescripciones del paciente, ordenadas por fecha de prescripcion y estado*/
     public function AjaxHistorialPrescripcion(){
       $paciente = $this->input->get('paciente');
       $estado = $this->input->get('estado');
-      $sql = $this->config_mdl->_query("SELECT DISTINCT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
-                                        CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,via_administracion,frecuencia,
+      $sql = $this->config_mdl->_query("SELECT DISTINCT prescripcion_id,fecha_prescripcion,
+                                        CONCAT(empleado_nombre,empleado_apellidos)empleado,
+                                        CONCAT(medicamento,' ',gramaje)medicamento,
+                                        dosis,via_administracion,frecuencia,
                                         aplicacion, fecha_inicio, fecha_fin, estado
                                         FROM prescripcion INNER JOIN os_empleados
                                         ON prescripcion.empleado_id = os_empleados.empleado_id
@@ -76,6 +93,32 @@ class Documentos extends Config{
                                         AND estado = ".$estado."
                                         ORDER BY fecha_prescripcion DESC");
       print json_encode($sql);
+    }
+    public function AjaxCambiarEstadoPrescripcion(){
+      $paciente = $this->input->get('paciente');
+      $variables = array(
+        'estado' => $this->input->get('estado')
+      );
+      $condiciones = array(
+        'prescripcion_id' => $this->input->get('prescripcion_id')
+      );
+      $sql = $this->config_mdl->_update_data('prescripcion', $variables, $condiciones);
+
+      $medicamento_inactivo = $this->config_mdl->_query("SELECT count(prescripcion_id)total_prescripcion
+                                                        FROM prescripcion WHERE estado = 0
+                                                        AND triage_id = ".$paciente);
+      if($sql){
+        $mensaje = array(
+          "mensaje" => "El estado de la prescripcion se modifico exitosamente",
+          "medicamento_inactivo" => $medicamento_inactivo[0]['total_prescripcion']
+        );
+      }else{
+        $mensaje = array(
+          "mensaje" => "El estado no pudo modificarse",
+          "medicamento_inactivo" => $medicamento_inactivo[0]['total_prescripcion']
+        );
+      }
+      print json_encode($mensaje);
     }
 
     public function ExpedienteEmpleado($data) {
@@ -279,14 +322,58 @@ class Documentos extends Config{
         $sql['Medicamentos'] = $this->config_mdl->_query("SELECT medicamento_id,
                                                                  CONCAT(medicamento,' ',gramaje)medicamento,
                                                                  interaccion_amarilla,interaccion_roja
-                                                          FROM catalogo_medicamentos");
+                                                          FROM catalogo_medicamentos
+                                                          WHERE existencia = 1");
         $sql['Vias'] = array(IV,VO,IT,Enema,IM,Coliris,SC,Rectal,SB,IP,Tupilco,ID,Inhalatoria,Nasal,Otorrino,Ocular);
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, medicamento, dosis,fecha_prescripcion,via_administracion,
+                                                          frecuencia,aplicacion,fecha_inicio,dias,fecha_fin,estado
+                                                          FROM prescripcion INNER JOIN catalogo_medicamentos ON
+                                                          prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                          INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
+                                                          WHERE os_triage.triage_id =".$_GET['folio']);
         $this->load->view('Documentos/HojaInicialAbierto',$sql);
     }
     public function AjaxHojaInicialAbierto() {
         $consultorio= $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
             'triage_id'=>  $this->input->post('triage_id')
         ))[0];
+
+
+
+
+
+
+        // Se toman los valores del formulario 'Instrucciones de nutricion'
+        $hf_nutricion = "";
+        $radio_nutricion = $this->input->post('dieta');
+        $select_nutricion = $this->input->post('tipoDieta');
+        $otros_nutricion = $this->input->post('otraDieta');
+        /* las siguiendes condiciones son para indexar el campo 'nota_nutricion'
+          de esta forma se conoce el origen del dato.*/
+
+        //Indica que el valor viene de una caja de texto
+        if($otros_nutricion != "" & $select_nutricion == 13){
+          $hf_nutricion = $otros_nutricion;
+        // Indica que el valor viene de un select
+        }else if($select_nutricion >= 1 || $select_nutricion <=12 ){
+          $hf_nutricion = $select_nutricion;
+        // Indica que el valor viene de un radio
+        }else if($radio_nutricion == 0){
+          $hf_nutricion = $radio_nutricion;
+        }
+
+
+        $select_signos = $this->input->post("tomaSignos");
+        $otros_signos = $this->input->post("otrasIndicacionesSignos");
+        $hf_svycuidados = $select_signos;
+        if($select_signos == "3"){
+          $hf_svycuidados = $otros_signos;
+        }
+
+        $hf_cgenfermeria = 1;
+        if($this->input->post("nota_cgenfermeria") != 1){
+          $hf_cgenfermeria = 0;
+        }
 
         $data=array(
             'hf_ce'=> ($this->input->post('tipo')=='Consultorios' ? '1': '0'),
@@ -323,8 +410,9 @@ class Documentos extends Config{
             'hf_eva'=> $this->input->post('hf_eva'),
             'hf_riesgo_trombosis'=> $this->input->post('hf_riesgo_trombosis'),
             // PLAN MEDICO
-            'hf_ayuno'=> $this->input->post('hf_ayuno'),
-            'hf_signosycuidados'=> $this->input->post('hf_signosycuidados'),
+            'hf_nutricion'=> $hf_nutricion,
+            'hf_signosycuidados'=> $hf_svycuidados,
+            'hf_cgenfermeria' => $hf_cgenfermeria,
             'hf_cuidadosenfermeria'=> $this->input->post('hf_cuidadosenfermeria'),
             'hf_solucionesp'=> $this->input->post('hf_solucionesp'),
             'hf_medicamentos'=> $this->input->post('hf_medicamentos'),
@@ -372,6 +460,43 @@ class Documentos extends Config{
         ),'hf_id');
         if(empty($sqlCheckHojaFrontal)){
             $this->config_mdl->_insert('os_consultorios_especialidad_hf',$data);
+
+            // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
+            // tabla "prescripcio"
+            for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
+              $datosPrescripcion = array(
+                'empleado_id' => $this->UMAE_USER,
+                'triage_id' => $this->input->post('triage_id'),
+                'medicamento_id' => $this->input->post("idMedicamento[$x]"),
+                'dosis' => $this->input->post("dosis[$x]"),
+                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
+                'via_administracion' => $this->input->post("via_administracion[$x]"),
+                'frecuencia' => $this->input->post("frecuencia[$x]"),
+                'aplicacion' => $this->input->post("horaAplicacion[$x]"),
+                'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
+                'dias' => $this->input->post("duracion[$x]"),
+                'fecha_fin' => $this->input->post("fechaFin[$x]"),
+                'observacion' => $this->input->post("observacion[$x]"),
+                'estado' => "1"
+              );
+              $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
+            }
+            // Se toma el ID de las precripcines activas
+            $Prescripciones = $this->config_mdl->_query("SELECT prescripcion_id
+                                                         FROM prescripcion
+                                                         WHERE estado = 1 and triage_id = ".$this->input->post('triage_id').";");
+            for($x = 0; $x < count($Prescripciones); $x++){
+              $FrontalPrescripcion = array(
+                'hf_id' => $this->config_mdl->_get_last_id('os_consultorios_especialidad_hf','hf_id'),
+                'prescripcion_id' => $Prescripciones[$x]['prescripcion_id']
+              );
+              // Se registra la relacion entre notas y prescripcion
+              $this->config_mdl->_insert('nm_hojafrontal_prescripcion', $FrontalPrescripcion);
+            }
+
+
+
+
         }else{
             unset($data['hf_fg']);
             unset($data['hf_hg']);
@@ -747,9 +872,10 @@ class Documentos extends Config{
                                                            WHERE empleado_id = '$this->UMAE_USER')"
                                                          );
         $sql['Medicamentos'] = $this->config_mdl->_query("SELECT medicamento_id,
-                                                                 CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,
+                                                                 CONCAT(medicamento,' ',gramaje)medicamento,
                                                                  interaccion_amarilla,interaccion_roja
-                                                          FROM catalogo_medicamentos");
+                                                          FROM catalogo_medicamentos
+                                                          WHERE existencia = 1");
         $sql['Residentes'] = $this->config_mdl->_query("SELECT notas_id,nombre_residente,apellido_residente,cedulap_residente
                                                            FROM um_notas_residentes
                                                            WHERE notas_id = $Nota");
@@ -759,13 +885,37 @@ class Documentos extends Config{
                                                              WHERE empleado_id = (
                                                                SELECT empleado_id FROM doc_notas WHERE notas_id = $Nota
                                                              )");
-        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT CONCAT(medicamento,' ',gramaje,' ',forma_farmaceutica,' ',grupo_terapeutico)medicamento,
-                                                          fecha_prescripcion,via_administracion, frecuencia,aplicacion,fecha_inicio,dias,fecha_fin,estado
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, concat(medicamento, ' ', gramaje)medicamento,
+                                                          dosis,fecha_prescripcion,via_administracion,
+                                                          frecuencia,aplicacion,fecha_inicio,dias,fecha_fin,estado
                                                           FROM prescripcion INNER JOIN catalogo_medicamentos ON
                                                           prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                           INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
                                                           WHERE os_triage.triage_id =".$_GET['folio']);
+        $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
+                                                                    WHERE estado = 1 AND triage_id = ".$_GET['folio']);
+        $sql['Prescripciones_canceladas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)canceladas FROM prescripcion
+                                                                      WHERE estado = 0 AND triage_id = ".$_GET['folio']);
         $this->load->view('Documentos/Doc_Notas',$sql);
+    }
+    public function AjaxConteoEstadoPrescripciones(){
+      $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
+                                                                  WHERE estado = 1 AND triage_id = ".$_GET['folio']);
+      $sql['Prescripciones_canceladas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)canceladas FROM prescripcion
+                                                                    WHERE estado = 0 AND triage_id = ".$_GET['folio']);
+      print json_encode($sql);
+    }
+    public function AjaxPrescripciones(){
+      $estado = $_GET['estado'];
+      $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, concat(medicamento, ' ', gramaje)medicamento,
+                                                        dosis,fecha_prescripcion,via_administracion,observacion,
+                                                        frecuencia,aplicacion,fecha_inicio,dias,fecha_fin,estado
+                                                        FROM prescripcion INNER JOIN catalogo_medicamentos ON
+                                                        prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                        INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
+                                                        WHERE os_triage.triage_id =".$_GET['folio']." AND estado =".$estado);
+
+      print json_encode($sql['Prescripcion']);
     }
     /*Funcion para insertar el estado del paciente en la nota medica o editarla*/
     public function AjaxNotas() {
@@ -864,6 +1014,8 @@ class Documentos extends Config{
                 'nota_cuidadosenfermeria'=> $this->input->post('nota_cuidadosenfermeria'),
                 'nota_solucionesp'=> $this->input->post('nota_solucionesp'),
                 'nota_medicamentos'=> $this->input->post('nota_medicamentos'),
+                'nota_problema' => $this->input->post('nota_problema'),
+                'nota_analisis' => $this->input->post('nota_analisis'),
                 'nota_interconsulta'=> trim($interconsulta, ','),
                 'notas_id'=>$sqlMax
             ));
@@ -874,13 +1026,14 @@ class Documentos extends Config{
                 'empleado_id' => $this->UMAE_USER,
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento[$x]"),
+                'dosis' => $this->input->post("dosis[$x]"),
                 'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
                 'via_administracion' => $this->input->post("via_administracion[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
                 'aplicacion' => $this->input->post("horaAplicacion[$x]"),
                 'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
-                'dias' => $this->input->post("duracion[$x]"),
-                'fecha_fin' => $this->input->post("fechaFin[$x]"),
+                //'dias' => $this->input->post("duracion[$x]"),
+                //'fecha_fin' => $this->input->post("fechaFin[$x]"),
                 'observacion' => $this->input->post("observacion[$x]"),
                 'estado' => "1"
               );
@@ -926,6 +1079,8 @@ class Documentos extends Config{
                 'nota_cuidadosenfermeria'=> $this->input->post('nota_cuidadosenfermeria'),
                 'nota_solucionesp'=> $this->input->post('nota_solucionesp'),
                 'nota_medicamentos'=> $this->input->post('nota_medicamentos'),
+                'nota_problema' => $this->input->post('nota_problema'),
+                'nota_analisis' => $this->input->post('nota_analisis'),
                 'nota_interconsulta'=> $this->input->post('nota_interconsulta'),
                 'nota_interconsulta'=> trim($interconsulta, ',')
             ),array(
@@ -1118,7 +1273,7 @@ class Documentos extends Config{
     }
 
     public function ObtenerMedicamentos(){
-       $sql['medicamentos'] = $this -> config_mdl -> _get_data('catalogo_medicamentos');
+       $sql['medicamentos'] = $this ->config_mdl-> _get_data('catalogo_medicamentos');
        return json_encode($sql);
     }
 }
