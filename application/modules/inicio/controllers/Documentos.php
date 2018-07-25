@@ -181,7 +181,7 @@ class Documentos extends Config{
         ))[0];
 
         $sql['Prescripcion'] = $this->config_mdl->_query("SELECT medicamento,gramaje, via_administracion,frecuencia,
-          aplicacion, fecha_inicio, dias, observacion,fecha_fin,dosis
+          aplicacion, fecha_inicio, tiempo, observacion,fecha_fin,dosis
           FROM prescripcion INNER JOIN nm_hojafrontal_prescripcion ON
           prescripcion.prescripcion_id = nm_hojafrontal_prescripcion.prescripcion_id
           INNER JOIN catalogo_medicamentos
@@ -665,7 +665,7 @@ class Documentos extends Config{
         $sql['Prescripcion'] = $this->config_mdl->_query(
           "SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
           CONCAT(medicamento,' ',gramaje)medicamento, dosis, via_administracion, frecuencia,
-          aplicacion, fecha_inicio, dias, observacion,fecha_fin, estado,doc_notas.notas_id
+          aplicacion, fecha_inicio, tiempo, observacion,fecha_fin, estado,doc_notas.notas_id
           FROM prescripcion
           INNER JOIN nm_notas_prescripcion
           	ON prescripcion.prescripcion_id = nm_notas_prescripcion.prescripcion_id

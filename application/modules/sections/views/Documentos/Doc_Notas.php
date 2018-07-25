@@ -19,10 +19,11 @@
                 background: white;
               }
               #acordeon_prescripciones_activas, #acordeon_prescripciones_canceladas{
-                padding-left: 10px;
-                padding-right: 10px;
-                padding-top: 10px;
-                padding-bottom: 10px;
+                color: rgb(255,255,255);
+                font-size: 16px;
+                padding-top: -4px;
+                padding-button: -4px;
+
               }
               #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover{
                 background-color: rgba(0, 0, 0, 0.12);
@@ -76,7 +77,7 @@
                 }
             td,th{
               text-align: center;
-              border-bottom: 1px solid #ddd;
+              border-top:  1px solid #ddd;
               color: black;
             }
             .label-input{
@@ -87,6 +88,31 @@
               outline:0;
               width: 100%;
             }
+
+            .panel-heading .accordion-toggle:after {
+                font-family: 'Glyphicons Halflings';
+                content: "\e114";
+                float: right;
+                color: #256659;
+            }
+            .panel-heading .accordion-toggle.collapsed:after {
+                font-family: 'Glyphicons Halflings';
+                content: "\e080";
+            }
+            .panel-heading{
+              padding: 3px 24px;
+            }
+            .panel-body{
+              padding-top: 4px !important;
+            }
+            .panel-container{
+              border-bottom: 1px solid #ddd;
+            }
+            #label_total_activas, #label_total_canceladas{
+              display: inline-block;
+            }
+
+
             </style>
             <div class="panel panel-default ">
                 <div class="panel-heading p teal-900 back-imss text-center scroll-box" style="">
@@ -142,10 +168,20 @@
                                     <div class="form-group">
                                         <div class="input-group m-b">
                                             <span class="input-group-addon back-imss border-back-imss">SELECCIONAR TIPO DE NOTA</span>
-                                              <select name="notas_tipo" class="form-control" data-value="<?=$Nota['notas_tipo']?>" required>
+                                            <?php
+                                            if(isset($_GET['via']) && $_GET['via'] == 'Interconsulta'){
+
+                                              $select_disable = "disabled";
+                                            }
+                                             ?>
+                                              <select name="notas_tipo" class="form-control" <?= $select_disable ?> data-value="<?=$Nota['notas_tipo']?>" required>
                                                 <option value="" selected hidden>NOTAS</option>
-                                                <?php foreach ($Documentos as $value) {?>
-                                                <option value="<?=$value['doc_nombre']?>"><?=$value['doc_nombre']?></option>
+                                                <?php foreach ($Documentos as $value) {
+                                                  $option_seleccion = "";
+                                                  if(isset($_GET['via']) && $_GET['via'] == 'Interconsulta' && $value['doc_nombre'] == 'NOTA DE INTERCONSULTA'){
+                                                    $option_seleccion = "selected";
+                                                  }?>
+                                                <option <?= $option_seleccion ?> value="<?=$value['doc_nombre']?>"><?=$value['doc_nombre']?></option>
                                                 <?php }?>
                                             </select>
 
@@ -209,12 +245,12 @@
        <!-- COMIENZA LOS CAMPOS DEL FORMULARIO PARA LA NOTA MEDICA -->
                 <?php
                 $visibleInterconsulta = "hidden";
-                if($Nota['notas_tipo']=='NOTA DE INTERCONSULTA'){
+                if($Nota['notas_tipo']=='NOTA DE INTERCONSULTA' || isset($_GET['via']) && $_GET['via'] == 'Interconsulta'){
                   $visibleInterconsulta = "";
                 } ?>
                 <div class="col-sm-12 nota_motivoInterconsulta <?=$visibleInterconsulta ?>">
                     <h4><span class = "label back-imss border-back-imss">MOTIVO DE INTERCONSULTA</span></h4>
-                    <textarea class="form-control" name="nota_motivoInterconsulta" rows="2" placeholder="Anote el motivo de la interconsulta"><?=$Nota['nota_motivoInterconsulta']?></textarea>
+                    <textarea class="form-control" name="nota_motivoInterconsulta" rows="4" placeholder="Anote el motivo de la interconsulta"><?=$Nota['nota_motivoInterconsulta']?></textarea>
                 </div>
                     <div class="col-sm-12" >
                       <h4><span class = "label back-imss border-back-imss">EVOLUCION Y/O ACTUALIZACION DEL CUADRO CLINICO</span></h4>
@@ -573,7 +609,6 @@
                                                     $otras_indicaciones = '';
                                                   }
                                                 }
-
                                               ?>
                                               <div class="col-sm-12" id="divSignos" style="padding:0">
                                                 <div class="col-sm-4 form-group" style="padding:0" id="divTomaSignos">
@@ -597,7 +632,7 @@
                                               <div class="col-sm-12" style="padding:0">
                                                 <div class="col-sm-12" style="padding:0" id="divCuidadosGenerales">
                                                   <div class="form-group ">
-                                                    <label><b>c) Cuidados Generales de enfermeria:</b>
+                                                    <label><b>c) Cuidados generales de enfermeria:</b>
                                                         <?php
                                                         // Declara el estado original checkbox de cuidados generales de enfermeria
                                                         $labelCheck = 'SI';
@@ -640,7 +675,7 @@
                                               <div class="col-sm-12" id="divCuidadosGenerales" style="padding:0">
                                                 <div class="col-sm-12" style="padding:0">
                                                   <div class="form-group">
-                                                    <label><b>e) Soluciones Parenterales</b></label>
+                                                    <label><b>e) Soluciones parenterales</b></label>
                                                     <textarea class="form-control" name="nota_solucionesp" rows="5" placeholder="Soluciones Parenterales"><?=$Nota['nota_solucionesp']?></textarea>
                                                   </div>
                                                 </div>
@@ -648,48 +683,69 @@
 
                                             <div>
 
-                                            <label><b>f) Prescripcion: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
+                                            <label><b>f) Prescripción: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
                                             <!-- Panel con el historial de prescripciones -->
-                                            <div class="panel-group" id="acordeon">
-                                               <div class="back-imss" style="border-radius: 5px 5px 0px 0px; padding:1px;">
-                                                 <h4 style="padding-left:5px">
-                                                   <a data-toggle="" id="acordeon_prescripciones_activas" data-parent="#acordeon" href="#collapse1">
-                                                     Prescripciones activas:&nbsp;<label id="label_total_activas" ><?= $Prescripciones_activas[0]['activas'] ?></label>
-                                                   </a>
-                                                   <a data-toggle="" id="acordeon_prescripciones_canceladas" data-parent="#acordeon" href="#collapse1">
-                                                      Canceladas o modificadas:&nbsp;<label id="label_total_canceladas" ><?= $Prescripciones_canceladas[0]['canceladas'] ?></label>
-                                                   </a>
-                                                  </h4>
-                                               </div>
-                                               <div id="collapse1" class="panel-collapse " >
-                                                   <table style="width:100%;">
-                                                     <thead id="historial_prescripcion" hidden>
-                                                       <tr>
-                                                         <th>Medicamento</th>
-                                                         <th>Fecha prescripción</th>
-                                                         <th>Dosis</th>
-                                                         <th>Vía</th>
-                                                         <th>Frecuencia</th>
-                                                         <th>Aplicación</th>
-                                                         <th>Fecha Inicio</th>
-                                                         <th>Días Transcurridos</th>
-                                                         <th>Acciones</th>
-                                                       </tr>
-                                                     </thead>
-                                                     <tbody id="table_prescripcion_historial">
+                                            <nav class=" back-imss">
 
-                                                     </tbody>
-                                                   </table>
-                                               </div>
-                                            </div> <!-- Fin panel prescripciones -->
+                                                <ul class="nav navbar-nav" >
+                                                  <li>
+                                                    <a id="acordeon_prescripciones_activas">
+                                                        Prescripciones activas:
+                                                        <label id="label_total_activas"><?= $Prescripciones_activas[0]['activas'] ?></label>
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a id="acordeon_prescripciones_canceladas">
+                                                        Canceladas o Actualizadas:
+                                                        <label id="label_total_canceladas"><?= count($Prescripciones_canceladas) ?></label>
+                                                    </a>
+                                                  </li>
+                                                </ul>
+                                                <label id="estado_panel" hidden>0</label>
+
+                                            </nav>
+                                            <div>
+                                              <table id="historial_medicamentos_activos" style="width:100%;" hidden>
+                                                <thead id="historial_prescripcion" >
+                                                  <tr>
+                                                    <th>Medicamento</th>
+                                                    <th>Categoria Farmacologica</th>
+                                                    <th>Fecha prescripción</th>
+                                                    <th>Dosis</th>
+                                                    <th>Vía</th>
+                                                    <th>Frecuencia</th>
+                                                    <th>Aplicación</th>
+                                                    <th>Fecha Inicio</th>
+                                                    <th colspan="2">Tiempo</th>
+                                                    <th>Fecha Fin</th>
+                                                    <th id="col_dias">Días Transcurridos</th>
+                                                    <th id="col_fechaFin" >Acciones</th>
+                                                    <th id="col_acciones" >Acciones</th>
+                                                    <th id="col_movimiento" >Movimiento</th>
+                                                    <th id="col_fecha_movimiento" >Fecha Movimiento</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="table_prescripcion_historial">
+
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <div>
+                                              <div class="panel-group" id='historial_movimientos' hidden>
+
+                                              </div>
+                                            </div>
+
+
+
                                             <!-- Inicio formulario prescripcion -->
-                                            <div class="formulario_prescripcion" hidden>
+                                            <div class="formulario_prescripcion" style="padding-top: 10px;" hidden>
                                               <div class="col-sm-12" style="padding:0">
-                                                <div class="col-sm-8" style="padding: 0;">
+                                                <div class="col-sm-3" style="padding: 0;">
                                                   <div class="form-group">
                                                   <label><b>Medicamento</b></label>
                                                   <div id="borderMedicamento">
-                                                    <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" >
+                                                    <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%">
                                                         <option value="0">-Seleccionar-</option>
                                                         <?php foreach ($Medicamentos as $value) {?>
                                                         <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
@@ -698,20 +754,20 @@
                                                   </div>
                                                   </div>
                                                 </div>
-                                                <div class="col-sm-2" style="padding-right: 0;">
+                                                <div class="col-sm-1" style="padding-right: 0;">
                                                   <div class="form-group" >
-                                                    <label >Dosis</label>
+                                                    <label ><b>Dosis</b></label>
                                                     <div id="borderDosis">
                                                     <input type="number" id="input_dosis" class="form-control">
                                                     </div>
                                                   </div>
                                                 </div>
-                                                <div class="col-sm-2" style="padding-right: 0;">
+                                                <div class="col-sm-1" style="padding-right: 0;">
                                                   <div class="form-group" >
-                                                    <label >Unidad</label>
+                                                    <label ><b>Unidad</b></label>
                                                     <div id="borderUnidad">
                                                     <select name="" id="select_unidad" class="form-control">
-                                                      <option value="0">- Unidad -</option>
+                                                      <option value="0">-Unidad-</option>
                                                       <option value="mg">mg</option>
                                                       <option value="g">g</option>
                                                       <option value="UI">UI</option>
@@ -719,34 +775,8 @@
                                                     </div>
                                                   </div>
                                                 </div>
-                                                <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
-                                                     el select se llena al seleccionar un medicamento -->
-                                                <div hidden class="col-sm-2" style="padding: 1;">
-                                                    <label><b>interaccion_amarilla</b></label>
-                                                    <div id="borderMedicamento">
-                                                      <select id="interaccion_amarilla" class="" style="width: 100%" >
-                                                          <option value="0">-Seleccionar-</option>
-                                                          <?php foreach ($Medicamentos as $value) {?>
-                                                          <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_amarilla']?></option>
-                                                          <?php } ?>
-                                                      </select>
-                                                    </div>
-                                                </div>
-                                                <div hidden class="col-sm-2" style="padding: 1;">
-                                                    <label><b>interaccion_roja</b></label>
-                                                    <div id="borderMedicamento">
-                                                      <select id="interaccion_roja" class="" style="width: 100%" >
-                                                          <option value="0">-Seleccionar-</option>
-                                                          <?php foreach ($Medicamentos as $value) {?>
-                                                          <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_roja']?></option>
-                                                          <?php } ?>
-                                                      </select>
-                                                    </div>
-                                                </div>
-                                              </div>
-                                              <div class="col-sm-12" style="padding:0">
-                                                <div class="col-sm-2" style="padding: 0;">
-                                                    <label><b>Via Administración</b></label>
+                                                <div class="col-sm-2" >
+                                                    <label><b>Via</b></label>
                                                     <div id="borderVia">
                                                     <select class="select2 selectpicker" id="via_administracion" style="width: 100%" >
                                                         <option value="0">-Seleccionar-</option>
@@ -776,36 +806,47 @@
                                                   <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
                                                   </div>
                                                 </div>
+                                                <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
+                                                     el select se llena al seleccionar un medicamento -->
+                                                <div hidden class="col-sm-2" style="padding: 1;">
+                                                    <label><b>interaccion_amarilla</b></label>
+                                                    <div id="borderMedicamento">
+                                                      <select id="interaccion_amarilla" class="" style="width: 100%" >
+                                                          <option value="0">-Seleccionar-</option>
+                                                          <?php foreach ($Medicamentos as $value) {?>
+                                                          <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_amarilla']?></option>
+                                                          <?php } ?>
+                                                      </select>
+                                                    </div>
+                                                </div>
+                                                <div hidden class="col-sm-2" style="padding: 1;">
+                                                    <label><b>interaccion_roja</b></label>
+                                                    <div id="borderMedicamento">
+                                                      <select id="interaccion_roja" class="" style="width: 100%" >
+                                                          <option value="0">-Seleccionar-</option>
+                                                          <?php foreach ($Medicamentos as $value) {?>
+                                                          <option value="<?=$value['medicamento_id']?>" ><?=$value['interaccion_roja']?></option>
+                                                          <?php } ?>
+                                                      </select>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-sm-12" style="padding:0">
+
+
+
                                                 <div class="col-sm-2" style="padding: 1; padding-left: 0;">
                                                   <label><b>Fecha Inicio</b></label>
                                                   <div id="borderFechaInicio">
                                                   <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
                                                   </div>
                                                 </div>
-                                                <div class="col-sm-1" style="padding: 0;" >
-                                                  <label><b>Dias</b></label>
-                                                  <div id="borderDuracion">
-                                                  <select id="duracion" onchange="mostrarFechaFin()" class="form-control ">
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                    <option value="6">6</option>
-                                                    <option value="7">7</option>
-                                                    <option value="8">8</option>
-                                                    <option value="9">9</option>
-                                                    <option value="10">10</option>
-                                                  </select>
-                                                  </div>
+                                                <!-- El div cambia dependiendo el medicamento que sea prescrito -->
+                                                <div class="tiempo_tipo_medicamento">
+
+
                                                 </div>
-                                                <div class="col-sm-2" style="padding-right: 0; padding-left: 1;">
-                                                  <label><b>Fecha Fin</b></label>
-                                                  <div id="borderFechaFin">
-                                                  <input class="form-control" id="fechaFin"   name="" >
-                                                  </div>
-                                                </div>
+
                                               </div>
 
                                               <div class="col-sm-8" style="padding: 0;" >
@@ -815,13 +856,20 @@
                                                 </div>
                                               </div>
                                               <div class="col-sm-2">
-                                                <div class="form-group" style="padding-top:23px;" hidden id="div_btnActualizarPrescripcion">
-                                                  <button type="button"  id="btnActualizarPrescripcion" class="btn back-imss btn-block" onclick="actualizarPrescripcion()"> MODIFICAR </button>
+                                                <div class="form-group" style="padding-top:23px;" >
+                                                  <div hidden id="div_btnActualizarPrescripcion">
+                                                      <button type="button"  id="btnActualizarPrescripcion" class="btn back-imss btn-block" onclick="actualizarPrescripcion()"> MODIFICAR </button>
+                                                  </div>
                                                 </div>
                                               </div>
                                               <div class="col-sm-2" style="padding-right: 0">
-                                                <div class="form-group" style="padding-top:23px;" >
-                                                  <button type="button" class="btn back-imss btn-block" onclick="agregarPrescripcion()"> AGREGAR </button>
+                                                <div class="form-group" style="padding-top:23px;">
+                                                  <div class="btn_agregarPrescripcion">
+                                                      <button type="button" class="btn back-imss btn-block"  onclick="agregarPrescripcion()"> AGREGAR </button>
+                                                  </div>
+                                                  <div class="btn_modificarPrescripcion" hidden>
+                                                      <button type="button" class="btn back-imss btn-block" data-value="" id="btn_modificar_prescripcion"> MODIFICAR </button>
+                                                  </div>
                                                 </div>
                                               </div>
                                               <table style="width:100%;">
@@ -829,12 +877,14 @@
                                                   <tr>
                                                     <th hidden >ID</th>
                                                     <th>Medicamento</th>
+                                                    <th>Categoria F.</th>
                                                     <th>Dosis</th>
                                                     <th>Vía</th>
                                                     <th>Frecuencia</th>
                                                     <th>Aplicación</th>
                                                     <th>Fecha Inicio</th>
-                                                    <th>Dias</th>
+                                                    <th>Tiempo</th>
+                                                    <th>Periodo</th>
                                                     <th>Fecha Fin</th>
                                                     <th>Opciones</th>
                                                   </tr>

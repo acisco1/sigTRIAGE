@@ -21,7 +21,7 @@ class Consultorios extends Config{
         $sql['Consultorio']= $this->BuscarConsultorio($this->UMAE_AREA);
         $Atributos='os_triage.triage_id, ce_fe,ce_he,triage_nombre, triage_nombre_ap,ce_asignado_consultorio,ce_status';
         $sql['Gestion']=$this->config_mdl->_query("SELECT $Atributos
-          FROM os_consultorios_especialidad, os_consultorios_especialidad_llamada, os_triage 
+          FROM os_consultorios_especialidad, os_consultorios_especialidad_llamada, os_triage
           WHERE os_consultorios_especialidad.ce_id=os_consultorios_especialidad_llamada.ce_id_ce AND
                 os_consultorios_especialidad.triage_id=os_triage.triage_id AND
                 os_consultorios_especialidad.ce_status!='Salida' AND
@@ -136,11 +136,23 @@ class Consultorios extends Config{
     public function ObtenerServicioInterconsulta() {
         if($_GET['Interconsultas']=='Solicitadas'){
 
-                $sql['Gestion']= $this->config_mdl->_query("SELECT * FROM os_triage, doc_430200 WHERE
-                    doc_430200.doc_estatus!='Evaluado' AND
+                $sql['Gestion']= $this->config_mdl->_query(
+                   "SELECT *, tb1.especialidad_nombre as esp_nom1, tb2.especialidad_nombre as esp_nom2
+
+                    FROM os_triage, doc_430200
+                    INNER JOIN um_especialidades as tb1
+                      ON tb1.especialidad_id = doc_430200.doc_servicio_solicitado
+                    INNER JOIN um_especialidades as tb2
+                      ON tb2.especialidad_id = doc_430200.doc_servicio_envia
+                    WHERE doc_430200.doc_estatus!='Evaluado' AND
                     doc_430200.empleado_envia!=$this->UMAE_USER AND
                     os_triage.triage_id=doc_430200.triage_id AND
-                    doc_430200.doc_servicio_solicitado=(SELECT empleado_servicio FROM os_empleados WHERE empleado_id = $this->UMAE_USER)");
+                    doc_430200.doc_servicio_solicitado = (SELECT especialidad_id
+                                                          FROM um_especialidades
+                                                          WHERE especialidad_id = (SELECT empleado_servicio
+                                                                                   FROM os_empleados
+                                                                                   WHERE empleado_id = $this->UMAE_USER ))");
+
 
         }else{
             $sql['Gestion']= $this->config_mdl->_query("SELECT * FROM os_triage, doc_430200 WHERE
@@ -322,6 +334,16 @@ class Consultorios extends Config{
         return $sqlConsultorio['especialidad_nombre'];
 
     }
+    public function ObtenerEspecialidadID($data) {
+        $Consultorio=$data['Consultorio'];
+        $sqlConsultorio= $this->config_mdl->_query("SELECT * FROM um_especialidades, um_especialidades_consultorios WHERE
+            um_especialidades.especialidad_id=um_especialidades_consultorios.especialidad_id AND
+            um_especialidades_consultorios.consultorio_nombre='$Consultorio'")[0];
+        return $sqlConsultorio['especialidad_id'];
+
+    }
+
+
     public function ObtenerEspecialidades() {
         $sqlEspecialidades= $this->config_mdl->_query("SELECT * FROM um_especialidades");
         foreach ($sqlEspecialidades as $value) {

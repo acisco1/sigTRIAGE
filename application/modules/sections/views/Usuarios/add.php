@@ -181,7 +181,7 @@
                                         </span>
                                         <select name="empleado_servicio" class="form-control" data-value="<?=$info[0]['empleado_servicio']?>">
                                             <?php foreach ($Especialidades as $value) {?>
-                                            <option value="<?=$value['especialidad_nombre']?>"><?=$value['especialidad_nombre']?></option>
+                                            <option value="<?=$value['especialidad_id']?>"><?=$value['especialidad_nombre']?></option>
                                             <?php }?>
                                         </select>
                                     </div>

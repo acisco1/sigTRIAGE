@@ -2,9 +2,12 @@
 <page backtop="80mm" backbottom="50mm" backleft="48" backright="1mm">
     <page_header>
         <style>
-            table, td, th {text-align: left;}
-            table {border-collapse: collapse;width: 100%;}
-            th, td {padding: 5px;}
+            th, td {
+              padding-left: 3px;
+              padding-right: 3px;
+              padding-top: 2px;
+              padding-bottom: 2px;
+            }
         </style>
         <img src="<?=  base_url()?>assets/doc/DOC430128_HF.png" style="position: absolute;width: 805px;margin-top: 0px;margin-left: -10px;">
         <div style="position: absolute;margin-top: 15px">
@@ -168,6 +171,11 @@
         <?=$hoja['hf_antecedentes']?>
         <br>
         <?php }?>
+        <?php if($PINFO['alergias']!=''){?>
+        <h5 style="margin-bottom: -6px">ALERGIAS</h5>
+        <?=$PINFO['alergias']?>
+        <br>
+        <?php }?>
         <?php if($hoja['hf_padecimientoa']!=''){?>
         <h5 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h5>
         <?=$hoja['hf_padecimientoa']?>
@@ -287,7 +295,7 @@
             <td><?= $Prescripcion[$x]['dias'] ?></td>
           </tr>
           <tr>
-            <td colspan="9" style="text-align: left; border-bottom: 1px solid #ddd;">Observacion: <?= $Prescripcion[$x]['observacion'] ?></td>
+            <td colspan="9" style="text-align: left; border-bottom: 1px solid #ddd;"><b>Observación:</b> <?= $Prescripcion[$x]['observacion'] ?></td>
           </tr>
         <?php } ?>
         </table>

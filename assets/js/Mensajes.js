@@ -246,6 +246,12 @@ $('.fecha-calendar,.fecha_calendar').datepicker({
     format: 'yyyy/mm/dd',
     todayHighlight: true
 });
+//input id="fechaInicio" ubicado en /Documentos/Doc_Notas
+$('#fechaInicio').datepicker({
+  startDate: new Date(),
+  format: 'dd/mm/yyyy',
+  language: 'es'
+});
 $('.dd-mm-yyyy').datepicker({
     autoclose: true,
     format: 'dd/mm/yyyy',

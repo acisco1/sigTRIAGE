@@ -37,7 +37,7 @@
                                         <th>ENVIO</th>
                                         <th>ÁREA QUE ENVIA</th>
                                         <th>ÁREA SOLICITADA</th>
-                                        <th>DIAGNOSTICO</th>
+                                        <th>MOTIVO</th>
                                         <th>ACCIONES</th>
                                     </tr>
                                 </thead>
@@ -49,12 +49,12 @@
                                         </td>
                                         <td style="width: 16%"><?=$value['doc_fecha']?> <?=$value['doc_hora']?></td>
                                         <td style="width: 18%;text-align: center">
-                                            <?=$value['doc_servicio_envia']?><br>
+                                            <?=$value['esp_nom2']?><br>
                                             (<?=$value['doc_modulo']?>)
                                         </td>
-                                        <td style="width: 18%;text-align: center"><?=$value['doc_servicio_solicitado']?></td>
-                                        <td style="width: 15%" class="ver-texto pointer" data-content-title="DIAGNOSTICO" data-content-text="<?=$value['doc_diagnostico']?>">
-                                            <?= substr($value['doc_diagnostico'], 0,20)?>...
+                                        <td style="width: 18%;text-align: center"><?=$value['esp_nom1']?></td>
+                                        <td style="width: 15%" class="ver-texto pointer" data-content-title="DIAGNOSTICO" data-content-text="<?=$value['motivo_interconsulta']?>">
+                                            <?= substr($value['motivo_interconsulta'], 0,20)?>...
                                         </td>
                                         <td >
 

@@ -1,9 +1,9 @@
-<?= modules::run('Sections/Menu/index'); ?> 
+<?= modules::run('Sections/Menu/index'); ?>
 <div class="box-row">
     <div class="box-cell">
         <div class="box-inner col-md-12" style="margin-top: 10px">
             <div class="panel panel-default ">
-                
+
                 <div class="panel-heading p teal-900 back-imss">
                     <span style="font-size: 15px;font-weight: 500;text-transform: uppercase">LISTA DE PACIENTES EN CONSULTORIO (<?=count($Gestion)?> PACIENTES)</span>
                     <a href="<?=  base_url()?>Consultorios/Indicadores" class="md-btn md-fab m-b red pull-right tip " data-original-title="Indicadores" target="_blank" style="position: absolute;right: 20px;top: 0px">
@@ -54,37 +54,53 @@
                                         </td>
                                         <td ><?=$t_c->d?> Días <?=$t_c->h?> Hrs <?=$t_c->i?> Min</td> <!-- tiempo trascurrido -->
                                         <td ><?=$value['ce_asignado_consultorio']?></td> <!-- Consultorio Asignado -->
-                                        <td>                                             <!-- Estado -->
-                                            <?=$value['ce_status']?>
+                                        <td>
+
+                                                                                 <!-- Estado -->
+
+                                            <?php
+                                            $sqlInterconsulta=$this->config_mdl->_query("SELECT doc_estatus,doc_id,especialidad_nombre FROM doc_430200
+                                            INNER JOIN um_especialidades ON
+                                              doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
+                                            WHERE triage_id = ".$value['triage_id']." AND doc_modulo = 'Consultorios' "
+                                            );
+                                            $Total = count($sqlInterconsulta);
+
+
+                                             ?>
+
                                             <?php if($value['ce_status']=='Interconsulta'){
+                                                echo $value['ce_status'].": ".$Total;
                                                 echo '<br>';
-                                                $sqlInterconsulta=$this->config_mdl->_get_data_condition('doc_430200',array(
-                                                    'triage_id'=>$value['triage_id'],
-                                                    'doc_modulo'=>'Consultorios',
-                                                ));
-                                                $Total= count($sqlInterconsulta);
-                                                $Evaluados=0;
+
+
+                                                $Evaluados = 0;
                                                 foreach ($sqlInterconsulta as $value_st) {
                                                 ?>
-                                                        <?php 
+                                                        <?php
                                                         if($value_st['doc_estatus']=='En Espera'){
                                                         ?>
-                                                        <span class="label amber pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/DOC430200/<?=$value_st['doc_id']?>')"><?=$value_st['doc_servicio_solicitado']?></span><br>
-                                                        
-                                                        <?php   
+                                                        <span class="label amber pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/DOC430200/<?=$value_st['doc_id']?>')">
+                                                          <?=$value_st['especialidad_nombre']?>
+                                                        </span><br>
+
+                                                        <?php
                                                         }else{
                                                             $Evaluados++;
                                                         ?>
-                                                           
+
                                                         <a href="<?= base_url()?>Consultorios/InterconsultasDetalles?inter=<?=$value_st['doc_id']?>" target="_blank">
-                                                            <span class="label green"><?=$value_st['doc_servicio_solicitado']?></span>
+                                                            <span class="label green"><?=$value_st['especialidad_nombre']?></span>
                                                         </a>
                                                         <br>
                                                         <?php
                                                         }
 
                                                     }
+                                            }else{
+                                              echo $value['ce_status'];
                                             }?>
+
                                         </td>
                                         <td >           <!-- Aciones -->
                                             <a href="<?=  base_url()?>Sections/Documentos/Expediente/<?=$value['triage_id']?>/?tipo=Consultorios" target="_blank">
@@ -94,8 +110,8 @@
 
                                             <?php if($value['ce_hf']==''){?>
                                             <i class="fa fa-bed tip salida-paciente-observacion pointer icono-accion" data-con="<?=$info_c[0]['empleado_area']?>"  data-id="<?=$value['triage_id']?>" data-original-title="Enviar a Observación"></i>&nbsp;
-                                            
-                                            
+
+
                                             <i class="fa fa-share-square-o icono-accion pointer tip abandono-consultorio" data-id="<?=$value['triage_id']?>" data-original-title="Alta por ausencia del paciente"></i>
                                             <?php }?>
                                             <?php if($value['ce_hf']!=''){?>
@@ -112,11 +128,11 @@
                                     </td>
                                 </tr>
                                 </tfoot>
-                            </table>            
+                            </table>
                         </div>
-                        
+
                     </div>
-                </div>      
+                </div>
             </div>
         </div>
     </div>

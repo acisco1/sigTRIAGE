@@ -282,8 +282,6 @@ if(count($Residentes) == 3){
           TOMA DE SIGNOS: <?= $toma_signos ?> <br><br>
         <?php } ?>
 
-
-
         <?php if($Nota['nota_cgenfermeria'] == '1'){ ?>
           CUIDADOS GENERALES:<br><br>
           <label style="margin-left:20px;" >a. Estado neurológico</label><br>
@@ -307,11 +305,7 @@ if(count($Residentes) == 3){
         <h5 style="margin-bottom: -6px">PRESCRIPCIONES:</h5><br>
         <?php if(count($Prescripcion) > 0){?>
         <style media="screen">
-          td,th{
-            text-align: center;
-            width: 100%;
-          }
-          td{padding-bottom: 10px;}
+          
           th{
             border-bottom: 1px solid #ddd;
             padding-bottom: 8px;
@@ -330,20 +324,19 @@ if(count($Residentes) == 3){
             <th>Tiempo transcurrido</th>
           </tr>
         <?php
-
-
          for($x = 0; $x < count($Prescripcion); $x++){
           $new_format_fecha_prescripcion = str_replace('/','-',$Prescripcion[$x]['fecha_inicio']);
           $new_fecha_prescripcion = date('Y-m-d',strtotime($new_format_fecha_prescripcion));
+
           $calcular_tiempo = Modules::run('Config/CalcularTiempoTranscurrido',
           array('Tiempo1' => $new_fecha_prescripcion,
-                'Tiempo2' => $Nota['notas_fecha']
-               ));
+                'Tiempo2' => $Nota['notas_fecha']));
+
           $tiempo = $calcular_tiempo->format('%R%a');
           if($tiempo < 0 ){
             $tiempo = "Sin iniciar";
           }else{
-            $tiempo = str_replace('+','',$tiempo)." dias";
+            $tiempo = str_replace('+','',$tiempo)." días";
           }
           ?>
 

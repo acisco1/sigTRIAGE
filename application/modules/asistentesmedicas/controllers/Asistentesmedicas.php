@@ -58,7 +58,9 @@ class Asistentesmedicas extends Config{
         }
     }
     public function Paciente($paciente) {
-        $sql['MedicosTratantes']= $this->config_mdl->_query("SELECT * FROM os_empleados WHERE os_empleados.empleado_servicio='Admisión Continua'");
+        $sql['MedicosTratantes']= $this->config_mdl->_query("SELECT * FROM os_empleados
+                                                            WHERE os_empleados.empleado_servicio = 1
+                                                            AND os_empleados.empleado_roles = '2' ");
         $sql['info']=  $this->config_mdl->sqlGetDataCondition('os_triage',array(
            'triage_id'=>  $paciente
         ),'triage_id,triage_nombre,triage_nombre_am,triage_nombre_ap,triage_fecha_nac,triage_paciente_sexo,triage_paciente_estadocivil,triage_paciente_curp,triage_color,triage_consultorio_nombre');
@@ -617,5 +619,5 @@ class Asistentesmedicas extends Config{
         echo "<option value='".$sql['Medico'][$i]['empleado_matricula']."'>".$sql['Medico'][$i]['empleado_nombre']." ".$sql['Medico'][$i]['empleado_apellidos']."</option>";
       }
     }
-    
+
 }
