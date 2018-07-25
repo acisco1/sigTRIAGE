@@ -599,7 +599,45 @@
                               </div>
                               <div class="diagnosticos_secundarios_dinamico">
                                 <?php for($x = 2; $x < count($Diagnosticos); $x++){ ?>
-                                  
+                                  <div class='row'  id='form_diagnosticos_secundarios_<?=$x?>'>
+                                    <div class='col-sm-2'>
+                                      <label class='md-check' style='padding-top:6px;'>
+                                        <input type='radio' class='has-value' value='0' id='diagnostico_frecuente_<?=$x?>' name='tipo_diagnostico_<?=$x?>' />
+                                        <i class='red'></i>
+                                        Frecuentes
+                                      </label>
+
+                                      <label class='md-check' style='padding-top:6px;'>
+                                        <input type='radio' class='has-value' value='1' id='diagnostico_cie_<?=$x?>' name='tipo_diagnostico_<?=$x?>' />
+                                        <i class='red'></i>
+                                        CIE-10
+                                      </label>
+                                    </div>
+
+                                    <div class='col-sm-7'>
+                                      <div class='form-group'>
+                                        <label>Diagnostico</label>
+                                        <input type='text' class='form-control' id='text_diagnostico_<?=$x?>' value="<?= $Diagnosticos[$x]['cie10_nombre'] ?>" onkeydown="BuscarDiagnostico(<?=$x?>)" />
+
+                                          <ul class='contenedor_consulta_diagnosticos' id='lista_resultado_diagnosticos_<?=$x?>' ></ul>
+
+                                      </div>
+                                    </div>
+
+                                    <div class='col-sm-2'>
+                                      <label>Codigo</label>
+                                      <input type='text' class='form-control' id='text_codigo_diagnostico_<?$x?>' value="<?= $Diagnosticos[$x]['cie10_clave'] ?>" disabled/>
+                                      <input type='hidden' class='form-control' name='cie10_id[]' id='text_id_diagnostico_<?$x?>' >
+                                      <input type='hidden' name='tipo_diagnostico[]' value='1' >
+                                    </div>
+
+                                    <div class='col-sm-1' style='padding-top:25px;'>
+                                      <a class='btn btn-imms-cancel width100 delete-diagnostico-secundario' title='Borrar diagnostico secundario' onclick="BorrarDiagnosticoDinamico(<?=$x?>)">
+                                        <span class='glyphicon glyphicon-remove'></span>
+                                      </a>
+                                    </div>
+
+                                  </div>
                                 <?php } ?>
 
                               </div>
