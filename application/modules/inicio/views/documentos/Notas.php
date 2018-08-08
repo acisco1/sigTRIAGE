@@ -176,7 +176,7 @@ if(count($Residentes) == 3){
                 <barcode type="C128A" value="<?=$info['triage_id']?>" style="height: 40px;" ></barcode>
             </div>
             <div style="position: absolute;top: 262px;;width: 500px;;left: 205px;font-size: 12px;text-transform: uppercase;text-align: center;font-weight: bold">
-                <?=$Nota['notas_tipo']?> SERVICIO: <?=$ServicioM[0]['empleado_servicio'] ?>
+                <?=$Nota['notas_tipo']?> SERVICIO: <?=$ServicioM[0]['especialidad_nombre'] ?>
             </div>
         </div>
 
@@ -231,6 +231,14 @@ if(count($Residentes) == 3){
                  <h5 style="margin-botton: -6px">PRONOSTICOS</h5>
                  <?=$Nota['nota_pronosticos']?>
           <?php }?>
+          <h5 style="margin-botton: -6px">DIAGNOSTICO INGRESO:</h5>
+          <?= $Diagnosticos[0]['cie10_clave']." - ".$Diagnosticos[0]['cie10_nombre']?>
+          <h5 style="margin-botton: -6px">DIAGNOSTICO SECUNDARIO (COMORBILIDADES):</h5>
+          <?php for($x = 1; $x < count($Diagnosticos); $x++){
+              echo $Diagnosticos[$x]['cie10_clave']." - ".$Diagnosticos[$x]['cie10_nombre']."<br>";
+          } ?>
+
+
           <?php if($Nota['nota_estadosalud']!=''){ ?>
              <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
           <?php } ?>
@@ -278,7 +286,7 @@ if(count($Residentes) == 3){
         }
         ?>
 
-        <?php if($goma_signos != 0){ ?>
+        <?php if(count($Nota['nota_svycuidados']) > 0){ ?>
           TOMA DE SIGNOS: <?= $toma_signos ?> <br><br>
         <?php } ?>
 
@@ -305,7 +313,7 @@ if(count($Residentes) == 3){
         <h5 style="margin-bottom: -6px">PRESCRIPCIONES:</h5><br>
         <?php if(count($Prescripcion) > 0){?>
         <style media="screen">
-          
+
           th{
             border-bottom: 1px solid #ddd;
             padding-bottom: 8px;
@@ -356,10 +364,29 @@ if(count($Residentes) == 3){
         </table>
         <?php }?>
 
-        <?php if($Nota['nota_interconsultas']!=''){?>
-         <h5 style="margin-botton: -6px">INTERCONSULTAS</h5>
-            <?=$Nota['nota_interconsulta']?>
-        <?php }?>
+       <?php
+        $count_interconsultas = count($Interconsultas);
+       if($count_interconsultas > 0){  ?>
+         <h5 style="margin-botton: -6px">INTERCONSULTAS: </h5>
+       <?php }
+       $separacion = "Servicios: ";
+       $motivo = $Interconsultas[0]['motivo_interconsulta'];
+       echo "<strong>".$separacion." </strong>";
+       for($x = 0; $x < $count_interconsultas; $x++){
+         echo "".$Interconsultas[$x]['especialidad_nombre'].", ";
+         if($count_interconsultas == ($x + 1)){
+           $separacion = " ";
+         }
+         if($motivo != $Interconsultas[$x + 1]['motivo_interconsulta']){
+           echo "<br><strong>Motivo: </strong>".$motivo."<br><br><strong>".$separacion."</strong>";
+           $motivo = $Interconsultas[$x + 1]['motivo_interconsulta'];
+         }
+       }
+      ?>
+
+
+
+
 
     </span>
     <page_footer>

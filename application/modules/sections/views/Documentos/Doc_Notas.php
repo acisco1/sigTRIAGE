@@ -28,6 +28,30 @@
               #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover{
                 background-color: rgba(0, 0, 0, 0.12);
               }
+              .lista_resultado_diagnosticos{
+                margin: 0px;
+                padding-left: 16px;
+              }
+              .lista_diagnosticos{
+                list-style: none;
+                padding: 5px;
+                border-left: 1px solid #000;
+                border-right: 1px solid #000;
+                color: black;
+                background-color: #fff;
+              }
+              .lista_diagnosticos:hover{
+                background-color: #256659;
+                color: white;
+              }
+              .contenedor_consulta_diagnosticos{
+                max-width: 2000px;
+                max-height: 200px;
+                position:absolute;
+                left:0px;
+                z-index: 1;
+                overflow: auto;
+              }
           </style>
             <style type="text/css">
                 fieldset.scheduler-border {
@@ -35,6 +59,8 @@
                 padding: 0 10px 10px 10px;
                 border-bottom: none;
             }
+
+
 
             legend.scheduler-border {
                 width: auto !important;
@@ -95,6 +121,25 @@
                 float: right;
                 color: #256659;
             }
+            .tipo_nota{
+              text-align: center;
+              border:none;
+              background:none;
+              margin:0;
+              outline:0;
+              width: 100%;
+              color: white;
+            }
+            .tipo_nota:-moz-read-only{
+              background: none;
+            }
+            .tipo_nota:read-only{
+              background: none;
+            }
+            .btn_agregarDiagnostico{
+              height:42px;
+              width: 60px;
+            }
             .panel-heading .accordion-toggle.collapsed:after {
                 font-family: 'Glyphicons Halflings';
                 content: "\e080";
@@ -143,6 +188,7 @@
                                     }
                                 ?> | <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA: '.$PINFO['pia_procedencia_espontanea_lugar'] : ': '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?> | <?=$info['triage_color']?>
                             </h4>
+                            <h4>ALERGIAS : <?=$PINFO['alergias'] ?></h4>
                         </div>
                         <div class="col-sm-3 text-right">
                             <h3><b>EDAD</b></h3>
@@ -164,27 +210,18 @@
                     <div class="card-body" style="padding: 20px 0px;">
                         <form class="Form-Notas-COC" oninput="x.value=parseInt(nota_eva.value)">
                             <div class="row" >
-                                <div class="col-md-7" style="margin-top: -10px">
+                                <div class="col-md-12" style="margin-top: -10px">
                                     <div class="form-group">
                                         <div class="input-group m-b">
-                                            <span class="input-group-addon back-imss border-back-imss">SELECCIONAR TIPO DE NOTA</span>
                                             <?php
-                                            if(isset($_GET['via']) && $_GET['via'] == 'Interconsulta'){
-
-                                              $select_disable = "disabled";
+                                            $tipo_nota = ' NOTA DE EVOLUCIÓN ';
+                                            if($_GET['via'] == 'Interconsulta'){
+                                              $tipo_nota = 'NOTA DE INTERCONSULTA';
                                             }
                                              ?>
-                                              <select name="notas_tipo" class="form-control" <?= $select_disable ?> data-value="<?=$Nota['notas_tipo']?>" required>
-                                                <option value="" selected hidden>NOTAS</option>
-                                                <?php foreach ($Documentos as $value) {
-                                                  $option_seleccion = "";
-                                                  if(isset($_GET['via']) && $_GET['via'] == 'Interconsulta' && $value['doc_nombre'] == 'NOTA DE INTERCONSULTA'){
-                                                    $option_seleccion = "selected";
-                                                  }?>
-                                                <option <?= $option_seleccion ?> value="<?=$value['doc_nombre']?>"><?=$value['doc_nombre']?></option>
-                                                <?php }?>
-                                            </select>
-
+                                            <span class="input-group-addon back-imss border-back-imss" >
+                                              <input readonly type="text" readonly class="tipo_nota form-control width100" name="notas_tipo" value="<?=$tipo_nota?>">
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -247,10 +284,15 @@
                 $visibleInterconsulta = "hidden";
                 if($Nota['notas_tipo']=='NOTA DE INTERCONSULTA' || isset($_GET['via']) && $_GET['via'] == 'Interconsulta'){
                   $visibleInterconsulta = "";
+                  $MotivoInterconsulta = $this->config_mdl->_query("SELECT motivo_interconsulta FROM doc_430200 WHERE triage_id = ". $_GET['folio']." AND doc_servicio_solicitado = (SELECT empleado_servicio
+                  FROM os_empleados WHERE empleado_id = $this->UMAE_USER)");
                 } ?>
+
                 <div class="col-sm-12 nota_motivoInterconsulta <?=$visibleInterconsulta ?>">
                     <h4><span class = "label back-imss border-back-imss">MOTIVO DE INTERCONSULTA</span></h4>
-                    <textarea class="form-control" name="nota_motivoInterconsulta" rows="4" placeholder="Anote el motivo de la interconsulta"><?=$Nota['nota_motivoInterconsulta']?></textarea>
+
+                    <p style="font-size:large;"><?=$MotivoInterconsulta[0]['motivo_interconsulta']?></p>
+                    <!-- <textarea class="form-control" name="nota_motivoInterconsulta" rows="4" placeholder="Anote el motivo de la interconsulta" style="display:none"></textarea> -->
                 </div>
                     <div class="col-sm-12" >
                       <h4><span class = "label back-imss border-back-imss">EVOLUCION Y/O ACTUALIZACION DEL CUADRO CLINICO</span></h4>
@@ -491,7 +533,7 @@
 </div>
                        <div class="col-md-12">
                                 <div class="form-group">
-                                    <h4><span class = "label back-imss border-back-imss">RESULTADOS DE SERVICIO AUXILIARES DE DIAGNOSTICO</span></h4>
+                                    <h4><span class = "label back-imss border-back-imss">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</span></h4>
                                         <textarea class="form-control" name="nota_auxiliaresd" rows="5" placeholder=""><?=$Nota['nota_auxiliaresd']?></textarea>
                                     </div>
                                 <div class="form-group">
@@ -499,8 +541,49 @@
                                         <textarea class="form-control textWysihtml5" name="nota_procedimientos" rows="5" placeholder="Incluye intervencionismo en servicios auxiliares de diágnóstico"><?=$Nota['nota_procedimientos']?></textarea>
                                 </div>
                                 <div class="form-group">
-                                        <h4><span class = "label back-imss border-back-imss">ACTUALIZACION DE DIAGNÓSTICO(S)</span></h4>
-                                        <textarea class="form-control" name="nota_diagnostico" rows="5" placeholder="Anote diagnóstico y problemas clinicos"><?=$Nota['nota_diagnostico']?></textarea>
+                                  <h4><span class = "label back-imss border-back-imss">ACTUALIZACION DE DIAGNÓSTICO(S)</span></h4>
+
+                                  <!-- <textarea class="form-control" name="nota_diagnostico" rows="5" placeholder="Anote diagnóstico y problemas clinicos"><?=$Nota['nota_diagnostico']?></textarea> -->
+                                  <div class="seccion_diagnosticos">
+
+                                    <nav class=" back-imss">
+                                        <ul class="nav navbar-nav" >
+                                          <li>
+                                            <a id="consulta_diagnosticos" style="font-size:16px;">
+                                                Historial Diagnosticos
+                                            </a>
+                                          </li>
+                                        </ul>
+                                        <ul class="nav navbar-nav" style="float:right" >
+                                          <li>
+                                            <div style="padding-right:10px;">
+                                              <button  type="button" class="btn btn-success btn_agregarDiagnostico add-diagnostico-secundario"
+                                                title="Agregar Diagnostico Secundario" name="button">
+                                                <span class="glyphicon glyphicon-plus "></span>
+                                              </button>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                    </nav>
+                                    <div class="">
+                                      <table class="width100">
+                                        <thead class="table_diagnosticos" data-value="0" hidden>
+                                          <tr>
+                                            <th>CLAVE</th>
+                                            <th>DIAGNOSTICO</th>
+                                            <th>TIPO</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody class="historial_diagnosticos">
+
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                    <div class="diagnosticos_secundarios_dinamico">
+
+                                    </div>
+                                  </div>
+
                                 </div>
                                 <div class="form-group">
                                  <h4><span class = "label back-imss border-back-imss">ESTADO DE SALUD</span></h4>
@@ -896,16 +979,25 @@
 
                                         <br/>
                                 <div class="form-group">
-                                    <h4><span class = "label back-imss border-back-imss">SOLICITUD DE INTERCONSULTAS</span></h4>
-                                    <?php echo $nota_interconsulta; ?>
-                                        <div class="input-group m-b">
-                                          <span class="input-group-addon back-imss border-back-imss"><i class="fa fa-user-plus"></i></span>
-                                              <select class="select2" multiple="" name="nota_interconsulta[]" id="nota_interconsulta" data-value="<?=$Nota['nota_interconsulta']?>" style="width: 100%">
+
+                                    <h4>
+                                      <span class = "label back-imss border-back-imss">SOLICITUD DE INTERCONSULTAS</span>
+                                      <input type="checkbox" name="check_solicitud_interconsulta" value="0" >
+                                      <label id="lbl_check_interconsulta">- SI</label>
+                                    </h4>
+
+                                        <div class="input-group m-b nota_interconsulta" style='display:none' >
+                                          <span class="input-group-addon  back-imss border-back-imss"><i class="fa fa-user-plus"></i></span>
+                                              <select class="select2" multiple="" name="nota_interconsulta[]" id="nota_interconsulta" data-value="" style="width: 100%">
                                                 <?php foreach ($Especialidades as $value) {?>
                                                 <option value="<?=$value['especialidad_id']?>"><?=$value['especialidad_nombre']?></option>
-                                                <?php }?>
+                                                <?php } ?>
                                               </select>
                                         </div>
+                                </div>
+                                <div class="form-group nota_interconsulta" style='display:none' >
+                                  <label for=""><b>MOTIVO</b></label>
+                                  <textarea class="form-control" name="motivo_interconsulta" rows="2"><?=$Interconsultas[0]['motivo_interconsulta'] ?></textarea>
                                 </div>
 
                     </div>

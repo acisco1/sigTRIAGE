@@ -19,6 +19,7 @@ class Usuarios extends Config{
     public function index() {
         $this->load->view('Usuarios/index');
     }
+    
     public function Usuario($usuario) {
         $sql['info']=   $this->config_mdl->_get_data_condition('os_empleados',array('empleado_id'=>$usuario));
         $sql['roles']=  $this->config_mdl->_get_data('os_roles');
@@ -54,7 +55,7 @@ class Usuarios extends Config{
            'empleado_servicio'=>        $this->input->post('empleado_servicio'),
            'empleado_cedula'=>          $this->input->post('empleado_cedula'),
            'empleado_perfil'=>          'default.png',
-           'empleado_fecha_registro'=>  date('d/m/Y'), 
+           'empleado_fecha_registro'=>  date('d/m/Y'),
            'empleado_turno'=>           $this->input->post('empleado_turno'),
            'empleado_modulo'=>          $this->input->post('empleado_modulo'),
            'empleado_crea'=>$_SESSION['UMAE_USER'],
@@ -62,7 +63,7 @@ class Usuarios extends Config{
            'empleado_crea_h'=>  date('H:i'),
            'empleado_roles'=>  trim($roles, ','),
            'empleado_sc'=>'No'
-           
+
        );
        if($this->input->post('jtf_accion')=='add'){
             $this->config_mdl->_insert('os_empleados',$data);
@@ -86,7 +87,7 @@ class Usuarios extends Config{
                 $this->config_mdl->_insert('os_empleados_roles',array(
                     'empleado_id'=>$this->input->post('empleado_id'),
                     'rol_id'=>$rol_select
-                )); 
+                ));
             }
            $this->setOutput(array('accion'=>'1'));
        }
@@ -162,7 +163,7 @@ class Usuarios extends Config{
                'empleado_id'=> $this->input->post('empleado_id')
            ));
        }
-       
+
        $this->setOutput(array('accion'=>'1'));
    }
    public function AjaxRecargarPagina() {
@@ -170,12 +171,12 @@ class Usuarios extends Config{
             'empleado_pagina_reload'=>'Si'
        ),array(
            'empleado_id'=> $this->input->post('empleado_id')
-       ));  
+       ));
        $this->setOutput(array('accion'=>'1'));
    }
    public function AjaxCheckSesion() {
        $sql= $this->config_mdl->_get_data_condition('os_empleados',array(
-          'empleado_id'=> $this->UMAE_USER 
+          'empleado_id'=> $this->UMAE_USER
         ));
         if($sql[0]['empleado_conexion']=='1'){
             if(!isset($_SESSION['UMAE_USER'])){
@@ -184,13 +185,13 @@ class Usuarios extends Config{
                 $this->config_mdl->_update_data('os_empleados',array(
                     'empleado_pagina_reload'=>'No'
                 ),array(
-                    'empleado_id'=> $this->UMAE_USER 
+                    'empleado_id'=> $this->UMAE_USER
                 ));
                 $this->setOutput(array('accion'=>'4'));
             }else{
                 $this->setOutput(array('accion'=>'1'));
             }
-           
+
         }else{
             $this->setOutput(array('accion'=>'2'));
         }
@@ -229,7 +230,7 @@ class Usuarios extends Config{
            'empleado_turno'=> $this->input->post('empleado_turno'),
            'empleado_sc'=> $empleado_sc,
            'empleado_password'=> sha1($this->input->post('empleado_password')),
-           'empleado_base64'=> base64_encode($this->input->post('empleado_password')) 
+           'empleado_base64'=> base64_encode($this->input->post('empleado_password'))
        );
        $this->config_mdl->_update_data('os_empleados',$data,array(
            'empleado_id'=> $this->UMAE_USER
@@ -253,7 +254,7 @@ class Usuarios extends Config{
         ),array(
             'empleado_id'=> $this->UMAE_USER
         ));
-       
+
        $this->setOutput(array('accion'=>'1'));
    }
    public function AjaxBuscarEmpleado() {

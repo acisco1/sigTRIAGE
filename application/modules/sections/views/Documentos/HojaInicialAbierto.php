@@ -500,6 +500,7 @@
                             <!-- <textarea class="form-control hf_textarea" rows="3" name="hf_diagnosticos_lechaga" required><?=$hojafrontal[0]['hf_diagnosticos_lechaga']?></textarea> -->
 
                             <div class="row">
+                              <!-- Radio para filtrar la busqueda de diagnosticos por cie-10 o frecuentes
                               <div class="col-sm-2 ">
 
                                 <label class="md-check" style="padding-top:6px;">
@@ -508,13 +509,16 @@
                                   Frecuentes
                                 </label>
 
+
                                 <label class="md-check" style="padding-top:10px;">
                                   <input type="radio" class="has-value" value="1" id='diagnostico_cie_0' name="tipo_diagnostico_0" >
                                   <i class="red"></i>
                                   CIE-10
                                 </label>
+
                               </div>
-                              <div class="col-sm-7">
+                              -->
+                              <div class="col-sm-9">
                                 <div class="form-group">
                                   <label for="">Diagnostico</label>
 
@@ -560,8 +564,9 @@
                              ?>
                             <div class="diagnosticos_secundarios" <?=$secundarios_vista?>>
                               <div class="row">
-
+                                <!--
                                 <div class="col-sm-2 ">
+
                                   <label class="md-check" style="padding-top:6px;">
                                     <input type="radio" class="has-value" value="0" id='diagnostico_frecuente_1' name="tipo_diagnostico_1" >
                                     <i class="red"></i>
@@ -573,9 +578,10 @@
                                     <i class="red"></i>
                                     CIE-10
                                   </label>
-                                </div>
 
-                                <div class="col-sm-7">
+                                </div>
+                                -->
+                                <div class="col-sm-9">
                                   <div class="form-group">
                                     <label for="">Diagnostico</label>
                                     <input type="text" class="form-control" id="text_diagnostico_1" onkeydown="BuscarDiagnostico(1)" value="<?= $Diagnosticos[1]['cie10_nombre'] ?>">
@@ -600,6 +606,7 @@
                               <div class="diagnosticos_secundarios_dinamico">
                                 <?php for($x = 2; $x < count($Diagnosticos); $x++){ ?>
                                   <div class='row'  id='form_diagnosticos_secundarios_<?=$x?>'>
+                                  <!--
                                     <div class='col-sm-2'>
                                       <label class='md-check' style='padding-top:6px;'>
                                         <input type='radio' class='has-value' value='0' id='diagnostico_frecuente_<?=$x?>' name='tipo_diagnostico_<?=$x?>' />
@@ -613,8 +620,9 @@
                                         CIE-10
                                       </label>
                                     </div>
+                                  -->
 
-                                    <div class='col-sm-7'>
+                                    <div class='col-sm-9'>
                                       <div class='form-group'>
                                         <label>Diagnostico</label>
                                         <input type='text' class='form-control' id='text_diagnostico_<?=$x?>' value="<?= $Diagnosticos[$x]['cie10_nombre'] ?>" onkeydown="BuscarDiagnostico(<?=$x?>)" />
@@ -806,7 +814,9 @@
                                 </div>
 
                                 <label><b>f) Prescripción: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
+
                                 <!-- Panel con el historial de prescripciones -->
+                                <!--
                                 <nav class=" back-imss">
 
                                     <ul class="nav navbar-nav" >
@@ -857,6 +867,8 @@
 
                                   </div>
                                 </div>
+                              -->
+                                <!-- Fin panel historial prescripciones -->
 
 
 
@@ -1065,23 +1077,44 @@
                     <div class="col-md-12">
                         <div class="form-group">
                           <h4>
+                            <?php
+                            if(count($Interconsultas) > 0){
+                                $check = 'checked';
+                                $lable_text = "";
+                                $style = "";
+                                $value_check = "1";
+                            }else{
+                              $lable_text = "- SI";
+                              $style = "style='display:none'";
+                              $value_check = "0";
+                            }
+                            ?>
                             <span class = "label back-imss border-back-imss">SOLICITUD DE INTERCONSULTAS</span>
-                            <input type="checkbox" name="check_solicitud_interconsulta" value="0">
-                            <label id="lbl_check_interconsulta"> - SI</label>
+                            <input type="checkbox" name="check_solicitud_interconsulta" value="<?=$value_check?>" <?=$check  ?>>
+                            <label id="lbl_check_interconsulta"><?=$lable_text?></label>
                           </h4>
-                          <?php echo $nota_interconsulta; ?>
-                              <div class="input-group m-b nota_interconsulta " style="display:none" >
+                              <?php
+                              $interconsulta_solicitada = "";
+                              for ($x=0; $x < count($Interconsultas); $x++) {
+                                if($x == 0){
+                                  $interconsulta_solicitada = $Interconsultas[$x]['doc_servicio_solicitado'];
+                                }else{
+                                  $interconsulta_solicitada = $interconsulta_solicitada.",".$Interconsultas[$x]['doc_servicio_solicitado'];
+                                }
+                              }
+                               ?>
+                              <div class="input-group m-b nota_interconsulta " <?=$style?> >
                                 <span class="input-group-addon back-imss border-back-imss"><i class="fa fa-user-plus"></i></span>
-                                    <select class="select2" multiple="" name="nota_interconsulta[]" id="nota_interconsulta" data-value="<?=$Nota['nota_interconsulta']?>" style="width: 100%" >
+                                    <select class="select2" multiple="" name="nota_interconsulta[]" id="nota_interconsulta" data-value="<?=$interconsulta_solicitada?>" style="width: 100%" >
                                       <?php foreach ($Especialidades as $value) {?>
                                       <option value="<?=$value['especialidad_id']?>"><?=$value['especialidad_nombre']?></option>
                                       <?php }?>
                                     </select>
                               </div>
                         </div>
-                        <div class="form-group nota_interconsulta" style="display:none" >
+                        <div class="form-group nota_interconsulta" <?=$style?> >
                           <label for=""><b>MOTIVO</b></label>
-                          <textarea class="form-control" name="motivo_interconsulta" rows="2"></textarea>
+                          <textarea class="form-control" name="motivo_interconsulta" rows="2"><?=$Interconsultas[0]['motivo_interconsulta'] ?></textarea>
                         </div>
                     </div>
 

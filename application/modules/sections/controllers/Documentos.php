@@ -342,7 +342,7 @@ class Documentos extends Config{
                                                           	ON paciente_diagnosticos.diagnostico_id = diagnostico_hoja_frontal.diagnostico_id
                                                           INNER JOIN um_cie10
                                                           	ON um_cie10.cie10_id = paciente_diagnosticos.cie10_id
-                                                          WHERE triage_id = 5133 ORDER BY tipo_diagnostico");
+                                                          WHERE triage_id = ".$_GET['folio']." ORDER BY tipo_diagnostico");
 
         $sql['Prescripciones_canceladas'] = $this->config_mdl->_query("SELECT prescripcion.prescripcion_id
                                                                       FROM prescripcion
@@ -353,6 +353,12 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
+
+        $sql['Interconsultas'] = $this->config_mdl->_query("SELECT * FROM interconsulta_hoja_frontal
+                                                            INNER JOIN doc_430200
+                                                            	ON doc_430200.doc_id = interconsulta_hoja_frontal.doc_id
+                                                            WHERE triage_id = ".$_GET['folio']);
+
         $this->load->view('Documentos/HojaInicialAbierto',$sql);
     }
     public function AjaxDiagnosticos(){
@@ -548,6 +554,20 @@ class Documentos extends Config{
 
             }
 
+            /*
+            Se consultan las interconsultas realizdas en la nota inicial, para
+            ser registrados en el historial de interconsultas de la nota
+            */
+            $interconsultas_hf = $this->config_mdl->_query("SELECT doc_id FROM doc_430200
+                                                            WHERE triage_id = ".$this->input->post('triage_id'));
+            for($x = 0; $x < count($interconsultas_hf); $x++){
+              $datos = array(
+                "hf_id" => $this->config_mdl->_get_last_id('os_consultorios_especialidad_hf','hf_id'),
+                "doc_id" => $interconsultas_hf[$x]['doc_id']
+              );
+              $this->config_mdl->_insert('interconsulta_hoja_frontal',$datos);
+            }
+
             // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
             // tabla "prescripcio"
             for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
@@ -597,6 +617,11 @@ class Documentos extends Config{
               );
               $this->config_mdl->_insert('diagnostico_hoja_frontal',$datos);
             }
+
+            /*
+            Se consultan las interconsultas realizadas en la hoja frontal, para ingresarse
+            en la tabla que distinguira su origen
+            */
 
 
 
@@ -1007,8 +1032,12 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
+
+
+
         $this->load->view('Documentos/Doc_Notas',$sql);
     }
+
     public function AjaxConteoEstadoPrescripciones(){
       $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
                                                                   WHERE estado = 1 AND triage_id = ".$_GET['folio']);
@@ -1167,10 +1196,80 @@ class Documentos extends Config{
             }
           }
 
+          for($x = 0; $x < count($this->input->post('cie10_id')); $x++){
+            $datos_diagnostico = array(
+              'triage_id' => $this->input->post('triage_id'),
+              'cie10_id' => $this->input->post("cie10_id[$x]"),
+              'tipo_diagnostico' => $this->input->post("tipo_diagnostico[$x]")
+            );
+            $this->config_mdl->_insert('paciente_diagnosticos',$datos_diagnostico);
+
+          }
+
+          for($x = 0; $x < count($this->input->post('nota_interconsulta')); $x++){
+            $existencia_interconsuta = $this->config_mdl->_query(
+             "SELECT doc_id
+              FROM doc_430200
+              WHERE doc_servicio_solicitado = ".$this->input->post("nota_interconsulta[$x]")
+            );
+
+            $this->config_mdl->_update_data('os_consultorios_especialidad',array(
+                'ce_status'=>'Interconsulta',
+                'ce_interconsulta'=>'Si'
+            ),array(
+                'triage_id'=>  $this->input->post('triage_id')
+            ));
+
+              $datos_interconsulta = array(
+                'doc_estatus' => 'En Espera',
+                'doc_fecha'=> date('Y-m-d'),
+                'doc_hora' => date('H:i'),
+                'doc_area' => $this->UMAE_AREA,
+                'doc_servicio_envia'=> Modules::run('Consultorios/ObtenerEspecialidadID',array('Consultorio'=>$this->UMAE_AREA)),
+                'doc_servicio_solicitado' => $this->input->post("nota_interconsulta[$x]"),
+                'triage_id' => $this->input->post('triage_id'),
+                'doc_modulo' => "Consultorios",
+                'motivo_interconsulta' => $this->input->post('motivo_interconsulta'),
+                'empleado_envia'=> $this->UMAE_USER
+              );
+              $this->config_mdl->_insert('doc_430200',$datos_interconsulta);
+
+          }
+
+          /*
+          Se consultan las interconsultas realizadas en el momento en que se genero
+          la nota medica
+          */
+          $Interconsultas = $this->config_mdl->_query("SELECT doc_id FROM doc_430200
+                                                      WHERE triage_id = ".$this->input->post('triage_id'));
+          for($x = 0; $x < count($Interconsultas); $x++){
+            $datos = array(
+              'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
+              'doc_id' => $Interconsultas[$x]['doc_id']
+            );
+            $this->config_mdl->_insert('interconsulta_notas',$datos);
+          }
+          /*
+          Se consultan los diagnosticos del paciente registrados
+          para ser asignados en la nota evolucion
+          */
+          $diagnostico = $this->config_mdl->_query("SELECT diagnostico_id
+                                                    FROM paciente_diagnosticos
+                                                    WHERE triage_id =".$this->input->post('triage_id'));
+
+          for($x = 0; $x < count($diagnostico); $x++){
+            $datos = array(
+              'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
+              'diagnostico_id' => $diagnostico[$x]['diagnostico_id']
+            );
+            $this->config_mdl->_insert('diagnostico_notas',$datos);
+          }
+
+
 
             $sqlMax= $this->config_mdl->_get_last_id('doc_notas','notas_id');
             $this->config_mdl->_insert('doc_nota',array(
-                'nota_motivoInterconsulta' => $this->input->post('nota_motivoInterconsulta'),
+                //'nota_motivoInterconsulta' => $this->input->post('nota_motivoInterconsulta'),
                 'nota_interrogatorio'=> $this->input->post('nota_interrogatorio'),
                 'nota_exploracionf'=> $this->input->post('nota_exploracionf'),
                 'nota_escala_glasgow'=> $this->input->post('hf_escala_glasgow'),

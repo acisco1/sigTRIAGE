@@ -195,14 +195,19 @@
         <br>
         <?php }?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
-        <?=$hoja['hf_diagnosticos_lechaga']?>
+        <?=$Diagnosticos[0]['cie10_clave']?> -
+        <?=$Diagnosticos[0]['cie10_nombre']?>
+        <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
+        <?php for($x = 1; $x < count($Diagnosticos); $x++){ ?>
+          <?=$Diagnosticos[$x]['cie10_clave']?> - <?=$Diagnosticos[$x]['cie10_nombre']?>
+          <br>
+        <?php } ?>
 
         <?php if($hoja['hf_diagnosticos']!=''){?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
         <?=$hoja['hf_diagnosticos']?>
         <?php }?>
         <h5 style="margin-bottom: -6px">INDICACIONES Y ORDENES MÉDICAS</h5>
-
 
         <?php if($hoja['hf_nutricion'] == '0') {
           $nutricion = 'Ayuno';
@@ -310,6 +315,20 @@
         <br>
         <?php }?>
         <h5 style="margin-bottom: -6px">ACCIÓN:<?=$hoja['hf_alta']?></h5>
+        <?php $num_interconsultas = count($Interconsultas); ?>
+        <?php if($num_interconsultas > 0){ ?>
+        <h5 style="margin-bottom: -6px">INTERCONSULTAS</h5>
+          Servicios solicitados:
+          <?php for($x = 0; $x < $num_interconsultas; $x++){
+            $y = $x + 1;
+            $separacion = ($y == $num_interconsultas)?".":", ";
+            ?>
+            <?=$Interconsultas[$x]['especialidad_nombre'].$separacion?>
+          <?php } ?>
+          <br><br>
+          Motivo interconsulta: <?=$Interconsultas[0]['motivo_interconsulta'] ?>
+        <?php } ?>
+
          <?php if($hoja['hf_interconsulta']!=''){?>
         <h5 style="margin-bottom: -6px">VALORACION POR: <?=$hoja['hf_interconsulta']?></h5>
         <?php }?>

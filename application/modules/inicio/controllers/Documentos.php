@@ -188,6 +188,23 @@ class Documentos extends Config{
 	        ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
           WHERE triage_id = ".$Paciente);
 
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, tipo_diagnostico FROM um_cie10
+                                    INNER JOIN paciente_diagnosticos
+                                    	ON um_cie10.cie10_id = paciente_diagnosticos.cie10_id
+                                    INNER JOIN diagnostico_hoja_frontal
+                                    	ON paciente_diagnosticos.diagnostico_id = diagnostico_hoja_frontal.diagnostico_id
+                                    WHERE  hf_id = (SELECT hf_id FROM os_consultorios_especialidad_hf
+                                    WHERE triage_id = $Paciente)");
+
+        $sql['Interconsultas'] = $this->config_mdl-> _query("SELECT * FROM interconsulta_hoja_frontal
+                                                            INNER JOIN doc_430200
+                                                            	ON interconsulta_hoja_frontal.doc_id = doc_430200.doc_id
+                                                            INNER JOIN um_especialidades
+                                                            	ON doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
+                                                            WHERE triage_id = $Paciente AND hf_id = (
+                                                            	SELECT hf_id FROM os_consultorios_especialidad_hf
+                                                            	WHERE triage_id = $Paciente	)");
+
         $this->load->view('documentos/HojaFrontal430128Abierto',$sql);
     }
     public function FormatosJefaAsistentesMedicas() {
@@ -641,8 +658,17 @@ class Documentos extends Config{
         $sql['Residentes'] = $this->config_mdl->_query("SELECT nombre_residente,apellido_residente,cedulap_residente
                                                         FROM um_notas_residentes
                                                         WHERE notas_id =".$Nota);
-        $sql['ServicioM'] = $this->config_mdl->_query("SELECT empleado_servicio FROM os_empleados
+        $sql['ServicioM'] = $this->config_mdl->_query("SELECT empleado_servicio, especialidad_nombre
+                                              FROM os_empleados
+                                              INNER JOIN um_especialidades
+                                               ON os_empleados.empleado_servicio = um_especialidades.especialidad_id
                                               WHERE empleado_id =".$sql['Nota']['empleado_id']);
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre FROM diagnostico_notas
+                                                          INNER JOIN paciente_diagnosticos
+                                                          	ON diagnostico_notas.diagnostico_id = paciente_diagnosticos.diagnostico_id
+                                                          INNER JOIN um_cie10
+                                                          	ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
+                                                          WHERE notas_id = ".$Nota." ORDER BY tipo_diagnostico");
         $sql['info']= $this->config_mdl->sqlGetDataCondition('os_triage',array(
             'triage_id'=>$sql['Nota']['triage_id']
         ))[0];
@@ -662,6 +688,25 @@ class Documentos extends Config{
             'triage_id'=>$sql['Nota']['triage_id'],
             'sv_tipo'=>$_GET['inputVia']
         ));
+
+
+
+        $sql['Interconsultas'] = $this->config_mdl->_query("SELECT especialidad_nombre, motivo_interconsulta
+                                                            FROM interconsulta_notas
+                                                            INNER JOIN doc_430200
+                                                            	ON interconsulta_notas.doc_id = doc_430200.doc_id
+                                                            INNER JOIN um_especialidades
+                                                            	ON doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
+                                                            WHERE notas_id =".$Nota);
+
+          $sql['Interconsultas_Evaluadas'] = $this->config_mdl->_query("SELECT especialidad_nombre
+                                                              FROM interconsulta_notas
+                                                              INNER JOIN doc_430200
+                                                              	ON interconsulta_notas.doc_id = doc_430200.doc_id
+                                                              INNER JOIN um_especialidades
+                                                              	ON doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
+                                                              WHERE notas_id =".$Nota." AND doc_estatus = 'Evaluado'");
+
         $sql['Prescripcion'] = $this->config_mdl->_query(
           "SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
           CONCAT(medicamento,' ',gramaje)medicamento, dosis, via_administracion, frecuencia,

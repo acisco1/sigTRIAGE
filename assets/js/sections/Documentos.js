@@ -29,9 +29,9 @@ $(document).ready(function () {
     $('.nota_pronosticos').wysihtml5();
     //$('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2();
 
-    /*if($('input[name=accion]').val()!=undefined){
+    if($('input[name=accion]').val()!=undefined){
         $('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2(); //divide cada seleccinado
-    }*/
+    }
     var triage_paciente_accidente_lugar=$('input[name=pia_lugar_accidente]').val();
     if(triage_paciente_accidente_lugar=='TRABAJO'){
         $('.col-hojafrontal-info').removeClass('hide');
@@ -588,9 +588,11 @@ $(document).ready(function () {
 
       if(value_table == 0){
         $('.table_diagnosticos').attr('data-value',"1");
+        $('.table_diagnosticos').removeAttr('hidden');
         HistorialDiagnosticos(folio);
       }else if(value_table == 1){
         $('.table_diagnosticos').attr('data-value',"0");
+        $('.table_diagnosticos').attr('hidden',true);
         $('.historial_diagnosticos').empty();
       }
 
@@ -763,11 +765,15 @@ $(document).ready(function () {
             }
         })
     })
+
+
+
     var indice_diagnosticos_secundarios = 2;
     $('.add-diagnostico-secundario').click(function(){
       var form_diagnosticos_secundarios = "";
       form_diagnosticos_secundarios =
       "<div class='row'  id='form_diagnosticos_secundarios_"+indice_diagnosticos_secundarios+"'>"+
+      /*
         "<div class='col-sm-2'>"+
           "<label class='md-check' style='padding-top:6px;'>"+
             "<input type='radio' class='has-value' value='0' id='diagnostico_frecuente_"+indice_diagnosticos_secundarios+"' name='tipo_diagnostico_"+indice_diagnosticos_secundarios+"' />"+
@@ -781,8 +787,9 @@ $(document).ready(function () {
             "CIE-10"+
           "</label>"+
         "</div>"+
+        */
 
-        "<div class='col-sm-7'>"+
+        "<div class='col-sm-9'>"+
           "<div class='form-group'>"+
             "<label>Diagnostico</label>"+
             "<input type='text' class='form-control' id='text_diagnostico_"+indice_diagnosticos_secundarios+"' onkeydown=BuscarDiagnostico("+indice_diagnosticos_secundarios+") />"+
@@ -1799,11 +1806,15 @@ function TipoMedicamento(medicamento_id){
     success: function(data, textStatus, jqXHR){
       $('.tiempo_tipo_medicamento').empty();
       var formulario = "";
-      var categoria_farmacologica = data[0].categoria_farmacologica;
-      if(categoria_farmacologica.toLowerCase() == 'antibiotico'){
+      var farmacologica = "null";
+      if(data.length > 0){
+          farmacologica = data[0].categoria_farmacologica;
+      }
+
+      if(farmacologica.toLowerCase() == 'antibiotico'){
         formulario =
         "<div class='col-sm-1' style='padding: 0;' >"+
-          "<label id='categoria_farmacologica' hidden>"+categoria_farmacologica+"</label>"+
+          "<label id='categoria_farmacologica' hidden>"+farmacologica+"</label>"+
           "<label><b>Dias</b></label>"+
           "<div id='borderDuracion'>"+
           "<select id='duracion' onchange='mostrarFechaFin()' class='form-control' >"+
@@ -1830,7 +1841,7 @@ function TipoMedicamento(medicamento_id){
       }else{
         formulario =
         "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
-          "<label id='categoria_farmacologica' hidden>"+categoria_farmacologica+"</label>"+
+          "<label id='categoria_farmacologica' hidden>"+farmacologica+"</label>"+
           "<label><b>Tiempo</b></label>"+
           "<input type='number' class='form-control' id='duracion' onkeyup='mostrarFechaFin()' >"+
         "</div>"+
@@ -1898,16 +1909,19 @@ function BuscarDiagnostico(indice){
   var lista_opciones = "";
   var tipo_diagnostico = $('input:radio[name=tipo_diagnostico_'+indice+']:checked').val();
   var ruta_tipo_diagnostico = "";
-  if(diagnostico_solicitado.length >= 3 && tipo_diagnostico != null){
-
+  //condicion para validar que un input sea seleccionado y filtrar la busqueda
+  //if(diagnostico_solicitado.length >= 3 && tipo_diagnostico != null){
+  if(diagnostico_solicitado.length >= 3){
+    /*
     if(tipo_diagnostico == 0){
       ruta_tipo_diagnostico = "AjaxDiagnosticosFrecuentes";
     }else if(tipo_diagnostico == 1){
       ruta_tipo_diagnostico = "AjaxDiagnosticos";
     }
+    */
 
     $.ajax({
-        url:base_url+'Sections/Documentos/'+ruta_tipo_diagnostico,
+        url:base_url+'Sections/Documentos/AjaxDiagnosticos',
         type: 'get',
         dataType: 'json',
         data:{
@@ -1927,7 +1941,10 @@ function BuscarDiagnostico(indice){
             MsjError();
         }
     });
-  }else if(tipo_diagnostico == null){
+  }
+  /*
+  else if(tipo_diagnostico == null){
     alert("Indicar CIE-10 o Frecuentes");
   }
+  */
 }
