@@ -1008,7 +1008,11 @@ class Documentos extends Config{
         $sql['Residentes'] = $this->config_mdl->_query("SELECT notas_id,nombre_residente,apellido_residente,cedulap_residente
                                                            FROM um_notas_residentes
                                                            WHERE notas_id = $Nota");
-        $sql['Vias'] = array(IV,VO,IT,Enema,IM,Coliris,SC,Rectal,SB,IP,Tupilco,ID,Inhalatoria,Nasal,Otorrino,Ocular);
+
+        $sql['Vias'] = array("INTRAVENOSA","ORAL","TOPICO","OFTALMICO","SUBCUTANEA","INHALATORIA","RECTAL",
+                             "NASAL","INTRAMUSCULAR","TRANSDÉRMICO","VAGINAL","INTRATECAL","SUBLINGUAL",
+                             "DERMICO","PERFUCION INTRAVENOSA","GASTROENTÉRICA","PARENTAL","OFTÁLMICA","ÓTICA");
+
         $sql['MedicosBaseNota'] = $this->config_mdl->_query("SELECT empleado_nombre,empleado_apellidos,empleado_matricula
                                                              FROM os_empleados
                                                              WHERE empleado_id = (
@@ -1032,6 +1036,11 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id
+                                                         FROM paciente_diagnosticos
+                                                         INNER JOIN um_cie10
+                                                        	 ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
+                                                         WHERE triage_id = ".$_GET['folio']);
 
 
 

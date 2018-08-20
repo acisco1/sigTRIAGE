@@ -187,7 +187,7 @@ if(count($Residentes) == 3){
             <h4>INDICACIONES Y ORDENES MEDICAS</h4>
         <?php }else{ ?> <!-- Informacion general de la nota evolucion -->
           <?php if($Nota['nota_problema']!=''){?>
-              <h5 style="margin-bottom: -6px">PROBLEMA</h5>
+              <h5 style="margin-bottom: -6px">PROBLEMA</h5><br>
               <?=$Nota['nota_problema']?>
           <?php }?>
           <?php if($Nota['nota_interrogatorio']!=''){?>
@@ -201,22 +201,22 @@ if(count($Residentes) == 3){
               $objetivo = 'EXPLORACION FISICA';
             } ?>
 
-              <h5 style="margin-bottom: -6px"><?= $subjetivo ?></h5>
+              <h5 style="margin-bottom: -6px"><?= $subjetivo ?></h5><br>
               <?= $Nota['nota_interrogatorio'] ?>
           <?php }?>
           <?php if($Nota['nota_exploracionf']!=''){?>
-              <h5 style="margin-bottom: -6px"><?= $objetivo ?></h5>
+              <h5 style="margin-bottom: -6px"><?= $objetivo ?></h5><br>
               <?=$Nota['nota_exploracionf']?>
           <?php }?>
           <?php if($Nota['nota_analisis']!=''){?>
-              <h5 style="margin-bottom: -6px">ANALISIS</h5>
+              <h5 style="margin-bottom: -6px">ANALISIS</h5><br>
               <?=$Nota['nota_analisis']?>
           <?php }?>
           <?php if($Nota['nota_escala_glasgow']!=''){?>
               <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$Nota['nota_escala_glasgow']?> </h5>
           <?php }?>
           <?php if($Nota['nota_auxiliaresd']!=''){?>
-              <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5>
+              <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5><br>
               <?=$Nota['nota_auxiliaresd']?>
           <?php }?>
           <?php if($Nota['nota_procedimientos']!=''){?>
@@ -364,26 +364,30 @@ if(count($Residentes) == 3){
         </table>
         <?php }?>
 
-       <?php
-        $count_interconsultas = count($Interconsultas);
-       if($count_interconsultas > 0){  ?>
-         <h5 style="margin-botton: -6px">INTERCONSULTAS: </h5>
-       <?php }
-       $separacion = "Servicios: ";
-       $motivo = $Interconsultas[0]['motivo_interconsulta'];
-       echo "<strong>".$separacion." </strong>";
-       for($x = 0; $x < $count_interconsultas; $x++){
-         echo "".$Interconsultas[$x]['especialidad_nombre'].", ";
-         if($count_interconsultas == ($x + 1)){
-           $separacion = " ";
-         }
-         if($motivo != $Interconsultas[$x + 1]['motivo_interconsulta']){
-           echo "<br><strong>Motivo: </strong>".$motivo."<br><br><strong>".$separacion."</strong>";
-           $motivo = $Interconsultas[$x + 1]['motivo_interconsulta'];
-         }
-       }
-      ?>
 
+        <!-- Zona interconsultas -->
+       <?php if($Nota['notas_tipo'] != 'NOTA DE INTERCONSULTA'){
+
+         $count_interconsultas = count($Interconsultas);
+         if($count_interconsultas > 0){  ?>
+           <h5 style="margin-botton: -6px">INTERCONSULTAS: </h5>
+         <?php }
+         $separacion = "Servicios: ";
+         $motivo = $Interconsultas[0]['motivo_interconsulta'];
+         echo "<strong>".$separacion." </strong>";
+         for($x = 0; $x < $count_interconsultas; $x++){
+           echo "".$Interconsultas[$x]['especialidad_nombre'].", ";
+           if($count_interconsultas == ($x + 1)){
+             $separacion = " ";
+           }
+           if($motivo != $Interconsultas[$x + 1]['motivo_interconsulta']){
+             echo "<br><strong>Motivo: </strong>".$motivo."<br><br><strong>".$separacion."</strong>";
+             $motivo = $Interconsultas[$x + 1]['motivo_interconsulta'];
+           }
+         }
+        ?>
+      <?php } ?>
+      <!-- fin zona interconsultas -->
 
 
 

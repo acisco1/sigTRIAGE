@@ -550,7 +550,7 @@
                                         <ul class="nav navbar-nav" >
                                           <li>
                                             <a id="consulta_diagnosticos" style="font-size:16px;">
-                                                Historial Diagnosticos
+                                                Historial Diagnosticos - <?= count($Diagnosticos); ?>
                                             </a>
                                           </li>
                                         </ul>
