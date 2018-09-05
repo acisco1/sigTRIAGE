@@ -86,7 +86,7 @@
                                     <?php }?>
                                     <?php if(!empty($DocumentosNotas)){?>
                                     <li class="">
-                                        <a onclick="AbrirVista(base_url+'Sections/Documentos/Notas/0/?a=add&folio=<?=$this->uri->segment(4)?>&via=<?=$_GET['via']?>&doc_id=<?=$_GET['doc_id']?>&inputVia=<?=$_GET['tipo']?>',1100)" >Generar Nueva Nota Médica</a>
+                                        <a onclick="AbrirVista(base_url+'Sections/Documentos/Notas/0/?a=add&folio=<?=$this->uri->segment(4)?>&via=<?=$_GET['via']?>&doc_id=<?=$_GET['doc_id']?>&inputVia=<?=$_GET['tipo']?>',1100)" target="_blank">Generar Nueva Nota Médica</a>
                                     </li>
                                     <?php }?>
                                     <?php }?>

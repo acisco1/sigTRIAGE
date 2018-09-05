@@ -1036,11 +1036,25 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id, cie10_clave, cie10_nombre
                                                          FROM paciente_diagnosticos
                                                          INNER JOIN um_cie10
                                                         	 ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
                                                          WHERE triage_id = ".$_GET['folio']);
+        $sql['UltimosSignosVitales'] = $this->config_mdl->_query("SELECT sv_tipo,CONCAT(sv_fecha,' ',sv_hora) AS fecha,sv_ta,sv_temp,sv_fc,sv_fr,sv_oximetria,sv_talla,sv_dextrostix,sv_peso
+                                                                  FROM os_triage_signosvitales
+                                                                  WHERE triage_id = ".$_GET['folio']." AND
+                                                                        sv_tipo = 'Consultorios'
+                                                                  ORDER BY fecha DESC");
+        //En caso de no existir una nota con signos vitales, se toman de la hoja frontal
+        if(COUNT($sql['UltimosSignosVitales']) == 0 ){
+          $sql['UltimosSignosVitales'] = $this->config_mdl->_query("SELECT sv_tipo,CONCAT(sv_fecha,' ',sv_hora) AS fecha,sv_ta,sv_temp,sv_fc,sv_fr,sv_oximetria,sv_talla,sv_dextrostix,sv_peso
+                                                                    FROM os_triage_signosvitales
+                                                                    WHERE triage_id = ".$_GET['folio']." AND
+                                                                          sv_tipo = 'Triage'
+                                                                    ORDER BY fecha DESC");
+        }
+
 
 
 
@@ -1299,6 +1313,7 @@ class Documentos extends Config{
                 'nota_problema' => $this->input->post('nota_problema'),
                 'nota_analisis' => $this->input->post('nota_analisis'),
                 'nota_interconsulta'=> trim($interconsulta, ','),
+                'nota_solicitud_laboratorio' => $this->input->post('nota_solicitud_laboratorio'),
                 'notas_id'=>$sqlMax
             ));
             // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
@@ -1335,6 +1350,23 @@ class Documentos extends Config{
               $this->config_mdl->_insert('nm_notas_prescripcion', $NotaPrescripcion);
             }
             $MaxNota=$sqlMax;
+            $dataSV=array(
+                'sv_tipo'=> $this->input->post('inputVia'),
+                'sv_fecha'=> date('Y-m-d'),
+                'sv_hora'=>date('H:i:s'),
+                'sv_ta'=> $this->input->post('sv_ta'),
+                'sv_temp'=> $this->input->post('sv_temp'),
+                'sv_fc'=> $this->input->post('sv_fc'),
+                'sv_fr'=> $this->input->post('sv_fr'),
+                'sv_oximetria'=> $this->input->post('sv_oximetria'),
+                'sv_dextrostix'=> $this->input->post('sv_dextrostix'),
+                'sv_peso'=> $this->input->post('sv_peso'),
+                'sv_talla'=> $this->input->post('sv_talla'),
+                'triage_id'=> $this->input->post('triage_id'),
+                'empleado_id'=> $this->UMAE_USER,
+                'nota_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id')
+            );
+            $this->config_mdl->_insert('os_triage_signosvitales',$dataSV);
         }else{
 
             $this->config_mdl->_update_data('doc_notas',array(
@@ -1386,33 +1418,8 @@ class Documentos extends Config{
             'triage_id'=>$this->input->post('triage_id'),
             'sv_tipo'=> $this->input->post('inputVia')
         ),'sv_id');
-        $dataSV=array(
-            'sv_tipo'=> $this->input->post('inputVia'),
-            'sv_fecha'=> date('Y-m-d'),
-            'sv_hora'=>date('H:i:s'),
-            'sv_ta'=> $this->input->post('sv_ta'),
-            'sv_temp'=> $this->input->post('sv_temp'),
-            'sv_fc'=> $this->input->post('sv_fc'),
-            'sv_fr'=> $this->input->post('sv_fr'),
-            'sv_oximetria'=> $this->input->post('sv_oximetria'),
-            'sv_dextrostix'=> $this->input->post('sv_dextrostix'),
-            'sv_peso'=> $this->input->post('sv_peso'),
-            'sv_talla'=> $this->input->post('sv_talla'),
-            'triage_id'=> $this->input->post('triage_id'),
-            'empleado_id'=> $this->UMAE_USER
-        );
-        if($this->input->post('sv_temp')!=''){
-            if(empty($sqlCheck)){
-                $this->config_mdl->_insert('os_triage_signosvitales',$dataSV);
-            }else{
-                unset($dataSV['sv_fecha']);
-                unset($dataSV['sv_hora']);
-                $this->config_mdl->_update_data('os_triage_signosvitales',$dataSV,array(
-                    'sv_tipo'=>$this->input->post('inputVia'),
-                    'triage_id'=> $this->input->post('triage_id'),
-                ));
-            }
-        }
+
+
 
         $this->setOutput(array('accion'=>'1','notas_id'=>$id_nota ));
     }
@@ -1421,6 +1428,15 @@ class Documentos extends Config{
             'triage_id'=>$Paciente
         ))[0];
         $this->load->view('Documentos/Doc_TarjetaIdentificacion',$sql);
+    }
+
+    public function AjaxExisntenciaDiagnosticoPrincipal(){
+      $folio = $this->input->get('folio');
+      $consulta = "SELECT COUNT(diagnostico_id) AS existencia
+                   FROM paciente_diagnosticos
+                   WHERE triage_id = $folio AND tipo_diagnostico = 1";
+      $sql['Total'] = $this->config_mdl->_query($consulta);
+      print json_encode($sql);
     }
 
     public function AjaxConsultarDiagnosticos(){

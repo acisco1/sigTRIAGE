@@ -83,18 +83,19 @@ if(count($Residentes) == 3){
             <div style="position: absolute;margin-left: 40px;margin-top: 290px;width: 270px;text-transform: uppercase;font-size: 12px;">
                 <?=$Nota['notas_fecha']?> <?=$Nota['notas_hora']?><br>
             </div>
-            <div style="position: absolute;margin-left: 15px;margin-top: 320px;width: 130px;font-size: 12px;text-align: center">
-                <h5>PANI</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_ta']?> mm Hg</p>
-                <h5>Temperatura</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_temp']?> °C</p>
-                <h5>Frecuencia Cardíaca</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_fc']?> lpm</p>
-                <h5>Frecuencia Respiratoria</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_fr']?> rpm</p>
-                <h5>Peso:</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_peso']?> Kg</p>
-                <h5>Talla:</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_talla']?> cm</p>
-                <h5>Oximetria</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_oximetria']?> % Sp0<sub>2</sub></p>
-                <h5>Glucosa</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_dextrostix']?> mg/dl</p>
-                <h5>EVA</h5><p style="margin-top: -15px"><?=$Nota['nota_eva']?></p>
-                <h5>Riesgo de Caida</h5><p style="margin-top: -15px"><?=$Nota['hf_riesgo_caida']?></p>
-                <h5>Riesgo de Trombosis</h5><p style="margin-top: -15px"><?=$Nota['nota_riesgotrombosis']?></p>
+            <div style="position: absolute;margin-left: 15px;margin-top: 300px;width: 130px;font-size: 12px;text-align: center">
+                <h5>PANI</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_ta']?> mm Hg</p>
+                <h5>Temperatura</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_temp']?> °C</p>
+                <h5>Frecuencia Cardíaca</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_fc']?> lpm</p>
+                <h5>Frecuencia Respiratoria</h5><p style="margin-top: -14px"><?=$SignosVitales['sv_fr']?> rpm</p>
+                <h5>Peso:</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_peso']?> Kg</p>
+                <h5>Talla:</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_talla']?> cm</p>
+                <h5>Oximetria</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_oximetria']?> % Sp0<sub>2</sub></p>
+                <h5>Glucosa</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_dextrostix']?> mg/dl</p>
+                <h5>EVA</h5><p style="margin-top: -18px"><?=$Nota['nota_eva']?></p>
+                <h5>Riesgo de Caida</h5><p style="margin-top: -18px"><?=$Nota['hf_riesgo_caida']?></p>
+                <h5>Riesgo de Trombosis</h5><p style="margin-top: -18px"><?=$Nota['nota_riesgotrombosis']?></p>
+                <h5>Escala de Glasgow</h5><p style="margin-top: -18px"><?=$Nota['nota_escala_glasgow']?></p>
             </div>
             <div style="rotate: 90; position: absolute;margin-left: 50px;margin-top: 336px;text-transform: uppercase;font-size: 12px;">
                 <?php $sqlEmpleadoSV=$this->config_mdl->sqlGetDataCondition('os_empleados',array(
@@ -208,13 +209,6 @@ if(count($Residentes) == 3){
               <h5 style="margin-bottom: -6px"><?= $objetivo ?></h5><br>
               <?=$Nota['nota_exploracionf']?>
           <?php }?>
-          <?php if($Nota['nota_analisis']!=''){?>
-              <h5 style="margin-bottom: -6px">ANALISIS</h5><br>
-              <?=$Nota['nota_analisis']?>
-          <?php }?>
-          <?php if($Nota['nota_escala_glasgow']!=''){?>
-              <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$Nota['nota_escala_glasgow']?> </h5>
-          <?php }?>
           <?php if($Nota['nota_auxiliaresd']!=''){?>
               <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5><br>
               <?=$Nota['nota_auxiliaresd']?>
@@ -222,6 +216,10 @@ if(count($Residentes) == 3){
           <?php if($Nota['nota_procedimientos']!=''){?>
               <h5 style="margin-bottom: -6px">PROCEDIMIENTOS REALIZADOS</h5>
               <?=$Nota['nota_procedimientos']?>
+          <?php }?>
+          <?php if($Nota['nota_analisis']!=''){?>
+              <h5 style="margin-bottom: -6px">ANALISIS</h5><br>
+              <?=$Nota['nota_analisis']?>
           <?php }?>
           <?php if($Nota['nota_diagnostico']!=''){?>
               <h5 style="margin-botton: -6px">ACTUALIZACIÓN DE DIAGNOSTICO(S) Y PROBLEMAS CLÍNICOS</h5>
@@ -231,17 +229,20 @@ if(count($Residentes) == 3){
                  <h5 style="margin-botton: -6px">PRONOSTICOS</h5>
                  <?=$Nota['nota_pronosticos']?>
           <?php }?>
+          <?php if($Nota['nota_estadosalud']!=''){ ?>
+             <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
+          <?php } ?>
           <h5 style="margin-botton: -6px">DIAGNOSTICO INGRESO:</h5>
           <?= $Diagnosticos[0]['cie10_clave']." - ".$Diagnosticos[0]['cie10_nombre']?>
+          <h5 style="margin-botton: -6px">DIAGNOSTICO Principal:</h5>
+          <?= $Diagnosticos[1]['cie10_clave']." - ".$Diagnosticos[1]['cie10_nombre']?>
           <h5 style="margin-botton: -6px">DIAGNOSTICO SECUNDARIO (COMORBILIDADES):</h5>
-          <?php for($x = 1; $x < count($Diagnosticos); $x++){
+          <?php for($x = 2; $x < count($Diagnosticos); $x++){
               echo $Diagnosticos[$x]['cie10_clave']." - ".$Diagnosticos[$x]['cie10_nombre']."<br>";
           } ?>
 
 
-          <?php if($Nota['nota_estadosalud']!=''){ ?>
-             <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
-          <?php } ?>
+
           <h5 style="margin-botton: -6px">ORDENES MEDICAS:</h5>
         <?php } ?>
 
@@ -366,7 +367,7 @@ if(count($Residentes) == 3){
 
 
         <!-- Zona interconsultas -->
-       <?php if($Nota['notas_tipo'] != 'NOTA DE INTERCONSULTA'){
+       <?php
 
          $count_interconsultas = count($Interconsultas);
          if($count_interconsultas > 0){  ?>
@@ -386,7 +387,7 @@ if(count($Residentes) == 3){
            }
          }
         ?>
-      <?php } ?>
+      <?php  ?>
       <!-- fin zona interconsultas -->
 
 

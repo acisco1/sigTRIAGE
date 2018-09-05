@@ -1,10 +1,6 @@
 <?= modules::run('Sections/Menu/index'); ?>
 <link rel="stylesheet" type="text/css" href="<?= base_url()?>assets/libs/light-bootstrap/all.min.css" />
-<div class="box-row">
-    <div class="box-cell">
-        <div class="col-md-11 col-centered" style="margin-top: 10px ">
-            <div class="box-inner">
-               <style type="text/css">
+<style type="text/css">
                 fieldset.scheduler-border {
                 border: solid 1px #DDD !important;
                 padding: 0 10px 10px 10px;
@@ -120,6 +116,11 @@
                   overflow: auto;
                 }
             </style>
+<div class="box-row">
+    <div class="box-cell">
+        <div class="col-md-11 col-centered" style="margin-top: 10px ">
+            <div class="box-inner">
+           
                 <?php if($SignosVitales['sv_ta']==''){?>
                 <div class="row " style="margin-top: -10px;padding: 16px;">
                     <div class="col-md-12 col-centered back-imss" style="padding:10px;margin-bottom: -7px;">
@@ -584,18 +585,18 @@
                                 <div class="col-sm-9">
                                   <div class="form-group">
                                     <label for="">Diagnostico</label>
-                                    <input type="text" class="form-control" id="text_diagnostico_1" onkeydown="BuscarDiagnostico(1)" value="<?= $Diagnosticos[1]['cie10_nombre'] ?>">
+                                    <input type="text" class="form-control" id="text_diagnostico_2" onkeydown="BuscarDiagnostico(2)" value="<?= $Diagnosticos[2]['cie10_nombre'] ?>">
 
-                                      <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_1">
+                                      <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_2">
                                       </ul>
 
                                   </div>
                                 </div>
                                 <div class="col-sm-2">
                                   <label>Codigo</label>
-                                  <input type="text" class="form-control" id="text_codigo_diagnostico_1" value="<?= $Diagnosticos[1]['cie10_clave'] ?>" disabled>
-                                  <input type="hidden" class="form-control" name="cie10_id[]" id="text_id_diagnostico_1" hidden>
-                                  <input type="hidden" name="tipo_diagnostico[]" value="1" >
+                                  <input type="text" class="form-control" id="text_codigo_diagnostico_2" value="<?= $Diagnosticos[2]['cie10_clave'] ?>" disabled>
+                                  <input type="hidden" class="form-control" name="cie10_id[]" id="text_id_diagnostico_2" hidden>
+                                  <input type="hidden" name="tipo_diagnostico[]" value="2" >
                                 </div>
                                 <div class="col-sm-1" style="padding-top:25px;">
                                   <button type="button" class="btn btn-success width100 add-diagnostico-secundario" title="Agregar diagnostico secundario" name="button">

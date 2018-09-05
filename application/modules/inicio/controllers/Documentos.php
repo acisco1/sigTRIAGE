@@ -686,7 +686,8 @@ class Documentos extends Config{
         ),'empleado_nombre,empleado_apellidos,empleado_matricula')[0];
         $sqlSV= $this->config_mdl->sqlGetDataCondition('os_triage_signosvitales',array(
             'triage_id'=>$sql['Nota']['triage_id'],
-            'sv_tipo'=>$_GET['inputVia']
+            'sv_tipo'=>$_GET['inputVia'],
+            'nota_id' => $Nota
         ));
 
 

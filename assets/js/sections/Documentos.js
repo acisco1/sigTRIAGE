@@ -16,7 +16,7 @@ $(document).ready(function () {
     $('.hf_medicamentos').wysihtml5();
     $('.hf_diagnosticos').wysihtml5();
     $('textarea[name=nota_interrogatorio]').wysihtml5();
-    $('textarea[name=nota_problema]').wysihtml5();
+    //$('textarea[name=nota_problema]').wysihtml5();
     $('textarea[name=nota_exploracionf]').wysihtml5();
     $('textarea[name=nota_analisis]').wysihtml5();
     $('textarea[name=nota_motivoInterconsulta]').wysihtml5();
@@ -27,6 +27,7 @@ $(document).ready(function () {
     $('textarea[name=nota_cuidadosenfermeria]').wysihtml5();
     $('textarea[name=nota_solucionesp]').wysihtml5();
     $('.nota_pronosticos').wysihtml5();
+
     //$('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2();
 
     if($('input[name=accion]').val()!=undefined){
@@ -512,7 +513,17 @@ $(document).ready(function () {
             "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
               "<label id='categoria_farmacologica' hidden>"+categoria_farmacologica+"</label>"+
               "<label><b>Tiempo</b></label>"+
-              "<input type='number' class='form-control' id='duracion' onkeyup='mostrarFechaFin()' >"+
+              "<div class='input-group' >"+
+                "<input type='text' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
+                "<span class='input-group-btn'>"+
+                  "<div class='col-sm-12' style=''>"+
+                  "<a class='btn' title='Aumentar' onClick=AumentarNum() style='padding=0;margin-left:-28px; margin-top:-8px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-up'></span></a>"+
+                  "</div>"+
+                  "<div class='col-sm-12' style=''>"+
+                  "<a class='btn' title='Reducir' onClick=ReducirNum() style='padding=0;margin-left:-28px; margin-top:-17px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-down'></span></a>"+
+                  "</div>"+
+                "</span>"+
+              "</div>"+
             "</div>"+
             "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
               "<label><b>Periodo</b></label>"+
@@ -766,10 +777,32 @@ $(document).ready(function () {
         })
     })
 
+    function ExistenciaDiagnosticoPrincipal(folio){
+      var existencia = false;
 
+      $.ajax({
+          url:base_url+'Sections/Documentos/AjaxExisntenciaDiagnosticoPrincipal',
+          type: 'GET',
+          dataType: 'json',
+          data:{
+              folio:folio
+          },success: function (data, textStatus, jqXHR) {
+              
+          },error: function (jqXHR, textStatus, errorThrown) {
+              bootbox.hideAll();
+              MsjError();
+          }
+      });
+      return existencia;
+    }
 
     var indice_diagnosticos_secundarios = 2;
+    var tipo_diagnostico = 1;
     $('.add-diagnostico-secundario').click(function(){
+      var lbl_diagnostico = "Diagnostico Principal";
+      if(tipo_diagnostico != 1){
+        lbl_diagnostico = "Diagnostico";
+      }
       var form_diagnosticos_secundarios = "";
       form_diagnosticos_secundarios =
       "<div class='row'  id='form_diagnosticos_secundarios_"+indice_diagnosticos_secundarios+"'>"+
@@ -791,7 +824,7 @@ $(document).ready(function () {
 
         "<div class='col-sm-9'>"+
           "<div class='form-group'>"+
-            "<label>Diagnostico</label>"+
+            "<label>"+lbl_diagnostico+"</label>"+
             "<input type='text' class='form-control' id='text_diagnostico_"+indice_diagnosticos_secundarios+"' onkeydown=BuscarDiagnostico("+indice_diagnosticos_secundarios+") />"+
 
               "<ul class='contenedor_consulta_diagnosticos' id='lista_resultado_diagnosticos_"+indice_diagnosticos_secundarios+"' ></ul>"+
@@ -803,7 +836,7 @@ $(document).ready(function () {
           "<label>Codigo</label>"+
           "<input type='text' class='form-control' id='text_codigo_diagnostico_"+indice_diagnosticos_secundarios+"' disabled/>"+
           "<input type='hidden' class='form-control' name='cie10_id[]' id='text_id_diagnostico_"+indice_diagnosticos_secundarios+"' >"+
-          "<input type='hidden' name='tipo_diagnostico[]' value='1' >"+
+          "<input type='hidden' name='tipo_diagnostico[]' value='"+tipo_diagnostico+"' >"+
         "</div>"+
 
         "<div class='col-sm-1' style='padding-top:25px;'>"+
@@ -815,6 +848,7 @@ $(document).ready(function () {
       "</div>";
       $('.diagnosticos_secundarios_dinamico').append(form_diagnosticos_secundarios);
       indice_diagnosticos_secundarios = indice_diagnosticos_secundarios + 1;
+      tipo_diagnostico = 2;
     });
     $('.check_diagnosticos_secundarios').click(function(){
 
@@ -827,6 +861,7 @@ $(document).ready(function () {
         $('.diagnosticos_secundarios').attr('hidden',true);
         $('.label_check_secundarios').text('SI');
       }
+      tipo_diagnostico = 2;
     });
 
 
@@ -1007,6 +1042,16 @@ $(document).ready(function () {
         }
       });
 
+    });
+
+    $('#check_estudios').change(function(){
+        if($(this).is(':checked')){
+          $('.solicitud_laboratorio').removeAttr('hidden');
+          $('#label_check_estudios').text('');
+        }else {
+          $('.solicitud_laboratorio').attr('hidden',true);
+          $('#label_check_estudios').text('- SI');
+        }
     });
 
     $('#check_form_prescripcion').change(function(){
@@ -1418,11 +1463,13 @@ function HistorialDiagnosticos(folio){
       for(var x = 0; x < data.length; x++){
 
         if(data[x].tipo_diagnostico == 0){
-          tipo = "Primario";
+          tipo = "INGRESO";
         }else if(data[x].tipo_diagnostico == 1){
-          tipo = "Secundario";
+          tipo = "PRIMARIO";
         }else if(data[x].tipo_diagnostico == 2){
-          tipo = "Egreso";
+          tipo = "SECUNDARIO";
+        }else if(data[x].tipo_diagnostico == 3){
+          tipo = "EGRESO";
         }else {
           tipo = "Sin asignar";
         }
@@ -1843,7 +1890,17 @@ function TipoMedicamento(medicamento_id){
         "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
           "<label id='categoria_farmacologica' hidden>"+farmacologica+"</label>"+
           "<label><b>Tiempo</b></label>"+
-          "<input type='number' class='form-control' id='duracion' onkeyup='mostrarFechaFin()' >"+
+          "<div class='input-group' >"+
+            "<input type='text' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
+            "<span class='input-group-btn'>"+
+              "<div class='col-sm-12' style=''>"+
+              "<a class='btn' title='Aumentar' onClick=AumentarNum() style='padding=0;margin-left:-28px; margin-top:-8px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-up'></span></a>"+
+              "</div>"+
+              "<div class='col-sm-12' style=''>"+
+              "<a class='btn' title='Reducir' onClick=ReducirNum() style='padding=0;margin-left:-28px; margin-top:-17px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-down'></span></a>"+
+              "</div>"+
+            "</span>"+
+          "</div>"+
         "</div>"+
         "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
           "<label><b>Periodo</b></label>"+
@@ -1867,6 +1924,25 @@ function TipoMedicamento(medicamento_id){
   });
 }
 
+function AumentarNum(){
+  var numero = $('#duracion').val();
+  if(numero != ''){
+    $('#duracion').val(Number(numero) + 1);
+  }else{
+    $('#duracion').val('0');
+  }
+  mostrarFechaFin();
+}
+
+function ReducirNum(){
+  var numero = $('#duracion').val();
+  if(numero == 0 || numero < 0){
+    $('#duracion').val('0');
+  }else{
+    $('#duracion').val(Number(numero) - 1);
+  }
+  mostrarFechaFin();
+}
 function ConvercionDias(tiempo, periodo){
 
   var dias = 0;

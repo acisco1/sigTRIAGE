@@ -1,9 +1,5 @@
 <?= modules::run('Sections/Menu/HeaderBasico'); ?>
-<div class="box-row">
-    <div class="box-cell">
-        <div class="col-md-11 col-centered" style="margin-top: 10px">
-        <div class="box-inner">
-            <style>
+<style>
             hr.style-eight{
               border: 0;
               border-top: 4px double #8c8c8c;
@@ -53,15 +49,12 @@
                 overflow: auto;
               }
           </style>
-            <style type="text/css">
+          <style type="text/css">
                 fieldset.scheduler-border {
                 border: solid 1px #DDD !important;
                 padding: 0 10px 10px 10px;
                 border-bottom: none;
             }
-
-
-
             legend.scheduler-border {
                 width: auto !important;
                 border: none;
@@ -78,7 +71,7 @@
               border-radius: 8px;
             }
 
-                .panel {
+            .panel {
             /* for text on pannel */
             margin-top: 27px !important;
             }
@@ -156,55 +149,83 @@
             #label_total_activas, #label_total_canceladas{
               display: inline-block;
             }
-
-
             </style>
+<div class="box-row">
+    <div class="box-cell">
+        <div class="col-md-11 col-centered" style="margin-top: 10px">
+        <div class="box-inner">
             <div class="panel panel-default ">
                 <div class="panel-heading p teal-900 back-imss text-center scroll-box" style="">
-                    <div class="row" style="margin-top: -15px!important;">
+                    <div class="row" style="margin-top: -15px!important; padding-top: 12px;">
                         <div style="position: relative;">
-                            <div style="top: -1px;margin-left: -1px;position: absolute;height: 112px;width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
+                          <!-- Color franja -->
+                            <div style="top: 0px; margin-left: -9px;position: absolute; height: 172px; width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
                         </div>
-                        <div class="col-sm-9 text-left" style="padding-left: 40px">
-                            <h4>
+                        <div class="col-sm-10 text-left" style="padding-left: 40px">
+                            <div class="col-sm-12">
+                              <h4>
                                 <b>PACIENTE</b>: <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?>
+                                | <b>SEXO: </b><?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| - Posible Embarazo' : ''?>
+                                | <b>PROCEDENCIA:</b> <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA '.$PINFO['pia_procedencia_espontanea_lugar'] : ' '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?>
                             </h4>
-                            <h4>
-                                <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| Posible Embarazo' : ''?>
-                            </h4>
-                            <h4 style="margin-top: -5px;text-transform: uppercase">
-                                <?php
-                                    if($info['triage_fecha_nac']!=''){
-                                        $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
-                                        if($fecha->y<15){
-                                            echo 'PEDIATRICO';
-                                        }if($fecha->y>15 && $fecha->y<60){
-                                            echo 'ADULTO';
-                                        }if($fecha->y>60){
-                                            echo 'GERIATRICO';
-                                        }
-                                    }else{
-                                        echo 'S/E';
-                                    }
-                                ?> | <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA: '.$PINFO['pia_procedencia_espontanea_lugar'] : ': '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?> | <?=$info['triage_color']?>
-                            </h4>
-                            <h4>ALERGIAS : <?=$PINFO['alergias'] ?></h4>
+                            </div>
+                            <div class="col-sm-12">
+                              <h4><b>ALERGIAS : </b><?=$PINFO['alergias'] ?></h4>
+                            </div>
                         </div>
-                        <div class="col-sm-3 text-right">
-                            <h3><b>EDAD</b></h3>
-                            <h1 style="margin-top: -10px">
+                        <div class="col-sm-2">
+
+                            <h3 class="text-center">
                                 <?php
                                 if($info['triage_fecha_nac']!=''){
                                     $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
-                                    echo $fecha->y.' <span style="font-size:25px"><b>Años</b></span>';
+                                    echo ' <span ><b>Edad: '. $fecha->y.' Años</b></span>';
                                 }else{
                                     echo 'S/E';
                                 }
                                 ?>
-                            </h1>
+                            </h3>
                         </div>
+
+                <div class=" " style="margin-top: -16px; margin-left:-10px; margin-right:-10px;">
+                    <div class="col-sm-12" >
+                      <h5><b>Ultima toma de signos: <?=$UltimosSignosVitales[0]['fecha']?></b></h5>
                     </div>
+                    <div class="col-md-1 text-center" style="width: 12.5%;">
+                        <h5 class=""><b>P.A</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_ta']?>(mmhg)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>TEMP.</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_temp']?> (°C)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>FREC. CARD. </b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_fc']?> (lpm)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>FREC. RESP</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_fr']?> (rpm)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>SpO2</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_oximetria']?> (%)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>GLUCEMIA</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_dextrostix']?> (mg/dL)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>PESO</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_dextrostix']?> (kg)</h4>
+                    </div>
+                    <div class="col-md-1  text-center" style="border-left: 1px solid white; width: 12.5%;">
+                        <h5><b>TALLA (cm)</b></h5>
+                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_dextrostix']?> (mg/dL)</h4>
+                    </div>
+                  </div>
                 </div>
+              </div>
                 <style> .wysiwyg-text-align-center {text-align: center;}</style>
                 <div class="panel-body b-b b-light scrollspy-body">
                     <div class="card-body" style="padding: 20px 0px;">
@@ -227,78 +248,87 @@
                                 </div>
                             </div>
                             <div class="row">
+                              <div class="col-sm-12">
+                                <h4><span class = "label back-imss border-back-imss">ACTUALIZACION DE SIGNOS VITALES</span></h4>
+                              </div>
+
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label><b>PRESION ARTERIAL (mmHg)</b></label>
-                                        <input class="form-control"  name="sv_ta" value="<?=$SignosVitales['sv_ta']?>">
+                                        <input class="form-control"  name="sv_ta" value="">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label><b>TEMPERATURA (°C)</b></label>
-                                        <input class="form-control" name="sv_temp"  value="<?=$SignosVitales['sv_temp']?>">
+                                        <input class="form-control" name="sv_temp"  value="">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label><b>FRECUENCIA CARDIACA (lpm)</b></label>
-                                        <input class="form-control" name="sv_fc"  value="<?=$SignosVitales['sv_fc']?>">
+                                        <input class="form-control" name="sv_fc"  value="">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label><b>FREC. RESPIRATORIA (rpm)</b></label>
-                                        <input class="form-control" name="sv_fr"  value="<?=$SignosVitales['sv_fr']?>">
+                                        <input class="form-control" name="sv_fr"  value="">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label><b>SP02 (%)</b></label>
-                                        <input class="form-control" name="sv_oximetria"  value="<?=$SignosVitales['sv_oximetria']?>">
+                                        <input class="form-control" name="sv_oximetria"  value="">
                                     </div>
 
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="control-group">
                                         <label><b>GLUCOSA (mg/dl)</b></label>
-                                        <input class="form-control" name="sv_dextrostix"  value="<?=$SignosVitales['sv_dextrostix']?>">
+                                        <input class="form-control" name="sv_dextrostix"  value="">
                                     </div>
 
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="control-group">
                                         <label><b>PESO (kg)</b></label>
-                                        <input class="form-control" name="sv_peso"  value="<?=$SignosVitales['sv_peso']?>">
+                                        <input class="form-control" name="sv_peso"  value="">
                                     </div>
 
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="control-group">
                                         <label><b>TALLA (cm)</b></label>
-                                        <input class="form-control" name="sv_talla"  value="<?=$SignosVitales['sv_talla']?>">
+                                        <input class="form-control" name="sv_talla"  value="">
                                     </div>
 
                                 </div>
        <!-- COMIENZA LOS CAMPOS DEL FORMULARIO PARA LA NOTA MEDICA -->
                 <?php
-                $visibleInterconsulta = "hidden";
+
+                $sololectura = "";
                 if($Nota['notas_tipo']=='NOTA DE INTERCONSULTA' || isset($_GET['via']) && $_GET['via'] == 'Interconsulta'){
                   $visibleInterconsulta = "";
                   $MotivoInterconsulta = $this->config_mdl->_query("SELECT motivo_interconsulta FROM doc_430200 WHERE triage_id = ". $_GET['folio']." AND doc_servicio_solicitado = (SELECT empleado_servicio
                   FROM os_empleados WHERE empleado_id = $this->UMAE_USER)");
-                } ?>
+                  // En caso que se realice nota interconsulta el problema sera el diagnostico de ingreso y el motivo de interconsulta
+                  $problema ="Diagnóstico de Ingreso: ".$Diagnosticos[0]['cie10_clave']." - ".$Diagnosticos[0]['cie10_nombre']."\n".    "Motivo interconsulta: ".$MotivoInterconsulta[0]['motivo_interconsulta'];
 
-                <div class="col-sm-12 nota_motivoInterconsulta <?=$visibleInterconsulta ?>">
-                    <h4><span class = "label back-imss border-back-imss">MOTIVO DE INTERCONSULTA</span></h4>
+                  $sololectura = "readonly";
+                }else{
+                  $problema = $Nota['nota_problema'];
+                ?>
+                <script type="text/javascript">
+                  $('textarea[name=nota_problema]').wysihtml5();
+                </script>
+                <?php } ?>
 
-                    <p style="font-size:large;"><?=$MotivoInterconsulta[0]['motivo_interconsulta']?></p>
-                    <!-- <textarea class="form-control" name="nota_motivoInterconsulta" rows="4" placeholder="Anote el motivo de la interconsulta" style="display:none"></textarea> -->
-                </div>
                     <div class="col-sm-12" >
                       <h4><span class = "label back-imss border-back-imss">EVOLUCION Y/O ACTUALIZACION DEL CUADRO CLINICO</span></h4>
                       <div class="form-group evolucion-psoap ">
-                        <label><b>PROBLEMA (Diagnostico):</b></label>
-                        <textarea class="form-control" name="nota_problema" rows="5" placeholder="Problema o Diagnosticos"> <?=$Nota['nota_problema']?> </textarea>
+                        <label><b>PROBLEMA (Diagnóstico):</b></label>
+                        <textarea class="form-control" name="nota_problema" rows="5" placeholder="Problema o Diagnosticos" <?=$sololectura ?> ><?=$problema?></textarea>
                       </div>
                       <div class="form-group">
                         <label><b id="psoap_subjetivo" >SUBJETIVO (Interrogatorio):</b></label>
@@ -308,15 +338,12 @@
                         <label><b id="psoap_objetivo" >OBJETIVO (Exploracion fisica):</b></label>
                         <textarea class="form-control" name="nota_exploracionf" rows="5" placeholder=""><?=$Nota['nota_exploracionf']?></textarea>
                       </div>
-                      <div class="form-group evolucion-psoap ">
-                        <label><b>ANALISIS:</b></label>
-                        <textarea class="form-control" name="nota_analisis" rows="2" placeholder=""><?=$Nota['nota_analisis']?></textarea>
-                      </div>
+
                     </div>
                     <div class="col-md-3">
                         <label><b>ESCALA DE GLASGOW</b></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" data-toggle="modal" data-target='#myModal1' placeholder="Clic para colocar valor" name="hf_escala_glasgow" value="<?=$Nota['nota_escala_glasgow']?>">
+                                <input type="text" class="form-control" data-toggle="modal" data-target='#myModal1' placeholder="Clic para colocar valor" name="hf_escala_glasgow" value="<?=$Nota['nota_escala_glasgow']?>" required>
                             <span class="input-group-addon">Puntos</span>
                             </div>
                     </div>
@@ -397,7 +424,7 @@
                                         <div class="form-group">
                                             <b>RIESGO DE CAÍDA</b><br>
                                             <label class="md-check">
-                                            <input type="radio" name="hf_riesgo_caida" data-value="<?=$Nota['hf_riesgo_caida']?>" value="Alta" class="has-value"><i class="red"></i>Alta
+                                            <input type="radio" name="hf_riesgo_caida" data-value="<?=$Nota['hf_riesgo_caida']?>" value="Alta" class="has-value" required><i class="red"></i>Alta
                                             </label>&nbsp;&nbsp;&nbsp;
                                             <label class="md-check">
                                             <input type="radio" name="hf_riesgo_caida" data-value="<?=$Nota['hf_riesgo_caida']?>" value="Media" class="has-value"><i class="red"></i>Media
@@ -429,7 +456,7 @@
                         <div class="col-md-3">
                         <label><b>RIESGO DE TROMBOSIS</b></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" data-toggle="modal" data-target='#myModal2' placeholder="Clic para colocar valor" name="nota_riesgotrombosis" id="puntos_rt" value='<?=$Nota['nota_riesgotrombosis']?>'>
+                                <input type="text" class="form-control" data-toggle="modal" data-target='#myModal2' placeholder="Clic para colocar valor" name="nota_riesgotrombosis" id="puntos_rt" value='<?=$Nota['nota_riesgotrombosis']?>' required>
                             </div>
                     </div>
 
@@ -540,6 +567,10 @@
                                     <h4><span class = "label back-imss border-back-imss">PROCEDIMIENTOS REALIZADOS</span></h4>
                                         <textarea class="form-control textWysihtml5" name="nota_procedimientos" rows="5" placeholder="Incluye intervencionismo en servicios auxiliares de diágnóstico"><?=$Nota['nota_procedimientos']?></textarea>
                                 </div>
+                                <div class="form-group evolucion-psoap ">
+                                  <label><b>ANALISIS:</b></label>
+                                  <textarea class="form-control" name="nota_analisis" rows="2" placeholder=""><?=$Nota['nota_analisis']?></textarea>
+                                </div>
                                 <div class="form-group">
                                   <h4><span class = "label back-imss border-back-imss">ACTUALIZACION DE DIAGNÓSTICO(S)</span></h4>
 
@@ -550,7 +581,7 @@
                                         <ul class="nav navbar-nav" >
                                           <li>
                                             <a id="consulta_diagnosticos" style="font-size:16px;">
-                                                Historial Diagnosticos - <?= count($Diagnosticos); ?>
+                                                Diagnósticos Encontrados (<?= count($Diagnosticos); ?>)
                                             </a>
                                           </li>
                                         </ul>
@@ -567,10 +598,10 @@
                                     </nav>
                                     <div class="">
                                       <table class="width100">
-                                        <thead class="table_diagnosticos" data-value="0" hidden>
+                                        <thead class="table_diagnosticos" hidden data-value="0">
                                           <tr>
                                             <th>CLAVE</th>
-                                            <th>DIAGNOSTICO</th>
+                                            <th>DIAGNÓSTICO CIE10</th>
                                             <th>TIPO</th>
                                           </tr>
                                         </thead>
@@ -605,7 +636,19 @@
                                   <textarea class="form-control" name="nota_pronosticos" rows="2" placeholder="Anote diagnóstico y problemas clinicos"><?=$Nota['nota_pronosticos']?></textarea>
                                 </div>
 
-                                        <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span></h4>
+                                        <h4><span class = "label back-imss border-back-imss">PLAN Y ORDENES MÉDICAS</span>
+                                         <!-- Muestra las ultimas indicaciones. esto permite agregar las indicaciones igual a las anteriores o
+                                         modificar a partir de esta -->
+                                        <button  type="button" class="btn btn-warning"
+                                          title="Agregar Diagnostico Secundario" name="button">
+                                          Continuar indicaciones
+                                        </button>
+                                        <!-- El formulario de indicaciones lo deja en blanco -->
+                                        <button  type="button" class="btn btn-success"
+                                          title="Agregar Diagnostico Secundario" name="button">
+                                          Nuevas indicaciones
+                                        </button>
+                                        </h4>
 
                                               <div class="col-sm-12" id="divNutricion" style="padding:0">
                                                 <div class="col-sm-3" style="padding:0" id="divRadioNutricion">
@@ -929,6 +972,18 @@
 
 
                                                 </div>
+<!-- <div class="col-lg-6">
+  <div class="input-group">
+
+    <input type="text" id="contador" class="form-control" placeholder="1" value="1">
+    <span class="input-group-btn">
+      <button class="btn btn-default" id="carga" onClick="sube()" type="button">Carga</button>
+    </span>
+    <span class="input-group-btn">
+      <button class="btn btn-default" id="descarga" onClick="baja()" type="button">Descarga</button>
+     </span>
+  </div>
+</div> -->
 
                                               </div>
 
@@ -978,6 +1033,16 @@
                                             </div><!-- Fin formulario prescripcion-->
 
                                         <br/>
+                                        <div class="col-sm-12" id="divCuidadosGenerales" style="padding:0">
+                                          <div class="col-sm-12" style="padding:0">
+                                            <div class="form-group">
+                                              <label><b>g) Solicitud de estudios de laboratorio y rayos x: &nbsp;  </b></label><input type="checkbox" id="check_estudios">&nbsp;<label id="label_check_estudios">- SI</label>
+                                              <div class="solicitud_laboratorio" hidden>
+                                                  <textarea class="form-control" name="nota_solicitud_laboratorio" rows="4" placeholder="Indicar los estudios a realizar"><?=$Nota['nota_solicitud_laboratorio']?></textarea>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
                                 <div class="form-group">
 
                                     <h4>

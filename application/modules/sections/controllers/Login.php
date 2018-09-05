@@ -30,6 +30,9 @@ class Login extends Config{
         }
         $this->setOutput($areas);
     }
+    public function Ruta(){
+        echo "Esta es la ruta";
+    }
     public function loginV2() {
         $sql=  $this->config_mdl->_get_data_condition('os_empleados',array(
             'empleado_matricula'=>  $this->input->post('empleado_matricula')
