@@ -108,32 +108,36 @@
             </div>
             <div style="position: absolute;margin-top:237px;margin-left: 360px ">:[[page_cu]]/[[page_nb]]</div>
             <!-- fecha de  creacion del documento -->
-            <div style="position: absolute;margin-left: 20px;margin-top: 276px;width: 150px;font-size: 7px;text-align: center;">
+            <div style="position: absolute;margin-left: 10px;margin-top: 270px;width: 150px;font-size: 12px;text-align: center;">
                 <h5><?=$hoja['hf_fg']?> <?=$hoja['hf_hg']?></h5>
             </div>
             <div style="position: absolute;margin-left: 30px;margin-top: 310px;width: 110px;font-size: 12px;text-align: center">
-                <h5>Tensión Arterial</h5>
-                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_ta']?> mmHg</h5>
+                <h5 style="margin-top: -5px">Presión Arterial</h5>
+                <p style="margin-top: -15px"><?=$SignosVitales['sv_ta']?> mmHg</p>
                 <h5 style="margin-top: -5px">Temperatura</h5>
-                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_temp']?> °C</h5>
+                <p style="margin-top: -15px"><?=$SignosVitales['sv_temp']?> °C</p>
                 <h5 style="margin-top: -5px">Frecuencia Cardiaca</h5>
-                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_fc']?> (lpm)</h5>
+                <p style="margin-top: -15px"><?=$SignosVitales['sv_fc']?> (lpm)</p>
                 <h5 style="margin-top: -5px">Frecuencia Respiratoria</h5>
-                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_fr']?> (rpm)</h5>
+                <p style="margin-top: -15px"><?=$SignosVitales['sv_fr']?> (rpm)</p>
                 <?php if($SignosVitales['sv_oximetria']!=''){?>
                 <h5 style="margin-top: -5px">Oximetria</h5>
-                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_oximetria']?> (%SpO2)</h5>
+                <p style="margin-top: -15px"><?=$SignosVitales['sv_oximetria']?> (%SpO2)</p>
                 <?php }?>
                 <?php if($SignosVitales['sv_dextrostix']!=''){?>
                 <h5 style="margin-top: -5px">Glucometría</h5>
-                <h5 style="margin-top: -10px"><?=$SignosVitales['sv_dextrostix']?> (mg/dl)</h5>
+                <p style="margin-top: -15px"><?=$SignosVitales['sv_dextrostix']?> (mg/dl)</p>
                 <?php }?>
                 <h5 style="margin-top: -5px">Escala de dolor (EVA):</h5>
-                <h5 style="margin-top: -10px"><?=$hoja['hf_eva']?></h5>
-                <h5 style="margin-top: -5px">Riesgo de caída:</h5>
-                <h5 style="margin-top: -10px"><?=$hoja['hf_riesgocaida']?></h5>
+                <p style="margin-top: -28px; margin-left: 65px"><?=$hoja['hf_eva']?></p>
+                <h5 style="margin-top: -5px">Riesgo de caída</h5>
+                <p style="margin-top: -15px"><?=$hoja['hf_riesgocaida']?></p>
                 <h5 style="margin-top: -5px">Riesgo de trombosis:</h5>
-                <h5 style="margin-top: -10px"><?=$hoja['hf_riesgo_trombosis']?></h5>
+                <p style="margin-top: -15px"><?=$hoja['hf_riesgo_trombosis']?></p>
+                <h5 style="margin-top: -5px">Escala de Glasgow:</h5>
+                <p style="margin-top: -28px; margin-left: 75px"><?=$hoja['hf_escala_glasgow']?></p>
+                <h5 style="margin-top: -5px">Estado de Salud</h5>
+                <p style="margin-top: -15px"><?=$hoja['hf_estadosalud']?></p>
             </div>
             <div style="rotate: 90; position: absolute;margin-left: 13px;margin-top: 336px;text-transform: uppercase;font-size: 12px;">
                 ENF:<?=$Enfermera['empleado_nombre']?> <?=$Enfermera['empleado_apellidos']?> <?=$info['triage_fecha']?> <?=$info['triage_hora']?>
@@ -185,9 +189,6 @@
         <h5 style="margin-bottom: -6px">EXPLORACIÓN FISICA</h5>
         <?=$hoja['hf_exploracionfisica']?>
         <br>
-        <?php }?>
-        <?php if($hoja['hf_escala_glasgow']!=''){?>
-        <h5 style="margin-bottom: -6px">ESCALA DE GLASGOW: <?=$hoja['hf_escala_glasgow']?></h5>
         <?php }?>
         <?php if($hoja['hf_auxiliares']!=''){?>
         <h5 style="margin-bottom: -6px">AUXILIARES DE DIAGNÓSTICO</h5>
@@ -309,12 +310,7 @@
         <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
         <?=$hoja['hf_indicaciones']?>
         <?php }?>
-         <?php if($hoja['hf_interpretacion']!=''){?>
-        <h5 style="margin-bottom: -6px">ESTADO DE SALUD</h5>
-        <?=$hoja['hf_interpretacion']?>
-        <br>
-        <?php }?>
-        <h5 style="margin-bottom: -6px">ACCIÓN:<?=$hoja['hf_alta']?></h5>
+        <h5 style="margin-bottom: -6px">ACCIÓN:</h5><p style="margin-top: -13px; margin-left: 60"><?=$hoja['hf_alta']?></p>
         <?php $num_interconsultas = count($Interconsultas); ?>
         <?php if($num_interconsultas > 0){ ?>
         <h5 style="margin-bottom: -6px">INTERCONSULTAS</h5>

@@ -191,8 +191,8 @@
                                     <?php foreach ($HojasFrontales as $value) {?>
                                     <tr>
                                         <td><?=$value['hf_fg']?> <?=$value['hf_hg']?></td>
-                                        <td>Hoja Inicial(Hoja Frontal) & ST7</td>
-                                        <td>NO APLICA</td>
+                                        <td>Hoja Inicial(Hoja Frontal)</td>
+                                        <td>Admisión Continua</td>
                                         <td><?= Modules::run('Sections/Documentos/ExpedienteEmpleado',array('empleado_id'=>$value['empleado_id']))?></td>
                                         <td>
                                             <?php if($this->ConfigHojaInicialAbierta=='No'){?>

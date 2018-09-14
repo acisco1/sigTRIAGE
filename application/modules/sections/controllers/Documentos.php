@@ -204,7 +204,7 @@ class Documentos extends Config{
             'hf_quemadura_otros'=>  $this->input->post('hf_quemadura_otros'),
             'hf_antecedentes'=>  $this->input->post('hf_antecedentes'),
             'hf_exploracionfisica'=>  $this->input->post('hf_exploracionfisica'),
-            'hf_interpretacion'=>  $this->input->post('hf_interpretacion'),
+            'hf_estadosalud'=>  $this->input->post('hf_estadosalud'),
             'hf_diagnosticos'=>  $this->input->post('hf_diagnosticos'),
             'hf_diagnosticos_lechaga'=>  $this->input->post('hf_diagnosticos_lechaga'),
             'hf_trataminentos'=> rtrim($hf_trataminentos,','),
@@ -287,7 +287,7 @@ class Documentos extends Config{
         $this->setOutput(array('accion'=>'1'));
     }
     public function HojaInicialAbierto() {
-        $sql['Especialidades']= $this->config_mdl->_query("SELECT * FROM um_especialidades GROUP BY um_especialidades.especialidad_nombre");
+        $sql['Especialidades']= $this->config_mdl->_query("SELECT * FROM um_especialidades WHERE especialidad_interconsulta = 1 GROUP BY um_especialidades.especialidad_nombre");
         $sql['info']=  $this->config_mdl->_get_data_condition('os_triage',array(
             'triage_id'=> $this->input->get_post('folio')
         ))[0];
@@ -361,6 +361,27 @@ class Documentos extends Config{
 
         $this->load->view('Documentos/HojaInicialAbierto',$sql);
     }
+
+    public function AjaxUltimasOrdenes(){
+      $folio = $_GET['folio'];
+      $consultaNota = "SELECT nota_nutricion, nota_svycuidados, nota_cgenfermeria,
+                          nota_cuidadosenfermeria, nota_solucionesp
+                   FROM doc_nota
+                   INNER JOIN doc_notas
+                  	 ON doc_nota.notas_id = doc_notas.notas_id
+                   WHERE triage_id = ".$folio."
+                   ORDER BY nota_id DESC LIMIT 1";
+      $consultaHFrontal = "SELECT hf_nutricion, hf_signosycuidados, hf_cgenfermeria,
+                           hf_cuidadosenfermeria, hf_solucionesp
+                           FROM os_consultorios_especialidad_hf
+                           WHERE triage_id = ".$folio." ";
+      $sql = $this->config_mdl->_query($consultaNota);
+      if(COUNT($sql) < 1){
+        $sql = $this->config_mdl->_query($consultaHFrontal);
+      }
+      print json_encode($sql);
+    }
+
     public function AjaxDiagnosticos(){
       $diagnostico_solicitado = $_GET['diagnostico_solicitado'];
       $sql = $this->config_mdl->_query("SELECT * FROM um_cie10
@@ -390,8 +411,6 @@ class Documentos extends Config{
                                         array('alergias' => $alergias),
                                         array('triage_id' => $this->input->post('triage_id'))
                                       );
-
-
 
 
         // Se toman los valores del formulario 'Instrucciones de nutricion'
@@ -468,7 +487,7 @@ class Documentos extends Config{
             'hf_solucionesp'=> $this->input->post('hf_solucionesp'),
             'hf_medicamentos'=> $this->input->post('hf_medicamentos'),
             'hf_indicaciones'=> $this->input->post('hf_indicaciones'),//Pronosticos
-            'hf_interpretacion'=> $this->input->post('hf_interpretacion'),//Estado de salud
+            'hf_estadosalud'=> $this->input->post('hf_estadosalud'),//Estado de salud
             'hf_interconsulta'=> $this->input->post('hf_interconsulta'),
             'hf_alta'=> $this->input->post('hf_alta'),
             'hf_alta_otros'=> $this->input->post('hf_alta_otros'),
@@ -520,8 +539,6 @@ class Documentos extends Config{
               $this->config_mdl->_insert('paciente_diagnosticos',$datos_diagnostico);
 
             }
-
-
 
             $this->config_mdl->_insert('os_consultorios_especialidad_hf',$data);
             for($x = 0; $x < count($this->input->post('nota_interconsulta')); $x++){
@@ -1046,6 +1063,11 @@ class Documentos extends Config{
                                                                   WHERE triage_id = ".$_GET['folio']." AND
                                                                         sv_tipo = 'Consultorios'
                                                                   ORDER BY fecha DESC");
+
+        $sql['DiagnosticoPaciente'] = $this->config_mdl->_query("SELECT * FROM `paciente_diagnosticos`
+                                                                INNER JOIN um_cie10
+                                                                    ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
+                                                                WHERE triage_id = ".$_GET['folio']." AND tipo_diagnostico = 1;");
         //En caso de no existir una nota con signos vitales, se toman de la hoja frontal
         if(COUNT($sql['UltimosSignosVitales']) == 0 ){
           $sql['UltimosSignosVitales'] = $this->config_mdl->_query("SELECT sv_tipo,CONCAT(sv_fecha,' ',sv_hora) AS fecha,sv_ta,sv_temp,sv_fc,sv_fr,sv_oximetria,sv_talla,sv_dextrostix,sv_peso
@@ -1160,7 +1182,7 @@ class Documentos extends Config{
       }
 
         $dataNotas=array(
-            'notas_fecha'=> date('Y-m-d'),
+            'notas_fecha'=> date('d-m-Y'), //date('Y-m-d')
             'notas_hora'=> date('H:i'),
             'notas_tipo'=> $this->input->post('notas_tipo'),
             'notas_area'=> $this->UMAE_AREA,
@@ -1219,6 +1241,39 @@ class Documentos extends Config{
             }
           }
 
+          $accion_diagnosticos = $this->input->post('accion_diagnostico_principal');
+
+          $consulta = "SELECT cie10_id FROM paciente_diagnosticos
+                       WHERE triage_id = ".$this->input->post('triage_id')." AND tipo_diagnostico = 1";
+          $sqlResult = $this->config_mdl->_query($consulta);
+
+          if($accion_diagnosticos == "add"){
+            if(COUNT($sqlResult) == 0){
+                $data = array(
+                    'triage_id' => $this->input->post('triage_id'),
+                    'cie10_id' => $this->input->post('cie10_id_principal'),
+                    'tipo_diagnostico' => 1
+                );
+                $this->config_mdl->_insert('paciente_diagnosticos',$data);
+            }
+          }
+          else if ($accion_diagnosticos == "edit"){
+              $dataInsert = array(
+                'triage_id' => $this->input->post('triage_id'),
+                'cie10_id' => $sqlResult[0]['cie10_id'],
+                'tipo_diagnostico' => 2
+              );
+              $this->config_mdl->_insert('paciente_diagnosticos',$dataInsert);
+
+              $this->config_mdl->_update_data('paciente_diagnosticos',
+              array('cie10_id' => $this->input->post('cie10_id_principal')),
+              array('triage_id' => $this->input->post('triage_id'), 'tipo_diagnostico' => 1)
+              );
+
+          }
+
+
+
           for($x = 0; $x < count($this->input->post('cie10_id')); $x++){
             $datos_diagnostico = array(
               'triage_id' => $this->input->post('triage_id'),
@@ -1228,6 +1283,23 @@ class Documentos extends Config{
             $this->config_mdl->_insert('paciente_diagnosticos',$datos_diagnostico);
 
           }
+
+
+          //Consultar los diagnosticos y registrarlos en la nota para generar el historial
+
+          $consulta = "SELECT diagnostico_id, tipo_diagnostico, cie10_id
+                       FROM paciente_diagnosticos
+                       WHERE triage_id = ".$this->input->post('triage_id');
+          $sqlResult = $this->config_mdl->_query($consulta);
+
+          for($x = 0; $x < COUNT($sqlResult); $x++){
+            $this->config_mdl->_insert('diagnostico_notas',array(
+              'notas_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
+              'diagnostico_id' => $sqlResult[$x]['diagnostico_id'],
+              'tipo_diagnostico' => $sqlResult[$x]['tipo_diagnostico'],
+              'cie10_id' => $sqlResult[$x]['cie10_id']));
+          }
+
 
           for($x = 0; $x < count($this->input->post('nota_interconsulta')); $x++){
             $existencia_interconsuta = $this->config_mdl->_query(
@@ -1421,7 +1493,7 @@ class Documentos extends Config{
 
 
 
-        $this->setOutput(array('accion'=>'1','notas_id'=>$id_nota ));
+        $this->setOutput(array('accion'=>'1','notas_id'=>$id_nota));
     }
     public function TarjetaDeIdentificacion($Paciente) {
         $sql['info']= $this->config_mdl->sqlGetDataCondition('os_tarjeta_identificacion',array(
@@ -1430,14 +1502,7 @@ class Documentos extends Config{
         $this->load->view('Documentos/Doc_TarjetaIdentificacion',$sql);
     }
 
-    public function AjaxExisntenciaDiagnosticoPrincipal(){
-      $folio = $this->input->get('folio');
-      $consulta = "SELECT COUNT(diagnostico_id) AS existencia
-                   FROM paciente_diagnosticos
-                   WHERE triage_id = $folio AND tipo_diagnostico = 1";
-      $sql['Total'] = $this->config_mdl->_query($consulta);
-      print json_encode($sql);
-    }
+
 
     public function AjaxConsultarDiagnosticos(){
       $folio = $this->input->get('folio');
@@ -1445,7 +1510,7 @@ class Documentos extends Config{
                    FROM paciente_diagnosticos
                    INNER JOIN um_cie10
                   	 ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
-                   WHERE triage_id =".$folio;
+                   WHERE triage_id =".$folio." ORDER BY tipo_diagnostico";
       $sql = $this->config_mdl->_query($consulta);
       print json_encode($sql);
     }

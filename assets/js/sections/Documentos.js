@@ -1,13 +1,10 @@
 var cont = 0;
 $(document).ready(function () {
-
     $('.select2').select2();
-    //$('textarea[name=cpr_nota]').wysihtml5();
     $('.hf_motivo_abierto').wysihtml5();
     $('.hf_antecedentes').wysihtml5();
-
-    //$('.hf_padecimientoa_abierto').wysihtml5();
-    $('.hf_exploracionf_abierto').wysihtml5();
+    $('.hf_padecimientoa').wysihtml5();
+    $('.hf_exploracionfisica').wysihtml5();
     $('.hf_textarea').wysihtml5();
     $('.hf_ayuno').wysihtml5();
     $('.hf_signosycuidados').wysihtml5();
@@ -16,7 +13,6 @@ $(document).ready(function () {
     $('.hf_medicamentos').wysihtml5();
     $('.hf_diagnosticos').wysihtml5();
     $('textarea[name=nota_interrogatorio]').wysihtml5();
-    //$('textarea[name=nota_problema]').wysihtml5();
     $('textarea[name=nota_exploracionf]').wysihtml5();
     $('textarea[name=nota_analisis]').wysihtml5();
     $('textarea[name=nota_motivoInterconsulta]').wysihtml5();
@@ -27,7 +23,6 @@ $(document).ready(function () {
     $('textarea[name=nota_cuidadosenfermeria]').wysihtml5();
     $('textarea[name=nota_solucionesp]').wysihtml5();
     $('.nota_pronosticos').wysihtml5();
-
     //$('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2();
 
     if($('input[name=accion]').val()!=undefined){
@@ -211,7 +206,6 @@ $(document).ready(function () {
     $('input[name=hf_trataminentos_ferula][value="'+$('input[name=hf_trataminentos_ferula]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_trataminentos_vacunas][value="'+$('input[name=hf_trataminentos_vacunas]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_ministeriopublico][value="'+$('input[name=hf_ministeriopublico]').data('value')+'"]').prop("checked",true);
-
     $('input[name=hf_glasgow_expontanea][value="'+$('input[name=hf_glasgow_expontanea]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_glasgow_hablar][value="'+$('input[name=hf_glasgow_hablar]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_glasgow_dolor][value="'+$('input[name=hf_glasgow_dolor]').data('value')+'"]').prop("checked",true);
@@ -227,10 +221,10 @@ $(document).ready(function () {
     $('input[name=hf_glasgow_sonidos][value="'+$('input[name=hf_glasgow_sonidos]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_glasgow_arespuesta][value="'+$('input[name=hf_glasgow_arespuesta]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_glasgow_obedece][value="'+$('input[name=hf_glasgow_obedece]').data('value')+'"]').prop("checked",true);
-
     $('input[name=hf_riesgocaida][value="'+$('input[name=hf_riesgocaida]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_eva][value="'+$('input[name=hf_eva]').data('value')+'"]').prop("checked",true);
-
+    $('input[name=hf_estadosalud][value="'+$('input[name=hf_estadosalud]').data('value')+'"]').prop("checked",true);
+    
     // Toma el valor del 'data-value' y lo asigna en el select
     $('select[name=tomaSignos]').val($('select[name=tomaSignos]').attr('data-value'));
     $('select[name=select_alergias]').val($('select[name=select_alergias]').attr('data-value'));
@@ -552,6 +546,8 @@ $(document).ready(function () {
 
     });
 
+    
+
     $('body').on('click','.desactivar-prescripcion',function(){
 
 
@@ -592,6 +588,10 @@ $(document).ready(function () {
       BitacoraHistorialMedicamentos(prescripcion_id,paciente);
     });
 
+    $('.btn-edit-diagnostico-principal').click(function(){
+      $('input[name=accion_diagnostico_principal]').val("edit");
+      $('#text_diagnostico_1').removeAttr('disabled');
+    });
 
     $('#consulta_diagnosticos').click(function(){
       var folio = $('input[name=triage_id]').val();
@@ -625,6 +625,35 @@ $(document).ready(function () {
       }
 
     });
+
+    $('#play_ordenes_nuevo').click(function(){
+      //Limpiar campos de dieta
+      $('#radioAyuno').removeAttr('checked');
+      $('#radioDieta').removeAttr('checked');
+      $('#divSelectDietas').attr('hidden',true);
+      $('#selectDietas').val(0);
+      $('#divOtraDieta').attr('hidden',true);
+      $('#inputOtraDieta').val('');
+      //Limpiar campos de toma de signos
+      $('#selectTomaSignos').val(0);
+      $('#divOtrasInidcacionesSignos').attr('hidden',true);
+      $('#otras-indicaciones-signos').val('');
+      //Limpiar campos cuidados generales de enfermeria
+      $('#checkCuidadosGenerales').attr('checked',true);
+      $('#labelCheckCuidadosGenerales').text(" SI");
+      $('#listCuidadosGenerales').attr('hidden',true);
+      //Limpiar campo cuidados especiales de enfermeria
+      $('textarea[name=nota_cuidadosenfermeria]').data("wysihtml5").editor.setValue('');
+      //Limpiar campo soluciones parenterales
+      $('textarea[name=nota_solucionesp]').data("wysihtml5").editor.setValue('');
+
+    });
+    
+    $('#play_ordenes_continuar').click(function(){
+      var folio = $('input[name=triage_id]').val();
+      ConsultarUltimasOrdenes(folio);
+    });
+
 
     $('#acordeon_prescripciones_canceladas').click(function(){
       var paciente = $('input[name=triage_id]').val();
@@ -777,32 +806,12 @@ $(document).ready(function () {
         })
     })
 
-    function ExistenciaDiagnosticoPrincipal(folio){
-      var existencia = false;
-
-      $.ajax({
-          url:base_url+'Sections/Documentos/AjaxExisntenciaDiagnosticoPrincipal',
-          type: 'GET',
-          dataType: 'json',
-          data:{
-              folio:folio
-          },success: function (data, textStatus, jqXHR) {
-              
-          },error: function (jqXHR, textStatus, errorThrown) {
-              bootbox.hideAll();
-              MsjError();
-          }
-      });
-      return existencia;
-    }
+    
 
     var indice_diagnosticos_secundarios = 2;
-    var tipo_diagnostico = 1;
-    $('.add-diagnostico-secundario').click(function(){
-      var lbl_diagnostico = "Diagnostico Principal";
-      if(tipo_diagnostico != 1){
-        lbl_diagnostico = "Diagnostico";
-      }
+    
+    $('.btn_agregarDiagnostico').click(function(){
+      
       var form_diagnosticos_secundarios = "";
       form_diagnosticos_secundarios =
       "<div class='row'  id='form_diagnosticos_secundarios_"+indice_diagnosticos_secundarios+"'>"+
@@ -824,7 +833,7 @@ $(document).ready(function () {
 
         "<div class='col-sm-9'>"+
           "<div class='form-group'>"+
-            "<label>"+lbl_diagnostico+"</label>"+
+            "<label>Diagnóstico secundario</label>"+
             "<input type='text' class='form-control' id='text_diagnostico_"+indice_diagnosticos_secundarios+"' onkeydown=BuscarDiagnostico("+indice_diagnosticos_secundarios+") />"+
 
               "<ul class='contenedor_consulta_diagnosticos' id='lista_resultado_diagnosticos_"+indice_diagnosticos_secundarios+"' ></ul>"+
@@ -836,7 +845,7 @@ $(document).ready(function () {
           "<label>Codigo</label>"+
           "<input type='text' class='form-control' id='text_codigo_diagnostico_"+indice_diagnosticos_secundarios+"' disabled/>"+
           "<input type='hidden' class='form-control' name='cie10_id[]' id='text_id_diagnostico_"+indice_diagnosticos_secundarios+"' >"+
-          "<input type='hidden' name='tipo_diagnostico[]' value='"+tipo_diagnostico+"' >"+
+          "<input type='hidden' name='tipo_diagnostico[]' value='2' >"+
         "</div>"+
 
         "<div class='col-sm-1' style='padding-top:25px;'>"+
@@ -848,8 +857,9 @@ $(document).ready(function () {
       "</div>";
       $('.diagnosticos_secundarios_dinamico').append(form_diagnosticos_secundarios);
       indice_diagnosticos_secundarios = indice_diagnosticos_secundarios + 1;
-      tipo_diagnostico = 2;
+      
     });
+
     $('.check_diagnosticos_secundarios').click(function(){
 
       if($(this).val() == 0){
@@ -1963,6 +1973,73 @@ function multiplo(valor, multiplo){
     }else{
       return false;
     }
+
+}
+
+function ConsultarUltimasOrdenes(folio){
+
+  $.ajax({
+      url:base_url+'Sections/Documentos/AjaxUltimasOrdenes',
+      type: 'get',
+      dataType: 'json',
+      data:{
+          folio:folio
+      },success: function (data, textStatus, jqXHR) {
+
+        var nutricion = data[0].nota_nutricion,
+            signoscuidados = data[0].nota_svycuidados,
+            cgenfermeria = data[0].nota_cgenfermeria,
+            cuidadosenfermeria = data[0].nota_cuidadosenfermeria,
+            solucionesp = data[0].nota_solucionesp;
+
+        // si la variable es indefinida, significa que no hay nota de evolucion
+        // por lo que tomara los datos de la hoja frontal
+        if(nutricion == undefined){
+          nutricion = data[0].hf_nutricion,
+          signoscuidados = data[0].hf_signosycuidados,
+          cgenfermeria = data[0].hf_cgenfermeria,
+          cuidadosenfermeria = data[0].hf_cuidadosenfermeria,
+          solucionesp = data[0].hf_solucionesp;
+        }
+
+        //asignacion nuticion
+        if(nutricion == 0){
+          $('#radioAyuno').attr('checked',true);
+        }else if(nutricion >= 1 || nutricion <= 12){
+          $('#radioDieta').attr('checked',true);
+          $('#divSelectDietas').removeAttr('hidden');
+          $('#selectDietas').val(nutricion);
+        }else{
+          $('#radioDieta').attr('checked',true);
+          $('#divSelectDietas').removeAttr('hidden');
+          $('#selectDietas').val(13);
+          $('#divOtraDieta').removeAttr('hidden');
+          $('#inputOtraDieta').val(nutricion);
+        }
+        //asignacion toma de signoscuidados
+        if(signoscuidados <=3){
+          $('#selectTomaSignos').val(signoscuidados);
+        }else{
+          $('#selectTomaSignos').val(3);
+          $('#divOtrasInidcacionesSignos').removeAttr('hidden');
+          $('#otras-indicaciones-signos').val(signoscuidados);
+        }
+        //asignacion cuidados generales de enfermeria
+        if(cgenfermeria == 1){
+          $('#checkCuidadosGenerales').attr('checked',true);
+          $('#labelCheckCuidadosGenerales').text("");
+          $('#listCuidadosGenerales').removeAttr('hidden');
+        }
+
+        $('textarea[name=nota_cuidadosenfermeria]').data("wysihtml5").editor.setValue(cuidadosenfermeria);
+        $('textarea[name=nota_solucionesp]').data("wysihtml5").editor.setValue(solucionesp);
+
+
+      },error: function (jqXHR, textStatus, errorThrown) {
+          bootbox.hideAll();
+          MsjError();
+      }
+  });
 
 }
 

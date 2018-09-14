@@ -84,7 +84,6 @@
                 <h6><b>FECHA DE CREACIÓN DOCUMENTO MÉDICO:</b> <?=$hoja['hf_fg']?> <?=$hoja['hf_hg']?></h6>
             </div>
             <div style="position: absolute;margin-left: 66px;margin-top: 320px;width: 130px;font-size: 12px;text-align: center">
-                
                 <h4>Tensión Arterial</h4>
                 <h1 style="margin-top: -10px"><?=$SignosVitales['sv_ta']?></h1>
                 <br><br>

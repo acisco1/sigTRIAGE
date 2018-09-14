@@ -663,12 +663,10 @@ class Documentos extends Config{
                                               INNER JOIN um_especialidades
                                                ON os_empleados.empleado_servicio = um_especialidades.especialidad_id
                                               WHERE empleado_id =".$sql['Nota']['empleado_id']);
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre FROM diagnostico_notas
-                                                          INNER JOIN paciente_diagnosticos
-                                                          	ON diagnostico_notas.diagnostico_id = paciente_diagnosticos.diagnostico_id
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, diagnostico_notas.tipo_diagnostico AS tipodiag FROM diagnostico_notas
                                                           INNER JOIN um_cie10
-                                                          	ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
-                                                          WHERE notas_id = ".$Nota." ORDER BY tipo_diagnostico");
+                                                          	ON diagnostico_notas.cie10_id = um_cie10.cie10_id
+                                                          WHERE notas_id = ".$Nota." ORDER BY tipodiag");
         $sql['info']= $this->config_mdl->sqlGetDataCondition('os_triage',array(
             'triage_id'=>$sql['Nota']['triage_id']
         ))[0];

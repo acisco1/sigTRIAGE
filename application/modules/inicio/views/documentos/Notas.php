@@ -84,18 +84,18 @@ if(count($Residentes) == 3){
                 <?=$Nota['notas_fecha']?> <?=$Nota['notas_hora']?><br>
             </div>
             <div style="position: absolute;margin-left: 15px;margin-top: 300px;width: 130px;font-size: 12px;text-align: center">
-                <h5>PANI</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_ta']?> mm Hg</p>
-                <h5>Temperatura</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_temp']?> °C</p>
-                <h5>Frecuencia Cardíaca</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_fc']?> lpm</p>
-                <h5>Frecuencia Respiratoria</h5><p style="margin-top: -14px"><?=$SignosVitales['sv_fr']?> rpm</p>
-                <h5>Peso:</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_peso']?> Kg</p>
-                <h5>Talla:</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_talla']?> cm</p>
-                <h5>Oximetria</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_oximetria']?> % Sp0<sub>2</sub></p>
-                <h5>Glucosa</h5><p style="margin-top: -18px"><?=$SignosVitales['sv_dextrostix']?> mg/dl</p>
-                <h5>EVA</h5><p style="margin-top: -18px"><?=$Nota['nota_eva']?></p>
-                <h5>Riesgo de Caida</h5><p style="margin-top: -18px"><?=$Nota['hf_riesgo_caida']?></p>
-                <h5>Riesgo de Trombosis</h5><p style="margin-top: -18px"><?=$Nota['nota_riesgotrombosis']?></p>
-                <h5>Escala de Glasgow</h5><p style="margin-top: -18px"><?=$Nota['nota_escala_glasgow']?></p>
+              <h5 style="margin-top: 15px">Peso:</h5><p style="margin-top: -28px;margin-left: 77"><?=$SignosVitales['sv_peso']?> Kg</p>
+              <h5 style="margin-top: 1px">Talla:</h5><p style="margin-top: -28px;margin-left: 80"><?=$SignosVitales['sv_talla']?> cm</p>
+              <h5 style="margin-top: 5">Presión Arterial</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_ta']?> mm Hg</p>
+                <h5 style="margin-top: -5">Temperatura</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_temp']?> °C</p>
+                <h5 style="margin-top: -5">Frecuencia Cardíaca</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_fc']?> lpm</p>
+                <h5 style="margin-top: -5">Frecuencia Respiratoria</h5><p style="margin-top: -14px"><?=$SignosVitales['sv_fr']?> rpm</p>
+                <h5 style="margin-top: -5">Oximetria</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_oximetria']?> % Sp0<sub>2</sub></p>
+                <h5 style="margin-top: -5">Glucosa</h5><p style="margin-top: -15px"><?=$SignosVitales['sv_dextrostix']?> mg/dl</p>
+                <h5 style="margin-top: -5">EVA</h5><p style="margin-top: -15px"><?=$Nota['nota_eva']?></p>
+                <h5 style="margin-top: -5">Riesgo de Caída</h5><p style="margin-top: -12px"><?=$Nota['hf_riesgo_caida']?></p>
+                <h5 style="margin-top: -5">Riesgo de Trombosis</h5><p style="margin-top: -12px"><?=$Nota['nota_riesgotrombosis']?></p>
+                <h5 style="margin-top: -5">Escala de Glasgow</h5><p style="margin-top: -14px"><?=$Nota['nota_escala_glasgow']?></p>
             </div>
             <div style="rotate: 90; position: absolute;margin-left: 50px;margin-top: 336px;text-transform: uppercase;font-size: 12px;">
                 <?php $sqlEmpleadoSV=$this->config_mdl->sqlGetDataCondition('os_empleados',array(
@@ -177,18 +177,18 @@ if(count($Residentes) == 3){
                 <barcode type="C128A" value="<?=$info['triage_id']?>" style="height: 40px;" ></barcode>
             </div>
             <div style="position: absolute;top: 262px;;width: 500px;;left: 205px;font-size: 12px;text-transform: uppercase;text-align: center;font-weight: bold">
-                <?=$Nota['notas_tipo']?> SERVICIO: <?=$ServicioM[0]['especialidad_nombre'] ?>
+                <?=$Nota['notas_tipo']?> SERVICIO <?=$ServicioM[0]['especialidad_nombre'] ?>
             </div>
         </div>
 
     </page_header>
-
+  <div style="left: 1px; right: -2000px; margin-top: -15px; font-size: 12px;">
     <span style="text-align: justify">
         <?php if($_GET['indicaciones'] == 1){ ?>
             <h4>INDICACIONES Y ORDENES MEDICAS</h4>
         <?php }else{ ?> <!-- Informacion general de la nota evolucion -->
           <?php if($Nota['nota_problema']!=''){?>
-              <h5 style="margin-bottom: -6px">PROBLEMA</h5><br>
+              <h5 style="margin-bottom: -6px">PROBLEMA</h5>
               <?=$Nota['nota_problema']?>
           <?php }?>
           <?php if($Nota['nota_interrogatorio']!=''){?>
@@ -202,15 +202,15 @@ if(count($Residentes) == 3){
               $objetivo = 'EXPLORACION FISICA';
             } ?>
 
-              <h5 style="margin-bottom: -6px"><?= $subjetivo ?></h5><br>
+              <h5 style="margin-bottom: -6px"><?= $subjetivo ?></h5>
               <?= $Nota['nota_interrogatorio'] ?>
           <?php }?>
           <?php if($Nota['nota_exploracionf']!=''){?>
-              <h5 style="margin-bottom: -6px"><?= $objetivo ?></h5><br>
+              <h5 style="margin-bottom: -6px"><?= $objetivo ?></h5>
               <?=$Nota['nota_exploracionf']?>
           <?php }?>
           <?php if($Nota['nota_auxiliaresd']!=''){?>
-              <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5><br>
+              <h5 style="margin-bottom: -6px">RESULTADOS DE SERVICIOS AUXILIARES DE DIAGNOSTICO</h5>
               <?=$Nota['nota_auxiliaresd']?>
           <?php }?>
           <?php if($Nota['nota_procedimientos']!=''){?>
@@ -218,32 +218,30 @@ if(count($Residentes) == 3){
               <?=$Nota['nota_procedimientos']?>
           <?php }?>
           <?php if($Nota['nota_analisis']!=''){?>
-              <h5 style="margin-bottom: -6px">ANALISIS</h5><br>
+              <h5 style="margin-bottom: -6px">ANÁLISIS</h5>
               <?=$Nota['nota_analisis']?>
           <?php }?>
           <?php if($Nota['nota_diagnostico']!=''){?>
-              <h5 style="margin-botton: -6px">ACTUALIZACIÓN DE DIAGNOSTICO(S) Y PROBLEMAS CLÍNICOS</h5>
+              <h5 style="margin-bottom: -6px">ACTUALIZACIÓN DE DIAGNOSTICO(S) Y PROBLEMAS CLÍNICOS</h5>
               <?=$Nota['nota_diagnostico']?>
           <?php }?>
           <?php if($Nota['nota_pronosticos']!=''){?>
-                 <h5 style="margin-botton: -6px">PRONOSTICOS</h5>
+                 <h5 style="margin-bottom: -6px">PRONÓSTICOS</h5>
                  <?=$Nota['nota_pronosticos']?>
           <?php }?>
           <?php if($Nota['nota_estadosalud']!=''){ ?>
-             <h5 style="margin-botton: -6px">ESTADO DE SALUD: <?=$Nota['nota_estadosalud']?> </h5>
+             <h5 style="margin-bottom: -6px">ESTADO DE SALUD:</h5> <?=$Nota['nota_estadosalud']?>
           <?php } ?>
-          <h5 style="margin-botton: -6px">DIAGNOSTICO INGRESO:</h5>
+          <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO:</h5>
           <?= $Diagnosticos[0]['cie10_clave']." - ".$Diagnosticos[0]['cie10_nombre']?>
-          <h5 style="margin-botton: -6px">DIAGNOSTICO Principal:</h5>
+          <h5 style="margin-bottom: -6px">DIAGNÓSTICO PRINCIPAL:</h5>
           <?= $Diagnosticos[1]['cie10_clave']." - ".$Diagnosticos[1]['cie10_nombre']?>
-          <h5 style="margin-botton: -6px">DIAGNOSTICO SECUNDARIO (COMORBILIDADES):</h5>
+          <h5 style="margin-bottom: -6px">DIAGNÓSTICO(S) SECUNDARIO(S) (COMORBILIDADES):</h5>
           <?php for($x = 2; $x < count($Diagnosticos); $x++){
               echo $Diagnosticos[$x]['cie10_clave']." - ".$Diagnosticos[$x]['cie10_nombre']."<br>";
           } ?>
 
-
-
-          <h5 style="margin-botton: -6px">ORDENES MEDICAS:</h5>
+          <h5 style="margin-botton: -6px">ORDENES MÉDICAS:</h5>
         <?php } ?>
 
         <?php if($Nota['nota_nutricion'] == '0') {
@@ -255,15 +253,15 @@ if(count($Residentes) == 3){
         }else if($Nota['nota_nutricion'] == '3'){
           $nutricion = 'IIB - Astringente';
         }else if($Nota['nota_nutricion'] == '4'){
-          $nutricion = 'III - Diabetica';
+          $nutricion = 'III - Diabética';
         }else if($Nota['nota_nutricion'] == '5'){
-          $nutricion = 'IV - Hiposodica';
+          $nutricion = 'IV - Hiposódica';
         }else if($Nota['nota_nutricion'] == '6'){
           $nutricion = 'V - Hipograsa';
         }else if($Nota['nota_nutricion'] == '7'){
-          $nutricion = 'VI - Liquida clara';
+          $nutricion = 'VI - Líquida clara';
         }else if($Nota['nota_nutricion'] == '8'){
-          $nutricion = 'VIA - Liquida general';
+          $nutricion = 'VIA - Líquida general';
         }else if($Nota['nota_nutricion'] == '9'){
           $nutricion = 'VIB - Licuada por sonda';
         }else if($Nota['nota_nutricion'] == '10'){
@@ -276,7 +274,7 @@ if(count($Residentes) == 3){
           $nutricion = $Nota['nota_nutricion'];
         }
         ?>
-        NUTRICION: <?= $nutricion ?> <br><br>
+        NUTRICIÓN: <?= $nutricion ?> <br><br>
 
         <?php if($Nota['nota_svycuidados'] == '1'){
           $toma_signos = 'Por turno';
@@ -372,7 +370,7 @@ if(count($Residentes) == 3){
          $count_interconsultas = count($Interconsultas);
          if($count_interconsultas > 0){  ?>
            <h5 style="margin-botton: -6px">INTERCONSULTAS: </h5>
-         <?php }
+         <?php
          $separacion = "Servicios: ";
          $motivo = $Interconsultas[0]['motivo_interconsulta'];
          echo "<strong>".$separacion." </strong>";
@@ -387,13 +385,10 @@ if(count($Residentes) == 3){
            }
          }
         ?>
-      <?php  ?>
+      <?php } ?>
       <!-- fin zona interconsultas -->
-
-
-
-
     </span>
+  </div>
     <page_footer>
 
     </page_footer>

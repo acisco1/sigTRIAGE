@@ -145,7 +145,7 @@
                         <span style="font-size: 18px;font-weight: 500;text-transform: uppercase">
                             <div class="row" style="margin-top: -20px;">
                                 <div style="position: relative">
-                                    <div style="top: 17px;margin-left: -1px;position: absolute;height: 80px;width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
+                                    <div style="top: 17px;margin-left: -9px;position: absolute;height: 101px;width: 35px;" class="<?= Modules::run('Config/ColorClasificacion',array('color'=>$info['triage_color']))?>"></div>
                                 </div>
                                 <div class="col-md-10" style="padding-left: 40px">
                                   <br>
@@ -275,11 +275,11 @@
                                         </div>
                                         <div class="form-group">
                                             <h4><span class = "label back-imss border-back-imss">PADECIMIENTO ACTUAL</span></h4>
-                                            <textarea class="form-control" rows="5" name="hf_padecimientoa" placeholder="Escriba aquí el/los pacedimiento actual"><?=$hojafrontal[0]['hf_padecimientoa']?></textarea>
+                                            <textarea class="form-control hf_padecimientoa" rows="5" name="hf_padecimientoa" placeholder="Escriba aquí el/los pacedimiento actual"><?=$hojafrontal[0]['hf_padecimientoa']?></textarea>
                                         </div>
                                         <div class="form-group">
                                             <h4><span class = "label back-imss border-back-imss">EXPLORACIÓN FISICA</span></h4>
-                                            <textarea class="form-control" rows="8" name="hf_exploracionfisica"><?=$hojafrontal[0]['hf_exploracionfisica']?></textarea>
+                                            <textarea class="form-control hf_exploracionfisica" rows="8" name="hf_exploracionfisica"><?=$hojafrontal[0]['hf_exploracionfisica']?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -521,7 +521,7 @@
                               -->
                               <div class="col-sm-9">
                                 <div class="form-group">
-                                  <label for="">Diagnostico</label>
+                                  <label for="">Diagnóstico</label>
 
                                   <input type="text" class="form-control" id="text_diagnostico_0" onkeydown="BuscarDiagnostico(0)" value="<?= $Diagnosticos[0]['cie10_nombre'] ?>">
                                   <!-- lista que almacenan los diagnosticos consultados por el médico -->
@@ -531,7 +531,7 @@
                                 </div>
                               </div>
                               <div class="col-sm-2">
-                                <label for="">Codigo</label>
+                                <label for="">Código</label>
                                 <input type="text" class="form-control" id="text_codigo_diagnostico_0" value="<?= $Diagnosticos[0]['cie10_clave'] ?>" disabled>
                                 <input type="hidden" name="cie10_id[]" id="text_id_diagnostico_0" >
                                 <input type="hidden" name="tipo_diagnostico[]" value="0" >
@@ -584,7 +584,7 @@
                                 -->
                                 <div class="col-sm-9">
                                   <div class="form-group">
-                                    <label for="">Diagnostico</label>
+                                    <label for="">Diagnóstico</label>
                                     <input type="text" class="form-control" id="text_diagnostico_2" onkeydown="BuscarDiagnostico(2)" value="<?= $Diagnosticos[2]['cie10_nombre'] ?>">
 
                                       <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_2">
@@ -593,7 +593,7 @@
                                   </div>
                                 </div>
                                 <div class="col-sm-2">
-                                  <label>Codigo</label>
+                                  <label>Código</label>
                                   <input type="text" class="form-control" id="text_codigo_diagnostico_2" value="<?= $Diagnosticos[2]['cie10_clave'] ?>" disabled>
                                   <input type="hidden" class="form-control" name="cie10_id[]" id="text_id_diagnostico_2" hidden>
                                   <input type="hidden" name="tipo_diagnostico[]" value="2" >
@@ -1040,7 +1040,22 @@
                         <div class="col-sm-12" style="padding: 0;">
                           <div class="form-group">
                               <h4><span class = "label back-imss border-back-imss">ESTADO DE SALUD</span></h4>
-                              <textarea class="form-control" rows="3" name="hf_interpretacion"><?=$hojafrontal[0]['hf_interpretacion']?></textarea>
+                              &nbsp;&nbsp;&nbsp;
+                              <label class="md-check">
+                                <input type="radio" name="hf_estadosalud" data-value="<?=$hojafrontal[0]['hf_estadosalud']?>" class="has-value" value="Estable"><i class="red"></i>Estable
+                              </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="md-check">
+                                <input type="radio" name="hf_estadosalud" data-value="<?=$hojafrontal[0]['hf_estadosalud']?>" class="has-value" value="Delicado"><i class="red"></i>Delicado
+                              </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="md-check">
+                                <input type="radio" name="hf_estadosalud" data-value="<?=$hojafrontal[0]['hf_estadosalud']?>" class="has-value" value="Muy Delicado"><i class="red"></i>Muy Delicado
+                              </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="md-check">
+                                <input type="radio" name="hf_estadosalud" data-value="<?=$hojafrontal[0]['hf_estadosalud']?>" class="has-value" value="Grave"><i class="red"></i>Grave
+                              </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="md-check">
+                                <input type="radio" name="hf_estadosalud" data-value="<?=$hojafrontal[0]['hf_estadosalud']?>" class="has-value" value="Muy Grave"><i class="red"></i>Muy Grave
+                              </label>
                           </div>
                         </div>
                     </div>
