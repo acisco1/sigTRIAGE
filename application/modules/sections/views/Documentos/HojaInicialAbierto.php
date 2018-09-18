@@ -120,7 +120,7 @@
     <div class="box-cell">
         <div class="col-md-11 col-centered" style="margin-top: 10px ">
             <div class="box-inner">
-           
+
                 <?php if($SignosVitales['sv_ta']==''){?>
                 <div class="row " style="margin-top: -10px;padding: 16px;">
                     <div class="col-md-12 col-centered back-imss" style="padding:10px;margin-bottom: -7px;">
@@ -584,22 +584,22 @@
                                 -->
                                 <div class="col-sm-9">
                                   <div class="form-group">
-                                    <label for="">Diagnóstico</label>
-                                    <input type="text" class="form-control" id="text_diagnostico_2" onkeydown="BuscarDiagnostico(2)" value="<?= $Diagnosticos[2]['cie10_nombre'] ?>">
+                                    <label for="">Diagnóstico secundario</label>
+                                    <input type="text" class="form-control" id="text_diagnostico_1" onkeydown="BuscarDiagnostico(1)" value="<?= $Diagnosticos[1]['cie10_nombre'] ?>">
 
-                                      <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_2">
+                                      <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_1">
                                       </ul>
 
                                   </div>
                                 </div>
                                 <div class="col-sm-2">
                                   <label>Código</label>
-                                  <input type="text" class="form-control" id="text_codigo_diagnostico_2" value="<?= $Diagnosticos[2]['cie10_clave'] ?>" disabled>
-                                  <input type="hidden" class="form-control" name="cie10_id[]" id="text_id_diagnostico_2" hidden>
+                                  <input type="text" class="form-control" id="text_codigo_diagnostico_1" value="<?= $Diagnosticos[1]['cie10_clave'] ?>" disabled>
+                                  <input type="hidden" class="form-control" name="cie10_id[]" id="text_id_diagnostico_1" hidden>
                                   <input type="hidden" name="tipo_diagnostico[]" value="2" >
                                 </div>
                                 <div class="col-sm-1" style="padding-top:25px;">
-                                  <button type="button" class="btn btn-success width100 add-diagnostico-secundario" title="Agregar diagnostico secundario" name="button">
+                                  <button type="button" class="btn btn-success width100 btn_agregarDiagnostico add-diagnostico-secundario" title="Agregar diagnostico secundario" name="button">
                                     <span class="glyphicon glyphicon-plus "></span>
                                   </button>
                                 </div>
@@ -625,7 +625,7 @@
 
                                     <div class='col-sm-9'>
                                       <div class='form-group'>
-                                        <label>Diagnostico</label>
+                                        <label>Diagnóstico secundario</label>
                                         <input type='text' class='form-control' id='text_diagnostico_<?=$x?>' value="<?= $Diagnosticos[$x]['cie10_nombre'] ?>" onkeydown="BuscarDiagnostico(<?=$x?>)" />
 
                                           <ul class='contenedor_consulta_diagnosticos' id='lista_resultado_diagnosticos_<?=$x?>' ></ul>
@@ -634,10 +634,10 @@
                                     </div>
 
                                     <div class='col-sm-2'>
-                                      <label>Codigo</label>
+                                      <label>Código</label>
                                       <input type='text' class='form-control' id='text_codigo_diagnostico_<?$x?>' value="<?= $Diagnosticos[$x]['cie10_clave'] ?>" disabled/>
                                       <input type='hidden' class='form-control' name='cie10_id[]' id='text_id_diagnostico_<?$x?>' >
-                                      <input type='hidden' name='tipo_diagnostico[]' value='1' >
+                                      <input type='hidden' name='tipo_diagnostico[]' value='2' >
                                     </div>
 
                                     <div class='col-sm-1' style='padding-top:25px;'>
@@ -650,8 +650,6 @@
                                 <?php } ?>
 
                               </div>
-
-
                             </div>
                         </div>
                         <div class="form-group">

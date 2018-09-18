@@ -194,37 +194,38 @@
                       <h5>Fecha de última toma de signos: <?=$UltimosSignosVitales[0]['fecha']?></h5>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="width: 12.5%;">
-                        <h5 class=""><b>P.A</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_ta']?>(mmhg)</h4>
+                        <h5 style="margin-top: -5px;"><b>P.A</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_ta']?>(mmhg)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>TEMP.</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_temp']?> (°C)</h4>
+                        <h5 style="margin-top: -5px;"><b>TEMP.</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_temp']?> (°C)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>FREC. CARD. </b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_fc']?> (lpm)</h4>
+                        <h5 style="margin-top: -5px;"><b>FREC. CARD. </b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_fc']?> (lpm)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>FREC. RESP</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_fr']?> (rpm)</h4>
+                        <h5 style="margin-top: -5px;"><b>FREC. RESP</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?= [0]['sv_fr']?> (rpm)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>SpO2</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_oximetria']?> (%)</h4>
+                        <h5 style="margin-top: -5px;"><b>SpO2</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_oximetria']?> (%)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>GLUCEMIA</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_dextrostix']?> (mg/dL)</h4>
+                        <h5 style="margin-top: -5px;"><b>GLUCEMIA</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_dextrostix']?> (mg/dL)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>PESO</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_peso']?> (kg)</h4>
+                        <h5 style="margin-top: -5px;"><b>PESO</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_peso']?> (kg)</h4>
                     </div>
                     <div class="col-md-1 text-center back-imss" style="border-left: 1px solid white; width: 12.5%;">
-                        <h5><b>TALLA</b></h5>
-                        <h4 style="margin-top: -8px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_talla']?>(cm)</h4>
+                        <h5 style="margin-top: -5px;"><b>TALLA</b></h5>
+                        <h4 style="margin-top: -6px;font-weight: bold"> <?=$UltimosSignosVitales[0]['sv_talla']?>(cm)</h4>
                     </div>
+                    <div class="col-sm-12" ></div>
                 </div>
                 <!--</div>-->
               </div>
@@ -233,7 +234,7 @@
                     <div class="card-body" style="padding: 20px 0px;">
                         <form class="Form-Notas-COC" oninput="x.value=parseInt(nota_eva.value)">
                             <div class="row" >
-                                <div class="col-md-12" style="margin-top: -10px">
+                                <div class="col-md-12" style="margin-top: -15px">
                                     <div class="form-group">
                                         <div class="input-group m-b">
                                             <?php
@@ -614,25 +615,30 @@
                                     </div>
                                       <div class="diagnosticos_principales row">
                                       <?php
-                                      $cie10_nombre = "";
-                                      $cie10_clave = "";
+                                      $label_instruccion_diagnostico = "(Edite el campo si el diagnóstico de ingreso no es el principal)";
+                                      $cie10_nombre = $Diagnosticos[0]['cie10_nombre'];
+                                      $cie10_clave = $Diagnosticos[0]['cie10_clave'];
                                       $edit = "hidden";
+                                      $edit2 = "";
                                       $principal_edit = "";
+
                                       if(COUNT($DiagnosticoPaciente) > 0){
+                                        $label_instruccion_diagnostico = "";
                                         $cie10_nombre = $DiagnosticoPaciente[0]['cie10_nombre'];
                                         $cie10_clave = $DiagnosticoPaciente[0]['cie10_clave'];
                                         $edit = "";
+                                        $edit2 = "hidden";
                                         $principal_edit = "disabled";
                                       }
                                       ?>
                                         <div class="col-sm-9">
                                           <div class="form-group">
-                                            <label>Diagnóstico Principal</label>
+                                            <label>Diagnóstico Principal <?=$label_instruccion_diagnostico?> </label>
                                             <input type="text" class="form-control" id="text_diagnostico_1" onkeydown="BuscarDiagnostico(1)" value="<?=$cie10_nombre?>" <?=$principal_edit?>>
                                             <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_1"></ul>
                                           </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-2">
                                           <label>Código</label>
                                           <input type="text" class="form-control" id="text_codigo_diagnostico_1" value="<?=$cie10_clave?>" disabled>
@@ -641,6 +647,11 @@
                                         </div>
                                         <div class="col-sm-1" style="padding-top:22px;" <?=$edit?>>
                                           <a href="#" class="btn btn-default width100 btn-edit-diagnostico-principal" title="Editar diagnóstico principal" >
+                                          <span class="glyphicon glyphicon-pencil"></span>
+                                          </a>
+                                        </div>
+                                        <div class="col-sm-1" style="padding-top:22px;" <?=$edit2?>>
+                                          <a href="#" class="btn btn-default width100 btn-diagnostico-principal" title="Editar diagnóstico principal" >
                                           <span class="glyphicon glyphicon-pencil"></span>
                                           </a>
                                         </div>

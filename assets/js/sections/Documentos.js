@@ -224,7 +224,7 @@ $(document).ready(function () {
     $('input[name=hf_riesgocaida][value="'+$('input[name=hf_riesgocaida]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_eva][value="'+$('input[name=hf_eva]').data('value')+'"]').prop("checked",true);
     $('input[name=hf_estadosalud][value="'+$('input[name=hf_estadosalud]').data('value')+'"]').prop("checked",true);
-    
+
     // Toma el valor del 'data-value' y lo asigna en el select
     $('select[name=tomaSignos]').val($('select[name=tomaSignos]').attr('data-value'));
     $('select[name=select_alergias]').val($('select[name=select_alergias]').attr('data-value'));
@@ -546,7 +546,7 @@ $(document).ready(function () {
 
     });
 
-    
+
 
     $('body').on('click','.desactivar-prescripcion',function(){
 
@@ -591,6 +591,11 @@ $(document).ready(function () {
     $('.btn-edit-diagnostico-principal').click(function(){
       $('input[name=accion_diagnostico_principal]').val("edit");
       $('#text_diagnostico_1').removeAttr('disabled');
+    });
+
+    $('.btn-diagnostico-principal').click(function(){
+      $('#text_diagnostico_1').val('');
+      $('#text_codigo_diagnostico_1').val('');
     });
 
     $('#consulta_diagnosticos').click(function(){
@@ -648,7 +653,7 @@ $(document).ready(function () {
       $('textarea[name=nota_solucionesp]').data("wysihtml5").editor.setValue('');
 
     });
-    
+
     $('#play_ordenes_continuar').click(function(){
       var folio = $('input[name=triage_id]').val();
       ConsultarUltimasOrdenes(folio);
@@ -806,12 +811,12 @@ $(document).ready(function () {
         })
     })
 
-    
+
 
     var indice_diagnosticos_secundarios = 2;
-    
+
     $('.btn_agregarDiagnostico').click(function(){
-      
+
       var form_diagnosticos_secundarios = "";
       form_diagnosticos_secundarios =
       "<div class='row'  id='form_diagnosticos_secundarios_"+indice_diagnosticos_secundarios+"'>"+
@@ -842,7 +847,7 @@ $(document).ready(function () {
         "</div>"+
 
         "<div class='col-sm-2'>"+
-          "<label>Codigo</label>"+
+          "<label>Código</label>"+
           "<input type='text' class='form-control' id='text_codigo_diagnostico_"+indice_diagnosticos_secundarios+"' disabled/>"+
           "<input type='hidden' class='form-control' name='cie10_id[]' id='text_id_diagnostico_"+indice_diagnosticos_secundarios+"' >"+
           "<input type='hidden' name='tipo_diagnostico[]' value='2' >"+
@@ -857,7 +862,7 @@ $(document).ready(function () {
       "</div>";
       $('.diagnosticos_secundarios_dinamico').append(form_diagnosticos_secundarios);
       indice_diagnosticos_secundarios = indice_diagnosticos_secundarios + 1;
-      
+
     });
 
     $('.check_diagnosticos_secundarios').click(function(){

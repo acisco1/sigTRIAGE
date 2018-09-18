@@ -1,4 +1,6 @@
 <?php ob_start();
+
+//El margen se modifica dependiendo el número de residentes en la nota
 $margenBajo = "50mm";
 if(count($Residentes) == 3){
   $margenBajo = "78mm";
@@ -6,7 +8,9 @@ if(count($Residentes) == 3){
   $margenBajo = "71mm";
 }else if(count($Residentes) == 1){
   $margenBajo = "60mm";
-}?>
+}
+
+?>
 <page backtop="80mm" backbottom="<?=$margenBajo ?>" backleft="49" backright="10mm">
     <page_header>
         <img src="<?=  base_url()?>assets/doc/DOC430128.png" style="position: absolute;width: 805px;margin-top: 0px;margin-left: -10px;">
@@ -96,6 +100,7 @@ if(count($Residentes) == 3){
                 <h5 style="margin-top: -5">Riesgo de Caída</h5><p style="margin-top: -12px"><?=$Nota['hf_riesgo_caida']?></p>
                 <h5 style="margin-top: -5">Riesgo de Trombosis</h5><p style="margin-top: -12px"><?=$Nota['nota_riesgotrombosis']?></p>
                 <h5 style="margin-top: -5">Escala de Glasgow</h5><p style="margin-top: -14px"><?=$Nota['nota_escala_glasgow']?></p>
+                <h5 style="margin-top: -5">Estado de salud</h5><p style="margin-top: -14px"><?=$Nota['nota_estadosalud']?></p>
             </div>
             <div style="rotate: 90; position: absolute;margin-left: 50px;margin-top: 336px;text-transform: uppercase;font-size: 12px;">
                 <?php $sqlEmpleadoSV=$this->config_mdl->sqlGetDataCondition('os_empleados',array(
@@ -229,9 +234,7 @@ if(count($Residentes) == 3){
                  <h5 style="margin-bottom: -6px">PRONÓSTICOS</h5>
                  <?=$Nota['nota_pronosticos']?>
           <?php }?>
-          <?php if($Nota['nota_estadosalud']!=''){ ?>
-             <h5 style="margin-bottom: -6px">ESTADO DE SALUD:</h5> <?=$Nota['nota_estadosalud']?>
-          <?php } ?>
+
           <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO:</h5>
           <?= $Diagnosticos[0]['cie10_clave']." - ".$Diagnosticos[0]['cie10_nombre']?>
           <h5 style="margin-bottom: -6px">DIAGNÓSTICO PRINCIPAL:</h5>

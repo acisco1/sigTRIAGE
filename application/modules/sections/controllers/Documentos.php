@@ -327,13 +327,18 @@ class Documentos extends Config{
                                                                  interaccion_amarilla,interaccion_roja
                                                           FROM catalogo_medicamentos
                                                           WHERE existencia = 1");
-        $sql['Vias'] = array(IV,VO,IT,Enema,IM,Coliris,SC,Rectal,SB,IP,Tupilco,ID,Inhalatoria,Nasal,Otorrino,Ocular);
+
+        $sql['Vias'] = array("INTRAVENOSA","ORAL","TOPICO","OFTALMICO","SUBCUTANEA","INHALATORIA","RECTAL",
+                             "NASAL","INTRAMUSCULAR","TRANSDÉRMICO","VAGINAL","INTRATECAL","SUBLINGUAL",
+                             "DERMICO","PERFUCION INTRAVENOSA","GASTROENTÉRICA","PARENTAL","OFTÁLMICA","ÓTICA");
+
         $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, medicamento, dosis,fecha_prescripcion,via_administracion,
                                                           frecuencia,aplicacion,fecha_inicio,tiempo,fecha_fin,estado
                                                           FROM prescripcion INNER JOIN catalogo_medicamentos ON
                                                           prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                           INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
                                                           WHERE os_triage.triage_id =".$_GET['folio']);
+
         $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
                                                                     WHERE estado = 1 AND triage_id = ".$_GET['folio']);
 
@@ -635,14 +640,6 @@ class Documentos extends Config{
               $this->config_mdl->_insert('diagnostico_hoja_frontal',$datos);
             }
 
-            /*
-            Se consultan las interconsultas realizadas en la hoja frontal, para ingresarse
-            en la tabla que distinguira su origen
-            */
-
-
-
-
         }else{
             unset($data['hf_fg']);
             unset($data['hf_hg']);
@@ -650,6 +647,7 @@ class Documentos extends Config{
             $this->config_mdl->_update_data('os_consultorios_especialidad_hf',$data,array(
                 'hf_id'=>  $this->input->post('hf_id')
             ));
+
         }
         $this->config_mdl->_update_data('os_asistentesmedicas',$data_am,array(
            'triage_id'=>  $this->input->post('triage_id')
