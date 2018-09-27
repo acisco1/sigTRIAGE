@@ -14,14 +14,16 @@
                 padding: 0 0.20em;
                 background: white;
               }
-              #acordeon_prescripciones_activas, #acordeon_prescripciones_canceladas{
+              #acordeon_prescripciones_activas, #acordeon_prescripciones_canceladas,
+              #acordeon_alergia_medicamentos,#acordeon_reacciones, #acordeon_notificaciones{
                 color: rgb(255,255,255);
                 font-size: 16px;
                 padding-top: -4px;
                 padding-button: -4px;
 
               }
-              #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover{
+              #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover,
+              #acordeon_alergia_medicamentos:hover, #acordeon_reacciones:hover,#acordeon_notificaciones:hover{
                 background-color: rgba(0, 0, 0, 0.12);
               }
               .lista_resultado_diagnosticos{
@@ -146,7 +148,8 @@
             .panel-container{
               border-bottom: 1px solid #ddd;
             }
-            #label_total_activas, #label_total_canceladas{
+            #label_total_activas, #label_total_canceladas, #label_total_alergia_medicamentos,
+            #label_total_reacciones, #label_total_notificaciones{
               display: inline-block;
             }
             </style>
@@ -642,7 +645,7 @@
                                         <div class="col-sm-2">
                                           <label>Código</label>
                                           <input type="text" class="form-control" id="text_codigo_diagnostico_1" value="<?=$cie10_clave?>" disabled>
-                                          <input type="hidden" name="cie10_id_principal" id="text_id_diagnostico_1">
+                                          <input type="" name="cie10_id_principal" id="text_id_diagnostico_1" value="">
                                           <input type="hidden" name="accion_diagnostico_principal" value="add">
                                         </div>
                                         <div class="col-sm-1" style="padding-top:22px;" <?=$edit?>>
@@ -884,6 +887,20 @@
                                                         <label id="label_total_canceladas"><?= count($Prescripciones_canceladas) ?></label>
                                                     </a>
                                                   </li>
+                                                  <li>
+                                                    <a id="acordeon_reacciones">
+                                                        Reacciones Adversas:
+                                                        <label id="label_total_reacciones"><?= count($ReaccionesAdversas) ?></label>
+                                                    </a>
+                                                  </li>
+                                                  <!--
+                                                  <li>
+                                                    <a id="acordeon_notificaciones">
+                                                        Notificaciones Farmacovigilancia:
+                                                        <label id="label_total_notificaciones">0</label>
+                                                    </a>
+                                                  </li>
+                                                   -->
                                                 </ul>
                                                 <label id="estado_panel" hidden>0</label>
 
@@ -919,11 +936,27 @@
 
                                               </div>
                                             </div>
+                                            <div id='historial_reacciones' hidden>
+                                              <table style="width:100%;">
+                                                <thead>
+                                                  <th>Medicamento</th>
+                                                  <th>Observacion</th>
+                                                </thead>
+                                                <tbody id="table_historial_reacciones">
+
+                                                </tbody>
+                                              </table>
+
+                                            </div>
+                                            <div id='historial_notificaciones'>
+
+                                            </div>
 
 
 
                                             <!-- Inicio formulario prescripcion -->
                                             <div class="formulario_prescripcion" style="padding-top: 10px;" hidden>
+
                                               <div class="col-sm-12" style="padding:0">
                                                 <div class="col-sm-3" style="padding: 0;">
                                                   <div class="form-group">

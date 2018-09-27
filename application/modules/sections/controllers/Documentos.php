@@ -328,9 +328,23 @@ class Documentos extends Config{
                                                           FROM catalogo_medicamentos
                                                           WHERE existencia = 1");
 
-        $sql['Vias'] = array("INTRAVENOSA","ORAL","TOPICO","OFTALMICO","SUBCUTANEA","INHALATORIA","RECTAL",
-                             "NASAL","INTRAMUSCULAR","TRANSDÉRMICO","VAGINAL","INTRATECAL","SUBLINGUAL",
-                             "DERMICO","PERFUCION INTRAVENOSA","GASTROENTÉRICA","PARENTAL","OFTÁLMICA","ÓTICA");
+        $sql['Vias'] = array('(cerebelomedular)','Auricular (ótica)','Bolo Intravenoso','Bucal','campo eléctrico','Conjuntival','Cutánea','Dental',
+        'Electro-osmosis','En los ventrículos cerebrales','Endocervical','Endosinusial','Endotraqueal','Enteral','Epidural','Extra-amniótico',
+        'Gastroenteral','Goteo Intravenoso','In vitro','Infiltración','Inhalatoria','Intercelular','Intersticial','Intra corpus cavernoso',
+        'Intraamniótica','Intraarterial','Intraarticular','Intrabdominal','Intrabiliar','Intrabronquial','Intrabursal','Intracardiaca',
+        'Intracartilaginoso','Intracaudal','Intracavernosa','Intracavitaria','Intracerebral','Intracervical','Intracisternal','Intracorneal',
+        'Intracoronaria','Intracoronario','Intradérmica','Intradiscal','Intraductal','Intraduodenal','Intradural','Intraepidermal','Intraesofágica',
+        'Intraesternal','Intragástrica ','Intragingival','Intrahepática','Intraileal','Intramedular','Intrameníngea','Intramuscular','Intraocular',
+        'Intraovárica','Intrapericardial','Intraperitoneal','Intrapleural','Intraprostática','Intrapulmonar','Intrasinovial',
+        'Intrasinusal (senosparanasales)','Intratecal','Intratendinosa','Intratesticular','Intratimpánica','Intratoráxica','Intratraqueal',
+        'Intratubular','Intratumoral','Intrauterina','Intravascular','Intravenosa','Intraventricular','Intravesicular','Intravítrea','Iontoforesis',
+        'Irrigación','la túnica fibrosa del ojo)','Laríngeo','Laringofaringeal','médula espinal)','Nasal','Oftálmica','Oral','Orofaríngea',
+        'Otra Administración es diferente de otros contemplados en ésta lista','Parenteral','Párpados y la superficie del globo ocular',
+        'Percutánea','Periarticular','Peridura','Perineural','Periodontal','Por difusión','Rectal','Retrobulbal','Sistémico','Sonda nasogástrica',
+        'Subaracnoidea','Subconjuntival','Subcutánea','Sublingual','Submucosa','Técnica de vendaje oclusivo','Tejido blando','tejidos del cuerpo',
+        'Tópica','Transdérmica','Transmamaria','Transmucosa','Transplacentaria','Transtimpánica','Transtraqueal','Ureteral','Uretral',
+        'Uso Intralesional','Uso Intralinfático','Uso oromucosa','Vaginal','Vía a través de Hemodiálisis');
+
 
         $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, medicamento, dosis,fecha_prescripcion,via_administracion,
                                                           frecuencia,aplicacion,fecha_inicio,tiempo,fecha_fin,estado
@@ -534,6 +548,16 @@ class Documentos extends Config{
             'triage_id'=> $this->input->post('triage_id')
         ),'hf_id');
         if(empty($sqlCheckHojaFrontal)){
+
+
+              for($x = 0; $x < count($this->input->post('alergias_medicamento')); $x++){
+                $datos = array(
+                  'medicamento_id' => $this->input->post("alergias_medicamento[$x]"),
+                  'triage_id' => $this->input->post('triage_id')
+                );
+                $this->config_mdl->_insert('um_ram',$datos);
+              }
+
 
             for($x = 0; $x < count($this->input->post('cie10_id')); $x++){
               $datos_diagnostico = array(
@@ -1024,9 +1048,22 @@ class Documentos extends Config{
                                                            FROM um_notas_residentes
                                                            WHERE notas_id = $Nota");
 
-        $sql['Vias'] = array("INTRAVENOSA","ORAL","TOPICO","OFTALMICO","SUBCUTANEA","INHALATORIA","RECTAL",
-                             "NASAL","INTRAMUSCULAR","TRANSDÉRMICO","VAGINAL","INTRATECAL","SUBLINGUAL",
-                             "DERMICO","PERFUCION INTRAVENOSA","GASTROENTÉRICA","PARENTAL","OFTÁLMICA","ÓTICA");
+        $sql['Vias'] = array('(cerebelomedular)','Auricular (ótica)','Bolo Intravenoso','Bucal','campo eléctrico','Conjuntival','Cutánea','Dental',
+        'Electro-osmosis','En los ventrículos cerebrales','Endocervical','Endosinusial','Endotraqueal','Enteral','Epidural','Extra-amniótico',
+        'Gastroenteral','Goteo Intravenoso','In vitro','Infiltración','Inhalatoria','Intercelular','Intersticial','Intra corpus cavernoso',
+        'Intraamniótica','Intraarterial','Intraarticular','Intrabdominal','Intrabiliar','Intrabronquial','Intrabursal','Intracardiaca',
+        'Intracartilaginoso','Intracaudal','Intracavernosa','Intracavitaria','Intracerebral','Intracervical','Intracisternal','Intracorneal',
+        'Intracoronaria','Intracoronario','Intradérmica','Intradiscal','Intraductal','Intraduodenal','Intradural','Intraepidermal','Intraesofágica',
+        'Intraesternal','Intragástrica ','Intragingival','Intrahepática','Intraileal','Intramedular','Intrameníngea','Intramuscular','Intraocular',
+        'Intraovárica','Intrapericardial','Intraperitoneal','Intrapleural','Intraprostática','Intrapulmonar','Intrasinovial',
+        'Intrasinusal (senosparanasales)','Intratecal','Intratendinosa','Intratesticular','Intratimpánica','Intratoráxica','Intratraqueal',
+        'Intratubular','Intratumoral','Intrauterina','Intravascular','Intravenosa','Intraventricular','Intravesicular','Intravítrea','Iontoforesis',
+        'Irrigación','la túnica fibrosa del ojo)','Laríngeo','Laringofaringeal','médula espinal)','Nasal','Oftálmica','Oral','Orofaríngea',
+        'Otra Administración es diferente de otros contemplados en ésta lista','Parenteral','Párpados y la superficie del globo ocular',
+        'Percutánea','Periarticular','Peridura','Perineural','Periodontal','Por difusión','Rectal','Retrobulbal','Sistémico','Sonda nasogástrica',
+        'Subaracnoidea','Subconjuntival','Subcutánea','Sublingual','Submucosa','Técnica de vendaje oclusivo','Tejido blando','tejidos del cuerpo',
+        'Tópica','Transdérmica','Transmamaria','Transmucosa','Transplacentaria','Transtimpánica','Transtraqueal','Ureteral','Uretral',
+        'Uso Intralesional','Uso Intralinfático','Uso oromucosa','Vaginal','Vía a través de Hemodiálisis');
 
         $sql['MedicosBaseNota'] = $this->config_mdl->_query("SELECT empleado_nombre,empleado_apellidos,empleado_matricula
                                                              FROM os_empleados
@@ -1074,6 +1111,7 @@ class Documentos extends Config{
                                                                           sv_tipo = 'Triage'
                                                                     ORDER BY fecha DESC");
         }
+        $sql['ReaccionesAdversas'] = $this->config_mdl->_get_data_condition('um_ram', array('triage_id' => $_GET['folio']));
 
 
 
@@ -1240,12 +1278,13 @@ class Documentos extends Config{
           }
 
           $accion_diagnosticos = $this->input->post('accion_diagnostico_principal');
-
+          //Se consulta la existencia de diagnosticos principales
           $consulta = "SELECT cie10_id FROM paciente_diagnosticos
                        WHERE triage_id = ".$this->input->post('triage_id')." AND tipo_diagnostico = 1";
           $sqlResult = $this->config_mdl->_query($consulta);
 
           if($accion_diagnosticos == "add"){
+            //si no existe registra el diagnostico principal
             if(COUNT($sqlResult) == 0){
                 $data = array(
                     'triage_id' => $this->input->post('triage_id'),
@@ -1254,8 +1293,8 @@ class Documentos extends Config{
                 );
                 $this->config_mdl->_insert('paciente_diagnosticos',$data);
             }
-          }
-          else if ($accion_diagnosticos == "edit"){
+
+          }else if ($accion_diagnosticos == "edit"){
               $dataInsert = array(
                 'triage_id' => $this->input->post('triage_id'),
                 'cie10_id' => $sqlResult[0]['cie10_id'],
@@ -1588,6 +1627,30 @@ class Documentos extends Config{
         }
         $this->setOutputV2(array('row'=>$row));
     }
+
+    public function AjaxHistorialReaccionesAdversas(){
+      $paciente = $this->input->get('paciente');
+      $sql = $this->config_mdl->_query('SELECT medicamento,efecto FROM um_ram
+                                        INNER JOIN prescripcion
+                                        	ON um_ram.prescripcion_id = prescripcion.prescripcion_id
+                                        INNER JOIN catalogo_medicamentos
+                                        	ON catalogo_medicamentos.medicamento_id = prescripcion.medicamento_id
+                                        WHERE um_ram.triage_id = '.$paciente);
+      print json_encode($sql);
+    }
+
+    public function AjaxRegistrarEfectoAdverso(){
+      $data = array(
+        'prescripcion_id' => $this->input->get('prescripcion_id'),
+        'triage_id' => $this->input->get('paciente'),
+        'efecto' => $this->input->get('motivo')
+      );
+      $this->config_mdl->_insert('um_ram',$data);
+      $sql = $this->config_mdl->_get_data_condition('um_ram',
+      array('triage_id' => $this->input->get('paciente')));
+      print json_encode($sql);
+    }
+
     public function AjaxEliminarDiagnostico() {
         $this->config_mdl->_delete_data('um_cie10_hojafrontal',array(
             'cie10hf_id'=> $this->input->post('cie10hf_id')
@@ -1648,6 +1711,7 @@ class Documentos extends Config{
 
     public function ObtenerMedicamentos(){
        $sql['medicamentos'] = $this ->config_mdl-> _get_data('catalogo_medicamentos');
+       print json_encode($sql);
        return json_encode($sql);
     }
 }

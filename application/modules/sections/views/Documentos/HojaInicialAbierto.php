@@ -273,6 +273,13 @@
 
                                             <textarea class="form-control alergias" rows="2" name="alergias" placeholder="Escriba aquí las alergias"<?= $estilo_alergias ?> ><?= $textarea_alergias ?></textarea>
                                         </div>
+                                        <!--
+                                        <label><b>¿Alegia a medicamentos? </b> &nbsp; </label><input type="checkbox" id="check_form_alergia_medicamento">&nbsp;<label id="label_check_alergia_medicamentos">- NO DETECTADAS</label>
+                                        <div id="alergia_medicamentos" hidden>
+
+                                        </div>
+                                        -->
+
                                         <div class="form-group">
                                             <h4><span class = "label back-imss border-back-imss">PADECIMIENTO ACTUAL</span></h4>
                                             <textarea class="form-control hf_padecimientoa" rows="5" name="hf_padecimientoa" placeholder="Escriba aquí el/los pacedimiento actual"><?=$hojafrontal[0]['hf_padecimientoa']?></textarea>
@@ -812,6 +819,7 @@
                                   </div>
                                 </div>
 
+                                <br>
                                 <label><b>f) Prescripción: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
 
                                 <!-- Panel con el historial de prescripciones -->
@@ -878,7 +886,7 @@
                                       <div class="form-group">
                                       <label><b>Medicamento</b></label>
                                       <div id="borderMedicamento">
-                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%">
+                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="select2 selectpicker" style="width: 100%">
                                             <option value="0">-Seleccionar-</option>
                                             <?php foreach ($Medicamentos as $value) {?>
                                             <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>

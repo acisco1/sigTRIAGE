@@ -550,13 +550,13 @@ $(document).ready(function () {
 
     $('body').on('click','.desactivar-prescripcion',function(){
 
-
       if(confirm('¿QIERES RETIRAR ESTE MEDICAMENTO?')){
-        var prescripcion_id = $(this).attr('data-value');
-        var dias = $('#fila_historial_prescripcion'+prescripcion_id).text();
-        var estado = 0;
-        var motivo = prompt('Motivo por el que se cancela el medicamento');
-        var paciente = $('input[name=triage_id]').val();
+        var reaccion = confirm('¿SE PRESENTO UNA REACCIÓN ADVERSA?'),
+        prescripcion_id = $(this).attr('data-value'),
+        dias = $('#fila_historial_prescripcion'+prescripcion_id).text(),
+        estado = 0,
+        motivo = prompt('Motivo por el que se cancela el medicamento'+reaccion),
+        paciente = $('input[name=triage_id]').val();
 
         if(motivo!=null && motivo!=''){
           $.ajax({
@@ -573,6 +573,10 @@ $(document).ready(function () {
                 ActualizarHistorialPrescripcion(paciente,"1");
                 RegistrarAccionBitacoraPrescripcion(prescripcion_id,'Cancelar',motivo);
                 ConteoEstadoPrescripcion(paciente);
+                if(reaccion){
+                  RegistrarEfectoAdverso(prescripcion_id,paciente,motivo);
+                }
+
 
             },error: function (e) {
                 msj_error_serve(e)
@@ -614,22 +618,7 @@ $(document).ready(function () {
 
     });
 
-    $('#acordeon_prescripciones_activas').click(function(){
-      var estado_panel = $('#estado_panel').text();
-      var paciente = $('input[name=triage_id]').val();
-      if(estado_panel == 0){
-        $('#historial_medicamentos_activos').removeAttr('hidden');
-        $('#historial_movimientos').attr('hidden','true');
-        $('#estado_panel').text('1');
-        ActualizarHistorialPrescripcion(paciente,"1");
-      }else if(estado_panel == 1){
-        $('#historial_medicamentos_activos').attr('hidden',true);
-        $('#historial_movimientos').removeAttr('hidden');
-        $('#historial_movimientos').empty();
-        $('#estado_panel').text('0');
-      }
 
-    });
 
     $('#play_ordenes_nuevo').click(function(){
       //Limpiar campos de dieta
@@ -659,23 +648,27 @@ $(document).ready(function () {
       ConsultarUltimasOrdenes(folio);
     });
 
+    $('#acordeon_prescripciones_activas').click(function(){
+      var paciente = $('input[name=triage_id]').val();
+      var val_accion = 1;
+      AccionPanelPrescripcion(val_accion, paciente);
+    });
 
     $('#acordeon_prescripciones_canceladas').click(function(){
       var paciente = $('input[name=triage_id]').val();
-      var estado_panel = $('#estado_panel').text();
-      $('#historial_medicamentos_activos').attr('hidden','true');
-      if(estado_panel == 0){
-        $('#historial_movimientos').removeAttr('hidden');
-        BitacoraPrescripcionMedicamento(paciente);
-        $('#estado_panel').text('1');
-      }else if(estado_panel == 1){
-        $('#historial_movimientos').attr('hidden', true);
-        $('#estado_panel').text('0');
-      }
-
-
+      var val_accion = 2;
+      AccionPanelPrescripcion(val_accion, paciente);
 
     });
+
+    //Ejecuta las funciones para mostrar el historial de reacciones adversas
+    $('#acordeon_reacciones').click(function(){
+      var paciente = $('input[name=triage_id]').val();
+      var val_accion = 3;
+      AccionPanelPrescripcion(val_accion, paciente);
+    });
+
+
 
     $('input[name=cie10_nombre]').removeClass('sui-input');
     $('body').on('click','.add-cie10',function() {
@@ -1067,6 +1060,51 @@ $(document).ready(function () {
           $('.solicitud_laboratorio').attr('hidden',true);
           $('#label_check_estudios').text('- SI');
         }
+    });
+
+
+    $('#check_form_alergia_medicamento').change(function(){
+      if($(this).is(':checked')){
+
+        $('#label_check_alergia_medicamentos').text("");
+        $('#alergia_medicamentos').removeAttr('hidden');
+
+        var formulario =
+        "<div class='col-sm-11' style='padding-left:0px;'>"+
+          "<label>Medicamento</label>"+
+          "<select id='medicamento_select' name='alergias_medicamento[]' class='width100'>"+
+          "</select>"+
+        "</div>"+
+        "<div class='col-sm-1' style='padding-top:25px; padding-right:0px;' >"+
+          "<button type='button' class='btn btn-success width100' onClick=AgregaFormularioAlergiaMedicamento(); title='Agregar alergia a medicamentos' name='button'>"+
+            "<span class='glyphicon glyphicon-plus'></span>"+
+          "</button>"+
+        "</div>";
+
+        $('#alergia_medicamentos').append(formulario);
+        $('#medicamento_select').select2();
+
+        $.ajax({
+          url: base_url+"Sections/Documentos/ObtenerMedicamentos",
+          type: 'GET',
+          dataType:'json',
+          data: {
+          },success: function (data, textStatus, jqXHR) {
+            for(var x = 0; x < data.medicamentos.length; x++){
+            $('#medicamento_select').append("<option value='"+data.medicamentos[x].medicamento_id+"'>"+data.medicamentos[x].medicamento+"</option>");
+            }
+          },error: function (e) {
+              msj_error_serve(e)
+              bootbox.hideAll();
+          }
+        });
+
+
+      }else {
+        $('#label_check_alergia_medicamentos').text("- NO DETECTADAS");
+        $('#alergia_medicamentos').attr('hidden',true);
+        $('#alergia_medicamentos').empty();
+      }
     });
 
     $('#check_form_prescripcion').change(function(){
@@ -1681,7 +1719,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
           accion_editar = "class='fa fa-pencil pointer editar-prescripcion'";
           filas_diasTranscurridos_acciones = "<td id='fila_historial_prescripcion"+data[x].prescripcion_id+"' >"+tiempo_transcurrido+"</td>"+
           "<td>"+
-            "<i "+accion_cancelar+" title='Canselar Prescripción' data-value='"+data[x].prescripcion_id+"' ></i>"+
+            "<i "+accion_cancelar+" title='Cancelar Prescripción' data-value='"+data[x].prescripcion_id+"' ></i>"+
             "<i style='padding-left: 5px;' "+accion_editar+" title='Editar Prescripcion' data-value='"+data[x].prescripcion_id+"' ></i>"+
             "<i style='padding-left: 5px;' "+accion_observaciones+" title='Observaciones' data-value='"+data[x].prescripcion_id+"' ></i>"+
           "</td>";
@@ -2059,6 +2097,48 @@ function ConsultarClaveCIE10(valor_clave,lista,indice,id_cie10){
 function BorrarDiagnosticoDinamico(indice){
   $('#form_diagnosticos_secundarios_'+indice).remove();
 }
+
+var contador_alergia_medicamentos = 0;
+function AgregaFormularioAlergiaMedicamento(){
+  contador_alergia_medicamentos = contador_alergia_medicamentos + 1;
+  var formulario =
+  "<div id='input_medicamento_alergia_"+contador_alergia_medicamentos+"'>"+
+    "<div class='col-sm-11' style='padding-left:0px;'>"+
+      "<label>Medicamento</label>"+
+      "<select id='medicamento_select_"+contador_alergia_medicamentos+"' name='alergias_medicamento[]' class='width100'>"+
+      "</select>"+
+    "</div>"+
+    "<div class='col-sm-1' style='padding-top:25px; padding-right:0px;' >"+
+      "<button type='button' class='btn btn-imms-cancel width100' "+
+      " onClick=BorrarFormularioAlergiaMedicamento("+contador_alergia_medicamentos+"); title='Agregar alergia a medicamentos' name='button'>"+
+        "<span class='glyphicon glyphicon-remove'></span>"+
+      "</button>"+
+    "</div>"+
+  "</div>";
+
+  $('#alergia_medicamentos').append(formulario);
+  $('#medicamento_select_'+contador_alergia_medicamentos).select2();
+
+  $.ajax({
+    url: base_url+"Sections/Documentos/ObtenerMedicamentos",
+    type: 'GET',
+    dataType:'json',
+    data: {
+    },success: function (data, textStatus, jqXHR) {
+      for(var x = 0; x < data.medicamentos.length; x++){
+      $('#medicamento_select_'+contador_alergia_medicamentos).append("<option value='"+data.medicamentos[x].medicamento_id+"'>"+data.medicamentos[x].medicamento+"</option>");
+      }
+    },error: function (e) {
+        msj_error_serve(e)
+        bootbox.hideAll();
+    }
+  });
+}
+
+function BorrarFormularioAlergiaMedicamento(indice){
+  $('#input_medicamento_alergia_'+indice).remove();
+}
+
 function BuscarDiagnostico(indice){
 
   $('#lista_resultado_diagnosticos_'+indice).empty();
@@ -2105,4 +2185,73 @@ function BuscarDiagnostico(indice){
     alert("Indicar CIE-10 o Frecuentes");
   }
   */
+}
+
+function RegistrarEfectoAdverso(prescripcion_id, paciente, motivo){
+  $.ajax({
+      url:base_url+'Sections/Documentos/AjaxRegistrarEfectoAdverso',
+      type: 'get',
+      dataType: 'json',
+      data:{
+          prescripcion_id : prescripcion_id,
+          paciente : paciente,
+          motivo : motivo
+      },success: function (data, textStatus, jqXHR) {
+        $('#label_total_reacciones').text(data.length);
+      },error: function (jqXHR, textStatus, errorThrown) {
+          bootbox.hideAll();
+          MsjError();
+      }
+  });
+}
+function HitorialReaccionesAdversas(paciente){
+  $.ajax({
+      url:base_url+'Sections/Documentos/AjaxHistorialReaccionesAdversas',
+      type: 'get',
+      dataType: 'json',
+      data:{
+          paciente:paciente
+      },success: function (data, textStatus, jqXHR) {
+        $('#table_historial_reacciones').empty();
+        var fila = "";
+
+        data.forEach(function(val){
+          fila = "<tr>"+
+                 "<td>"+val.medicamento+"</td>"+
+                 "<td>"+val.efecto+"</td>"+
+                 "</tr>";
+          $('#table_historial_reacciones').append(fila);
+        });
+
+
+      },error: function (jqXHR, textStatus, errorThrown) {
+          bootbox.hideAll();
+          MsjError();
+      }
+  });
+}
+function AccionPanelPrescripcion(tipo_accion , paciente){
+
+  $("#historial_medicamentos_activos").attr('hidden',true);
+  $("#historial_movimientos").attr('hidden',true);
+  $("#historial_reacciones").attr('hidden',true);
+  $("#historial_notificaciones").attr('hidden',true);
+
+  switch (tipo_accion) {
+    case 1:
+        $("#historial_medicamentos_activos").removeAttr('hidden');
+        ActualizarHistorialPrescripcion(paciente,"1");
+      break;
+    case 2:
+        $("#historial_movimientos").removeAttr('hidden');
+        BitacoraPrescripcionMedicamento(paciente);
+      break;
+    case 3:
+        $("#historial_reacciones").removeAttr('hidden');
+        HitorialReaccionesAdversas(paciente);
+      break;
+    case 4:
+        $("#historial_notificaciones").removeAttr('hidden');
+      break;
+  }
 }
