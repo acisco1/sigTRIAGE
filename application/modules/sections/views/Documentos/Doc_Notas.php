@@ -621,6 +621,7 @@
                                       $label_instruccion_diagnostico = "(Edite el campo si el diagnóstico de ingreso no es el principal)";
                                       $cie10_nombre = $Diagnosticos[0]['cie10_nombre'];
                                       $cie10_clave = $Diagnosticos[0]['cie10_clave'];
+                                      $cie10_id = $Diagnosticos[0]['cie10_id1'];
                                       $edit = "hidden";
                                       $edit2 = "";
                                       $principal_edit = "";
@@ -629,6 +630,7 @@
                                         $label_instruccion_diagnostico = "";
                                         $cie10_nombre = $DiagnosticoPaciente[0]['cie10_nombre'];
                                         $cie10_clave = $DiagnosticoPaciente[0]['cie10_clave'];
+                                        $cie10_id = $DiagnosticoPaciente[0]['cie10_id1'];
                                         $edit = "";
                                         $edit2 = "hidden";
                                         $principal_edit = "disabled";
@@ -645,7 +647,7 @@
                                         <div class="col-sm-2">
                                           <label>Código</label>
                                           <input type="text" class="form-control" id="text_codigo_diagnostico_1" value="<?=$cie10_clave?>" disabled>
-                                          <input type="" name="cie10_id_principal" id="text_id_diagnostico_1" value="">
+                                          <input type="" name="cie10_id_principal" id="text_id_diagnostico_1" value="<?=$cie10_id?>">
                                           <input type="hidden" name="accion_diagnostico_principal" value="add">
                                         </div>
                                         <div class="col-sm-1" style="padding-top:22px;" <?=$edit?>>

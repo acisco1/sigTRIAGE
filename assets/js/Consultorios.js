@@ -102,7 +102,7 @@ $(document).ready(function () {
                             'csrf_token':csrf_token
                         },beforeSend: function (xhr) {
                             msj_loading();
-                        },success: function (data, textStatus, jqXHR) { 
+                        },success: function (data, textStatus, jqXHR) {
                             bootbox.hideAll()
                             location.reload();
                         },error: function (e) {
@@ -147,7 +147,7 @@ $(document).ready(function () {
                         'csrf_token':csrf_token
                     },beforeSend: function (xhr) {
                         msj_loading();
-                    },success: function (data, textStatus, jqXHR) { 
+                    },success: function (data, textStatus, jqXHR) {
                         bootbox.hideAll()
                         location.reload();
                     },error: function (e) {
@@ -222,7 +222,7 @@ $(document).ready(function () {
                                         triage_id:id
                                     },'Consultorios/AjaxInterConsulta',function (response) {
                                         if(response.accion=='1'){
-                                            //AbrirDocumentoMultiple(base_url+'Inicio/Documentos/DOC430200/'+data.Interconsulta); 
+                                            //AbrirDocumentoMultiple(base_url+'Inicio/Documentos/DOC430200/'+data.Interconsulta);
                                             ActionWindowsReload();
                                         }if(response.accion=='2'){
                                             MsjNotificacion('<h5>ERROR</h5>','<center><i class="fa fa-exclamation-triangle fa-5x" style="color:#E62117"></i><br>LA INTERCONSULTA SOLICITADO A ESTE CONSULTORIO YA FUE REALIZADO </center>')
@@ -266,11 +266,11 @@ $(document).ready(function () {
                     bootbox.hideAll();
                     MsjError();
                     ReportarError(window.location.pathname,e.responseText);
-                    
+
                 }
             })
         }
-    })    
+    })
     $('body').on('click','.salida-paciente-observacion',function (e){
         e.preventDefault();
         var el=$(this);
@@ -296,7 +296,7 @@ $(document).ready(function () {
                 }
             });
         }
-    });    
+    });
     $('body').on('click','.abandono-consultorio',function (e) {
         if(confirm('¿DAR DE ALTA PACIENTE, POR NO PRESENTARSE A CONSULTORIO?')){
             $.ajax({
@@ -346,12 +346,12 @@ $(document).ready(function () {
                 $('.TOTAL_PACIENTES_CONSULTORIOS_DOC').find('span').html(data.TOTAL_DOCS+' DOCUMENTOS GENERADOS');
                 $('.GENERAR_LECHAGA_CONSULTORIOS')
                         .attr('data-inputfecha',$('input[name=inputFechaInicio]').val()).removeClass('hide');
-                
+
             },error: function (e) {
                 bootbox.hideAll();
                 MsjError();
                 console.log(e)
-            }      
+            }
         })
     })
     $('.GENERAR_LECHAGA_CONSULTORIOS').click(function (e) {
@@ -410,13 +410,13 @@ $(document).ready(function () {
                                 MsjError();
                                 console.log(e);
                             }
-                        })        
+                        })
                     }else{
                         msj_error_noti('Campor Requerido');
                     }
                 }
             }
-            
+
         })
     }
     $('body').on('click','.destino-eliminar',function () {
@@ -445,5 +445,5 @@ $(document).ready(function () {
         }
     });
     /*Agregar Nuevo Consultorio*/
-    
+
 })

@@ -550,42 +550,95 @@ $(document).ready(function () {
 
     $('body').on('click','.desactivar-prescripcion',function(){
 
-      if(confirm('¿QIERES RETIRAR ESTE MEDICAMENTO?')){
-        var reaccion = confirm('¿SE PRESENTO UNA REACCIÓN ADVERSA?'),
-        prescripcion_id = $(this).attr('data-value'),
-        dias = $('#fila_historial_prescripcion'+prescripcion_id).text(),
-        estado = 0,
-        motivo = prompt('Motivo por el que se cancela el medicamento'+reaccion),
-        paciente = $('input[name=triage_id]').val();
-
-        if(motivo!=null && motivo!=''){
-          $.ajax({
-            url: base_url+"Sections/Documentos/AjaxCambiarEstadoPrescripcion",
-            type: 'GET',
-            dataType:'json',
-            data: {
-              estado: estado,
-              prescripcion_id: prescripcion_id,
-              paciente: paciente,
-              dias: dias
-            },success: function (data, textStatus, jqXHR) {
-                msj_success_noti(data.mensaje);
-                ActualizarHistorialPrescripcion(paciente,"1");
-                RegistrarAccionBitacoraPrescripcion(prescripcion_id,'Cancelar',motivo);
-                ConteoEstadoPrescripcion(paciente);
-                if(reaccion){
-                  RegistrarEfectoAdverso(prescripcion_id,paciente,motivo);
-                }
 
 
-            },error: function (e) {
-                msj_error_serve(e)
-                bootbox.hideAll();
+        var reaccion = false;
+        var motivo = "";
+        var prescripcion_id = $(this).attr('data-value');
+        var dias = $('#fila_historial_prescripcion'+prescripcion_id).text();
+        var estado = 0;
+        var paciente = $('input[name=triage_id]').val();
+
+        bootbox.confirm({
+          message: '<h5>¿QIERES RETIRAR ESTE MEDICAMENTO?</h5>',
+          buttons: {
+            cancel:{
+              label: 'NO',
+              className: 'btn-imss-cancel'
+            },confirm: {
+              label: 'SI',
+              className: 'back-imss'
             }
-          });
-        }
-      }
+          },callback: function(response){
+            if(response){
+              bootbox.confirm({
+                message: '<h5>¿Se presento una reaccion adversa?</h5>',
+                buttons: {
+                  cancel:{
+                    label: 'NO',
+                    className: 'btn-imss-cancel'
+                  },confirm: {
+                    label: 'SI',
+                    className: 'back-imss'
+                  }
+                },callback: function(response){
+                  if(response){
+                    reaccion = true;
+                  }
+                  bootbox.prompt({
+                    title: "<h5>Motivo por el que se cancela el medicamento</h5>",
+                    inputType: 'text',
+                    buttons: {
+                      cancel:{
+                        label: 'Cancelar',
+                        className: 'btn-imss-cancel'
+                      },confirm: {
+                        label: 'Acepar',
+                        className: 'back-imss'
+                      }
+                    },callback: function(result){
+                      motivo = result;
+                      if(motivo!=null && motivo!=''){
+                        $.ajax({
+                          url: base_url+"Sections/Documentos/AjaxCambiarEstadoPrescripcion",
+                          type: 'GET',
+                          dataType:'json',
+                          data: {
+                            estado: estado,
+                            prescripcion_id: prescripcion_id,
+                            paciente: paciente,
+                            dias: dias
+                          },success: function (data, textStatus, jqXHR) {
+                              msj_success_noti(data.mensaje);
+                              ActualizarHistorialPrescripcion(paciente,"1");
+                              RegistrarAccionBitacoraPrescripcion(prescripcion_id,'Cancelar',motivo);
+                              ConteoEstadoPrescripcion(paciente);
+                              if(reaccion){
+                                RegistrarEfectoAdverso(prescripcion_id,paciente,motivo);
+                              }
+
+
+                          },error: function (e) {
+                              msj_error_serve(e)
+                              bootbox.hideAll();
+                          }
+                        });
+                      }
+                    }
+                  });
+                }
+              });
+            }
+
+
+          }
+        });
+
+
+
+
     });
+
     $('body').on('click','.prescripcion_historial',function(){
       var prescripcion_id = $(this).attr('data-value');
       var paciente = $('input[name=triage_id]').val();

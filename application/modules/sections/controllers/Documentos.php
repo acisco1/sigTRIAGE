@@ -1088,18 +1088,22 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id, cie10_clave, cie10_nombre
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id, triage_id, (paciente_diagnosticos.cie10_id)cie10_id1,
+                                                                 tipo_diagnostico, (um_cie10.cie10_id)cie10_id2, cie10_clave, cie10_nombre
                                                          FROM paciente_diagnosticos
                                                          INNER JOIN um_cie10
                                                         	 ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
                                                          WHERE triage_id = ".$_GET['folio']);
+
         $sql['UltimosSignosVitales'] = $this->config_mdl->_query("SELECT sv_tipo,CONCAT(sv_fecha,' ',sv_hora) AS fecha,sv_ta,sv_temp,sv_fc,sv_fr,sv_oximetria,sv_talla,sv_dextrostix,sv_peso
                                                                   FROM os_triage_signosvitales
                                                                   WHERE triage_id = ".$_GET['folio']." AND
                                                                         sv_tipo = 'Consultorios'
                                                                   ORDER BY fecha DESC");
 
-        $sql['DiagnosticoPaciente'] = $this->config_mdl->_query("SELECT * FROM `paciente_diagnosticos`
+        $sql['DiagnosticoPaciente'] = $this->config_mdl->_query("SELECT diagnostico_id, triage_id, (paciente_diagnosticos.cie10_id)cie10_id1,
+                                                                        tipo_diagnostico, (um_cie10.cie10_id)cie10_id2, cie10_clave, cie10_nombre
+                                                                FROM paciente_diagnosticos
                                                                 INNER JOIN um_cie10
                                                                     ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
                                                                 WHERE triage_id = ".$_GET['folio']." AND tipo_diagnostico = 1;");
