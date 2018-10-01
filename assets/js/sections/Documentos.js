@@ -1419,7 +1419,7 @@ function agregarPrescripcion(){
           interaccionA = arrayInteracciones[x]['arrayInteraccionAmarilla'][y];
           if(arrayInteracciones[x]['arrayInteraccionAmarilla'][y] == idMedicamento ){
             $('#fila'+x).css("background-color","rgb(252, 255, 124)");// Amarillo para efectos grabes, solo requiere observación
-            alert(arrayPrescripcion[x]['medicamento']+" puede generar efectos adversos al aplicarse con el medicamento seleccionado. Favor de notificar a la Gefatura de Consulta Externa");
+            alert(arrayPrescripcion[x]['medicamento']+" y "+medicamento+" pueden generar efectos adversos. Favor de modificar la prescripción o notificar al área de Farmacovigilancia");
 
             //break;
           }
@@ -1428,9 +1428,9 @@ function agregarPrescripcion(){
           interaccionA = arrayInteracciones[x]['arrayInteraccionRoja'][y];
           if(arrayInteracciones[x]['arrayInteraccionRoja'][y] == idMedicamento ){
             $('#fila'+x).css("background-color","rgb(255, 170, 170)");//color rojo para efectos muy grabes
-            alert(arrayPrescripcion[x]['medicamento']+" puede generar efectos"+
-            "adversos muy graves al aplicarse con el medicamento seleccionado. "+
-            "Favor de notificar a la Gefatura de Consulta Externa");
+            alert(arrayPrescripcion[x]['medicamento']+" y "+medicamento+" son medicamentos contraindicados"+
+            ". "+
+            "Favor de modificar la prescripción o notificar al área de Farmacovigilancia");
             //break;
           }
         }
