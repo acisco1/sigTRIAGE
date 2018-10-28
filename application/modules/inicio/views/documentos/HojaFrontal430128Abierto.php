@@ -2,12 +2,7 @@
 <page backtop="80mm" backbottom="50mm" backleft="48" backright="1mm">
     <page_header>
         <style>
-            th, td {
-              padding-left: 3px;
-              padding-right: 3px;
-              padding-top: 2px;
-              padding-bottom: 2px;
-            }
+
         </style>
         <img src="<?=  base_url()?>assets/doc/DOC430128_HF.png" style="position: absolute;width: 805px;margin-top: 0px;margin-left: -10px;">
         <div style="position: absolute;margin-top: 15px">
@@ -271,41 +266,132 @@
         <?php if($hoja['hf_solucionesp']!=''){?>
         SOLUCIONES PARENTERALES:<br><?=$hoja['hf_solucionesp']?>
         <?php }?>
-        <?php if(count($Prescripcion) > 0){?>
-        <br><br>MEDICAMENTOS:<br><br>
-        <style media="screen">
-          td,th{
-            text-align: center;
-          }
-        </style>
-        <table style="font-size:10;">
-          <tr>
-            <th style="text-align:left;">Medicamento</th>
-            <th>Dosis</th>
-            <th>Via</th>
-            <th>Frecuencia</th>
-            <th>Aplicacion</th>
-            <th>Fecha inicio</th>
-            <th>Fecha fin</th>
-            <th>Dias</th>
-          </tr>
-        <?php for($x = 0; $x < count($Prescripcion); $x++){ ?>
-          <tr>
-            <td style="text-align:left;"><?= $Prescripcion[$x]['medicamento']." ".$Prescripcion[$x]['gramaje'] ?></td>
-            <td><?= $Prescripcion[$x]['dosis'] ?></td>
-            <td style="width: 41px;"><?= $Prescripcion[$x]['via_administracion'] ?></td>
-            <td><?= $Prescripcion[$x]['frecuencia'] ?></td>
-            <td style="width: 60px;" ><?= $Prescripcion[$x]['aplicacion'] ?></td>
-            <td><?= $Prescripcion[$x]['fecha_inicio'] ?></td>
-            <td style="width: 50px; height:0px;"><?= $Prescripcion[$x]['fecha_fin'] ?></td>
-            <td><?= $Prescripcion[$x]['dias'] ?></td>
-          </tr>
-          <tr>
-            <td colspan="9" style="text-align: left; border-bottom: 1px solid #ddd;"><b>Observación:</b> <?= $Prescripcion[$x]['observacion'] ?></td>
-          </tr>
-        <?php } ?>
-        </table>
-        <?php }?>
+
+
+
+
+         <!-- Prescripcion -->
+          <h5>PRESCRIPCIÓN</h5>
+          <br>
+          <?php for($x = 0; $x < count($Prescripcion_Basico); $x++){ ?>
+            <strong><?= $x+1 ?>) <?= $Prescripcion_Basico[$x]['medicamento']." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
+            Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>
+            via <?= strtolower($Prescripcion_Basico[$x]['via']); ?>,
+            <?= ($Prescripcion_Basico[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Basico[$x]['frecuencia']); ?>,
+            en el siguiente horario: <?= $Prescripcion_Basico[$x]['aplicacion'] ?>.
+            Iniciando el <?= $Prescripcion_Basico[$x]['fecha_inicio'] ?>
+            hasta el <?= $Prescripcion_Basico[$x]['fecha_fin'] ?>.
+            <?php if($Prescripcion_Basico[$x]['observacion'] != 'Sin observaciones' ){ ?>
+                <br><strong>Observación</strong>
+                <?= $Prescripcion_Basico[$x]['observacion'] ?>
+              <?php } ?>
+            <br>
+          <?php } ?>
+
+
+          <?= (count($Prescripcion_Onco_Anti) > 0)?"<h5>Antimicrobiano</h5>":""; ?>
+
+          <?php for($x = 0; $x < count($Prescripcion_Onco_Anti); $x++){ ?>
+            <strong><?= $x+1 ?>) <?= $Prescripcion_Onco_Anti[$x]['medicamento']." ".$Prescripcion_Onco_Anti[$x]['gramaje']." ".$Prescripcion_Onco_Anti[$x]['forma_farmaceutica'] ?>. </strong>
+            Aplicar <?= $Prescripcion_Onco_Anti[$x]['dosis'] ?>
+            via <?= strtolower($Prescripcion_Onco_Anti[$x]['via']); ?>,
+            <?= ($Prescripcion_Onco_Anti[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Onco_Anti[$x]['frecuencia']); ?>,
+            en el siguiente horario: <?= $Prescripcion_Onco_Anti[$x]['aplicacion'] ?>.
+            Iniciando el <?= $Prescripcion_Onco_Anti[$x]['fecha_inicio'] ?>
+            hasta el <?= $Prescripcion_Onco_Anti[$x]['fecha_fin'] ?>.
+            <br>
+            <strong>Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['diluente'] ?> &nbsp;</u>&nbsp;&nbsp;&nbsp;
+            <strong>Vol. Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['vol_dilucion'] ?> ml.&nbsp;</u> 
+            <?php if($Prescripcion_Onco_Anti[$x]['observacion'] != 'Sin observaciones' ){ ?>
+                <br><strong>Observación</strong>
+                <?= $Prescripcion_Onco_Anti[$x]['observacion'] ?>
+              <?php } ?>
+            <br>
+          <?php } ?>
+
+          <?= (count($Prescripcion_NPT) > 0)?"<h5>Nutrición Parenteral Total</h5>":""; ?>
+
+          <?php for($x = 0; $x < count($Prescripcion_NPT); $x++){ ?>
+            <strong><?= $x+1 ?>) <?= $Prescripcion_NPT[$x]['medicamento']." ".$Prescripcion_NPT[$x]['gramaje']." ".$Prescripcion_NPT[$x]['forma_farmaceutica'] ?>. </strong>
+            Aplicar <?= $Prescripcion_NPT[$x]['dosis'] ?>
+            via <?= strtolower($Prescripcion_NPT[$x]['via']); ?>,
+            <?= ($Prescripcion_NPT[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_NPT[$x]['frecuencia']); ?>,
+            en el siguiente horario: <?= $Prescripcion_NPT[$x]['aplicacion'] ?>.
+            Iniciando el <?= $Prescripcion_NPT[$x]['fecha_inicio'] ?>
+            hasta el <?= $Prescripcion_NPT[$x]['fecha_fin'] ?>.
+            <br>
+            <strong>OVERFILL:</strong><u>&nbsp; 20 &nbsp;</u>&nbsp;&nbsp;&nbsp;<strong>Vol. Total:</strong><u>&nbsp; 1377 &nbsp;</u>
+            <br>
+            <!-- Consultar bases -->
+            <?php if($Prescripcion_NPT[$x]['aminoacido'] > 0 ||
+                    $Prescripcion_NPT[$x]['dextrosa'] > 0 ||
+                    $Prescripcion_NPT[$x]['lipidos'] > 0 ||
+                    $Prescripcion_NPT[$x]['agua_inyect'] > 0 ){ ?>
+                      <br>
+                      Solucion Base
+                      <br>
+                      <?= ($Prescripcion_NPT[$x]['aminoacido'] > 0) ? '<div>Aminoácidos Cristalinos 10% adulto <u> '.$Prescripcion_NPT[$x]['aminoacido'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['dextrosa'] > 0) ? '<div>Dextrosa al 50% <u> '.$Prescripcion_NPT[$x]['dextrosa'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['lipidos'] > 0) ? '<div>Lipdiso Intravenosos con Acidos grasos, Omega 3 y 9 <u> '.$Prescripcion_NPT[$x]['lipidos'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['agua_inyect'] > 0) ? '<div>Agua Inyectable <u> '.$Prescripcion_NPT[$x]['agua_inyect'].' ml</u></div>':'' ?>
+
+            <?php } ?>
+
+            <!-- Consultar sales -->
+            <?php if($Prescripcion_NPT[$x]['cloruro_sodio'] > 0 ||
+                    $Prescripcion_NPT[$x]['sulfato'] > 0 ||
+                    $Prescripcion_NPT[$x]['cloruro_potasio'] > 0 ||
+                    $Prescripcion_NPT[$x]['fosfato'] > 0 ||
+                    $Prescripcion_NPT[$x]['gluconato'] > 0 ){ ?>
+                      <br>
+                      Sales
+                      <br>
+                      <?= ($Prescripcion_NPT[$x]['cloruro_sodio'] > 0) ? '<div>Cloruro de Sodio 17.7% (3mEq/ml Na) <u> '.$Prescripcion_NPT[$x]['cloruro_sodio'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['sulfato'] > 0) ? '<div>Sulfato de Magnesio (0.81) mEq/ml <u> '.$Prescripcion_NPT[$x]['sulfato'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['cloruro_potasio'] > 0) ? '<div>Cloruro de Potasio (4 mEeq/ml K) <u> '.$Prescripcion_NPT[$x]['cloruro_potasio'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['fosfato'] > 0) ? '<div>Fosfato de Potasio (2 mEq/ml k/1.11 m mol PO4) <u> '.$Prescripcion_NPT[$x]['fosfato'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['gluconato'] > 0) ? '<div>Gluconato de Calcio (0.465 mEq/ml) <u> '.$Prescripcion_NPT[$x]['gluconato'].' ml</u></div>':'' ?>
+
+
+            <?php } ?>
+
+            <!-- Consultar aditivos -->
+            <?php if($Prescripcion_NPT[$x]['albumina'] > 0 ||
+                    $Prescripcion_NPT[$x]['heparina'] > 0 ||
+                    $Prescripcion_NPT[$x]['insulina'] > 0 ||
+                    $Prescripcion_NPT[$x]['zinc'] > 0 ||
+                    $Prescripcion_NPT[$x]['mvi'] > 0 ||
+                    $Prescripcion_NPT[$x]['oligoelementos'] > 0 ||
+                    $Prescripcion_NPT[$x]['vitamina'] > 0){ ?>
+                      <br>
+                      Aditivos:
+                      <br>
+                      <?= ($Prescripcion_NPT[$x]['albumina'] > 0)?'<div>Albúmina 20% (0.20 g/ml): <u> '.$Prescripcion_NPT[$x]['albumina'].' gr</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['heparina'] > 0)?'<div>Heparina (1000 UI/ml): <u> '.$Prescripcion_NPT[$x]['heparina'].' UI</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['insulina'] > 0)?'<div>Insulina Humana (100 UI/ml): <u> '.$Prescripcion_NPT[$x]['insulina'].' UI</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['zinc'] > 0)?'<div>Zinc: <u> '.$Prescripcion_NPT[$x]['zinc'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['mvi'] > 0)?'<div>MVI - Adulto <u> '.$Prescripcion_NPT[$x]['mvi'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['oligoelementos'] > 0)?'<div>Oligoelementos Tracefusin <u> '.$Prescripcion_NPT[$x]['oligoelementos'].' ml</u></div>':'' ?>
+                      <?= ($Prescripcion_NPT[$x]['vitamina'] > 0)?'<div>Vitamina C (100 mg/ml) <u> '.$Prescripcion_NPT[$x]['vitamina'].' mg</u></div>':'' ?>
+
+            <?php } ?>
+
+            <?php if($Prescripcion_NPT[$x]['observacion'] != 'Sin observaciones' ){ ?>
+                <br><strong>Observación</strong>
+                <?= $Prescripcion_NPT[$x]['observacion'] ?>
+              <?php } ?>
+            <br>
+          <?php } ?>
+
+
+
+
+        <!-- Fin prescripcion -->
+
+
+
+
+
         <?php if($hoja['hf_indicaciones']!=''){?>
         <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
         <?=$hoja['hf_indicaciones']?>

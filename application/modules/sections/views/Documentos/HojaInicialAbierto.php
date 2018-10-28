@@ -881,75 +881,123 @@
 
                                 <!-- Inicio formulario prescripcion -->
                                 <div class="formulario_prescripcion" style="padding-top: 10px;" hidden>
+                                  <br>
+                                  <div class="row" >
+                                      <div class="col-md-12" style="margin-top: -15px">
+                                          <div class="form-group">
+                                              <div class="input-group m-b">
+                                                  <span class="input-group-addon back-imss border-back-imss" >
+                                                    RECETA MÉDICA
+                                                  </span>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
                                   <div class="col-sm-12" style="padding:0">
-                                    <div class="col-sm-3" style="padding: 0;">
+
+                                    <div class="col-sm-5" style="padding: 0;">
                                       <div class="form-group">
-                                      <label><b>Medicamento</b></label>
+                                      <label><b>Medicamento / Forma farmaceutica</b></label>
                                       <div id="borderMedicamento">
-                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="select2 selectpicker" style="width: 100%">
+                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%">
                                             <option value="0">-Seleccionar-</option>
                                             <?php foreach ($Medicamentos as $value) {?>
                                             <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
                                             <?php } ?>
                                         </select>
                                       </div>
+
+                                      </div>
+
+                                      <!-- Formulario para antibiotico NTP
+                                      *El formulrio es desplegado en una ventana modal* -->
+                                      <div class="form-group form-antibiotico-npt" hidden>
+                                         <input class="form-control" id="categoria_safe"/>
+                                         <input class="form-control aminoacido" />
+                                         <input class="form-control dextrosa" />
+                                         <input class="form-control lipidos-intravenosos" />
+                                         <input class="form-control agua-inyectable" />
+                                         <input class="form-control cloruro-sodio" />
+                                         <input class="form-control sulfato-magnesio" />
+                                         <input class="form-control cloruro-potasio" />
+                                         <input class="form-control fosfato-potasio" />
+                                         <input class="form-control gluconato-calcio" />
+                                         <input class="form-control albumina" />
+                                         <input class="form-control heparina" />
+                                         <input class="form-control insulina-humana" />
+                                         <input class="form-control zinc" />
+                                         <input class="form-control mvi-adulto" />
+                                         <input class="form-control oligoelementos" />
+                                         <input class="form-control vitamina" />
+                                         <input class="form-control total-npt" />
+                                         <!-- Campos antimicrobianos y oncologicos -->
+                                         <input class="form-control diluyente" />
+                                         <input class="form-control vol_diluyente" />
+                                      </div>
+                                      <!-- Fin formulario para antibiotico NTP -->
+                                    </div>
+
+
+
+                                    <div class="col-sm-3">
+                                      <label><b>Via de administración</b></label>
+                                      <div class="input-group" id="borderVia">
+                                        <div id="opcion_vias_administracion">
+                                          <select class="form control select2 width100" id="via">
+                                            <option value="0">-Seleccionar-</option>
+                                          </select>
+                                        </div>
+                                        <span class="input-group-btn">
+                                          <button class="btn btn-default btn_otra_via" type="button" value="0" title="Indicar otra via de administración">Otra</button>
+                                        </span>
                                       </div>
                                     </div>
                                     <div class="col-sm-1" style="padding-right: 0;">
                                       <div class="form-group" >
                                         <label ><b>Dosis</b></label>
                                         <div id="borderDosis">
-                                        <input type="number" id="input_dosis" class="form-control">
+                                        <input type="number" min='0' id="input_dosis" class="form-control">
+                                        <label id="dosis_max" hidden></label>
+                                        <label id="gramaje_dosis_max" hidden></label>
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-sm-1" style="padding-right: 0;">
+                                    <div class="col-sm-1" style="padding-left: 0; padding-right: 0;">
                                       <div class="form-group" >
                                         <label ><b>Unidad</b></label>
                                         <div id="borderUnidad">
                                         <select name="" id="select_unidad" class="form-control">
                                           <option value="0">-Unidad-</option>
-                                          <option value="mg">mg</option>
                                           <option value="g">g</option>
+                                          <option value="mg">mg</option>
+                                          <option value="mcg">mcg</option>
+                                          <option value="mL">mL</option>
                                           <option value="UI">UI</option>
                                         </select>
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-sm-2" >
-                                        <label><b>Via</b></label>
-                                        <div id="borderVia">
-                                        <select class="select2 selectpicker" id="via_administracion" style="width: 100%" >
-                                            <option value="0">-Seleccionar-</option>
-                                            <?php foreach ($Vias as $value) {?>
-                                            <option ><?=$value?></option>
-                                            <?php } ?>
-                                        </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
+
+                                    <div class="col-sm-2" style="padding-right: 0;">
                                       <label><b>Frecuencia</b></label>
                                       <div id="borderFrecuencia">
                                       <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
                                         <option value="0">- Frecuencia -</option>
+                                        <option value="4 hrs">4 hrs</option>
                                         <option value="6 hrs">6 hrs</option>
                                         <option value="8 hrs">8 hrs</option>
                                         <option value="12 hrs">12 hrs</option>
                                         <option value="24 hrs">24 hrs</option>
                                         <option value="48 hrs">48 hrs</option>
                                         <option value="72 hrs">72 hrs</option>
+                                        <option value="Dosis unica">Dosis unica</option>
                                       </select>
                                       </div>
                                     </div>
-                                    <div class="col-sm-3" style="padding-left: 0;">
-                                      <label><b>Aplicacion</b></label>
-                                      <div id="borderAplicacion">
-                                      <input id="aplicacion" class="form-control" type="text" name="" placeholder="Indicar frecuencia">
-                                      </div>
-                                    </div>
+
                                     <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
                                          el select se llena al seleccionar un medicamento -->
-                                    <div hidden class="col-sm-2" style="padding: 1;">
+                                    <div hidden class="col-sm-2">
                                         <label><b>interaccion_amarilla</b></label>
                                         <div id="borderMedicamento">
                                           <select id="interaccion_amarilla" class="" style="width: 100%" >
@@ -974,10 +1022,18 @@
                                   </div>
                                   <div class="col-sm-12" style="padding:0">
 
+                                    <div class="col-sm-3" style="padding-left: 0;">
+                                      <label><b>Aplicación</b></label>
+                                      <div class="input-group" id="borderAplicacion">
+                                        <input type="text" class="form-control" id="aplicacion" disabled='disabled' >
+                                        <span class="input-group-btn">
+                                          <button class="btn btn-default edit-aplicacion" type="button" value="0" title="Cambiar el horario de aplicación">Cambiar</button>
+                                        </span>
+                                      </div>
+                                    </div>
 
-
-                                    <div class="col-sm-2" style="padding: 1; padding-left: 0;">
-                                      <label><b>Fecha Inicio</b></label>
+                                    <div class="col-sm-2" style="padding-left: 0;">
+                                      <label><b>Fecha inicio</b></label>
                                       <div id="borderFechaInicio">
                                       <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
                                       </div>
@@ -988,10 +1044,26 @@
 
                                     </div>
 
+
+
+
+
+<!-- <div class="col-lg-6">
+<div class="input-group">
+<input type="text" id="contador" class="form-control" placeholder="1" value="1">
+<span class="input-group-btn">
+<button class="btn btn-default" id="carga" onClick="sube()" type="button">Carga</button>
+</span>
+<span class="input-group-btn">
+<button class="btn btn-default" id="descarga" onClick="baja()" type="button">Descarga</button>
+</span>
+</div>
+</div> -->
+
                                   </div>
 
                                   <div class="col-sm-8" style="padding: 0;" >
-                                    <label><b>Observaciones para la Prescripcion</b></label>
+                                    <label><b>Observaciones para la prescripción</b></label>
                                     <div id="borderFechaFin">
                                     <input name="observacion_prescripcion" class="form-control" id="observacion"   name="" >
                                     </div>
@@ -1000,6 +1072,12 @@
                                     <div class="form-group" style="padding-top:23px;" >
                                       <div hidden id="div_btnActualizarPrescripcion">
                                           <button type="button"  id="btnActualizarPrescripcion" class="btn back-imss btn-block" onclick="actualizarPrescripcion()"> MODIFICAR </button>
+                                      </div>
+                                      <div id="btn-form-npt" hidden>
+                                        <button type="button" class="btn back-imss btn-block edit-form-npt">MODIFICAR NPT </button>
+                                      </div>
+                                      <div id="btn-form-onco-anti" hidden>
+                                        <button type="button" class="btn back-imss btn-block edit-form-onco-anti">DILUYENTE</button>
                                       </div>
                                     </div>
                                   </div>
@@ -1016,24 +1094,28 @@
                                   <table style="width:100%;">
                                     <thead >
                                       <tr>
+                                        <th colspan='11' class="back-imss">Medicamentos agregados</th>
+                                      </tr>
+                                      <tr>
                                         <th hidden >ID</th>
                                         <th>Medicamento</th>
-                                        <th>Categoria F.</th>
+                                        <th>Cat F.</th>
                                         <th>Dosis</th>
                                         <th>Vía</th>
                                         <th>Frecuencia</th>
                                         <th>Aplicación</th>
-                                        <th>Fecha Inicio</th>
-                                        <th>Tiempo</th>
+                                        <th>Inicio</th>
+                                        <th>Duración</th>
                                         <th>Periodo</th>
-                                        <th>Fecha Fin</th>
+                                        <th>Fin</th>
                                         <th>Opciones</th>
                                       </tr>
                                     </thead>
                                     <tbody id="tablaPrescripcion">
                                     </tbody>
                                   </table>
-                                </div><!-- Fin formulario prescripcion-->
+                                </div>
+                                <!-- Fin formulario prescripcion-->
                                 <br/>
                         </div>
                         <div class="col-sm-12" style="padding: 0;">

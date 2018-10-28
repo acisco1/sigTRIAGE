@@ -1,4 +1,22 @@
 var cont = 0;
+
+var arrayViasAdministracion = ['(cerebelomedular)','Auricular (ótica)','Bolo Intravenoso','Bucal','campo eléctrico','Conjuntival','Cutánea','Dental',
+'Electro-osmosis','En los ventrículos cerebrales','Endocervical','Endosinusial','Endotraqueal','Enteral','Epidural','Extra-amniótico',
+'Gastroenteral','Goteo Intravenoso','In vitro','Infiltración','Inhalatoria','Intercelular','Intersticial','Intra corpus cavernoso',
+'Intraamniótica','Intraarterial','Intraarticular','Intrabdominal','Intrabiliar','Intrabronquial','Intrabursal','Intracardiaca',
+'Intracartilaginoso','Intracaudal','Intracavernosa','Intracavitaria','Intracerebral','Intracervical','Intracisternal','Intracorneal',
+'Intracoronaria','Intracoronario','Intradérmica','Intradiscal','Intraductal','Intraduodenal','Intradural','Intraepidermal','Intraesofágica',
+'Intraesternal','Intragástrica ','Intragingival','Intrahepática','Intraileal','Intramedular','Intrameníngea','Intramuscular','Intraocular',
+'Intraovárica','Intrapericardial','Intraperitoneal','Intrapleural','Intraprostática','Intrapulmonar','Intrasinovial',
+'Intrasinusal (senosparanasales)','Intratecal','Intratendinosa','Intratesticular','Intratimpánica','Intratoráxica','Intratraqueal',
+'Intratubular','Intratumoral','Intrauterina','Intravascular','Intravenosa','Intraventricular','Intravesicular','Intravítrea','Iontoforesis',
+'Irrigación','la túnica fibrosa del ojo)','Laríngeo','Laringofaringeal','médula espinal)','Nasal','Oftálmica','Oral','Orofaríngea',
+'Otra Administración es diferente de otros contemplados en ésta lista','Parenteral','Párpados y la superficie del globo ocular',
+'Percutánea','Periarticular','Peridura','Perineural','Periodontal','Por difusión','Rectal','Retrobulbal','Sistémico','Sonda nasogástrica',
+'Subaracnoidea','Subconjuntival','Subcutánea','Sublingual','Submucosa','Técnica de vendaje oclusivo','Tejido blando','tejidos del cuerpo',
+'Tópica','Transdérmica','Transmamaria','Transmucosa','Transplacentaria','Transtimpánica','Transtraqueal','Ureteral','Uretral',
+'Uso Intralesional','Uso Intralinfático','Uso oromucosa','Vaginal','Vía a través de Hemodiálisis'];
+
 $(document).ready(function () {
     $('.select2').select2();
     $('.hf_motivo_abierto').wysihtml5();
@@ -23,6 +41,10 @@ $(document).ready(function () {
     $('textarea[name=nota_cuidadosenfermeria]').wysihtml5();
     $('textarea[name=nota_solucionesp]').wysihtml5();
     $('.nota_pronosticos').wysihtml5();
+    $('#aplicacion').clockpicker({
+      placement: 'bottom',
+      autoclose: true
+    });
     //$('#nota_interconsulta').val($('#nota_interconsulta').attr('data-value').split(',')).select2();
 
     if($('input[name=accion]').val()!=undefined){
@@ -112,12 +134,70 @@ $(document).ready(function () {
             }
         })
     })
+
+    $('body').on('change','.sum-total-npt',function(){
+
+      var aminoacido = $('.modal-aminoacido').val() == "" ? 0:  $('.modal-aminoacido').val(),
+      dextrosa = $('.modal-dextrosa').val() == "" ? 0: $('.modal-dextrosa').val(),
+      lipidos_intravenosos = $('.modal-lipidos-intravenosos').val() == "" ? 0: $('.modal-lipidos-intravenosos').val(),
+      agua_inyectable = $('.modal-agua-inyectable').val() == "" ? 0: $('.modal-agua-inyectable').val(),
+      cloruro_sodio = $('.modal-cloruro-sodio').val() == "" ? 0: $('.modal-cloruro-sodio').val(),
+      sulfato_magnesio = $('.modal-sulfato-magnesio').val() == "" ? 0: $('.modal-sulfato-magnesio').val(),
+      cloruro_potasio = $('.modal-cloruro-potasio').val() == "" ? 0: $('.modal-cloruro-potasio').val(),
+      fosfato_potasio = $('.modal-fosfato-potasio').val() == "" ? 0: $('.modal-fosfato-potasio').val(),
+      gluconato_calcio = $('.modal-gluconato-calcio').val() == "" ? 0: $('.modal-gluconato-calcio').val(),
+      albumina = $('.modal-albumina').val() == "" ? 0: $('.modal-albumina').val(),
+      heparina = $('.modal-heparina').val() == "" ? 0: $('.modal-heparina').val(),
+      insulina_humana = $('.modal-insulina-humana').val() == "" ? 0: $('.modal-insulina-humana').val(),
+      zinc = $('.modal-zinc').val() == "" ? 0: $('.modal-zinc').val(),
+      mvi_adulto = $('.modal-mvi-adulto').val() == "" ? 0: $('.modal-mvi-adulto').val() ,
+      oligoelementos = $('.modal-oligoelementos').val() == "" ? 0: $('.modal-oligoelementos').val(),
+      vitamina = $('.modal-vitamina').val() == "" ? 0: $('.modal-vitamina').val(),
+      sum_total_npt = parseInt(aminoacido) + parseInt(dextrosa) + parseInt(lipidos_intravenosos) + parseInt(agua_inyectable) + parseInt(cloruro_sodio) +
+                      parseInt(sulfato_magnesio) + parseInt(cloruro_potasio) + parseInt(fosfato_potasio) + parseInt(gluconato_calcio) + parseInt(albumina) +
+                      parseInt(heparina) + parseInt(insulina_humana) + parseInt(zinc) + parseInt(mvi_adulto) + parseInt(oligoelementos) + parseInt(vitamina);
+
+
+      $("#vol_total_npt").text(sum_total_npt);
+
+    });
+
+    $('.btn_otra_via').click(function(){
+
+
+      if($(this).val() === "1"){  //ver todas las vias
+        $(this).val("0");
+
+
+        ConsultarViasAdministracion();
+
+
+      }else if($(this).val() === "0"){ //ver vias recomendadas
+        $(this).val("1");
+        $("#via").empty();
+        var option = "<option value='0'></option>";
+        $("#via").append(option);
+
+
+        for(var x = 0; x < arrayViasAdministracion.length; x++){
+          option = "<option value="+arrayViasAdministracion[x]+">"+arrayViasAdministracion[x]+"</option>";
+          $("#via").append(option);
+        }
+
+      }
+
+
+      $('#via').val('0').trigger('change.select2');
+
+    });
+
     $('#radioAyuno').click(function(){
       $('#divSelectDietas').attr('hidden','true');
       $('#divOtraDieta').attr('hidden','true');
       $('#selectDietas').val('0');
       $('#inputOtraDieta').val('');
     });
+
     $('#radioDieta').click(function(){
       $('#divSelectDietas').removeAttr("hidden");
     });
@@ -320,6 +400,202 @@ $(document).ready(function () {
     $('input[name=hf_riesgo_caida][value="'+$('input[name=hf_riesgo_caida]').data('value')+'"]').prop("checked",true);
     $('input[name=nota_estadosalud][value="'+$('input[name=nota_estadosalud]').data('value')+'"]').prop("checked",true);
 
+
+    $('#input_dosis').change(function(){
+      var dosis = $('#input_dosis').val(),
+          dosis_max = $('#dosis_max').text(),
+          gramaje_dosis_max = $('#gramaje_dosis_max').text(),
+          select_unidad = $('#select_unidad').val(),
+          dosis_maxima = parseInt(dosis_max);
+
+
+          if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad != ""){
+
+            if(select_unidad.toLowerCase() != gramaje_dosis_max.toLowerCase()){
+
+              var dosis_mcg,
+                  dosis_maxima_mcg;
+
+              //convierte la dosis a microgramos segun el gramje que le corresponda
+              if(select_unidad.toLowerCase() == "mg"){
+                dosis_mcg = dosis * 1000;
+              }else if(select_unidad.toLowerCase() == "g"){
+                dosis_mcg = dosis * 1000 * 1000;
+              }
+
+              //convierte la dosis maxima a microgramos segun el gramje que le corresponda
+              if(gramaje_dosis_max.toLowerCase() == "mg"){
+                dosis_maxima_mcg = dosis_maxima * 1000;
+              }else if(gramaje_dosis_max.toLowerCase() == "g"){
+                dosis_maxima_mcg = dosis_maxima * 1000 * 1000;
+              }
+
+              dosis = parseInt(dosis_mcg);
+              dosis_maxima = parseInt(dosis_maxima_mcg);
+
+              if(dosis > dosis_maxima){
+                alert("La dosis rebasa los limites clinicos, favor de modificar el "+
+                      "campo o indique en las observaciones el motivo de la dosis");
+              }
+
+            }
+
+
+            if(dosis > dosis_maxima && select_unidad.toLowerCase() == gramaje_dosis_max.toLowerCase()){
+              alert("La dosis rebasa los limites clinicos, favor de modificar el "+
+                    "campo o indique en las observaciones el motivo de la dosis");
+            }
+
+
+
+          }
+
+
+
+
+
+    });
+
+
+    $('#select_unidad').change(function(){
+      var dosis = $('#input_dosis').val(),
+          dosis_max = $('#dosis_max').text(),
+          gramaje_dosis_max = $('#gramaje_dosis_max').text(),
+          select_unidad = $('#select_unidad').val(),
+          dosis_maxima = parseInt(dosis_max);
+
+if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad != ""){
+
+  if(select_unidad.toLowerCase() != gramaje_dosis_max.toLowerCase()){
+
+    var dosis_mcg,
+        dosis_maxima_mcg;
+
+    //convierte la dosis a microgramos segun el gramje que le corresponda
+    if(select_unidad.toLowerCase() == "mg"){
+      dosis_mcg = dosis * 1000;
+    }else if(select_unidad.toLowerCase() == "g"){
+      dosis_mcg = dosis * 1000 * 1000;
+    }
+
+    //convierte la dosis maxima a microgramos segun el gramje que le corresponda
+    if(gramaje_dosis_max.toLowerCase() == "mg"){
+      dosis_maxima_mcg = dosis_maxima * 1000;
+    }else if(gramaje_dosis_max.toLowerCase() == "g"){
+      dosis_maxima_mcg = dosis_maxima * 1000 * 1000;
+    }
+
+    dosis = parseInt(dosis_mcg);
+    dosis_maxima = parseInt(dosis_maxima_mcg);
+
+    if(dosis > dosis_maxima){
+      alert("La dosis rebasa los limites clinicos, favor de modificar el "+
+            "campo o indique en las observaciones el motivo de la dosis");
+    }
+
+  }
+
+
+  if(dosis > dosis_maxima && select_unidad.toLowerCase() == gramaje_dosis_max.toLowerCase()){
+    alert("La dosis rebasa los limites clinicos, favor de modificar el "+
+          "campo o indique en las observaciones el motivo de la dosis");
+  }
+
+
+
+}
+
+
+
+
+
+    });
+
+    $('.edit-form-npt').click(function(){
+      FormularioNPT();
+    });
+
+    $('.edit-form-onco-anti').click(function(){
+      FormularioAntimicrobianoOncologico();
+    });
+
+    $('#select_medicamento').change(function(){
+      var medicamento_id = $(this).val();
+      var option = "<option value='0'></option>";
+      $("#via").append(option);
+      $('#via').val('0').trigger('change.select2');
+
+      $('.aminoacido').val("");
+      $('.dextrosa').val("");
+      $('.lipidos-intravenosos').val("");
+      $('.agua-inyectable').val("");
+      $('.cloruro-sodio').val("");
+      $('.sulfato-magnesio').val("");
+      $('.cloruro-potasio').val("");
+      $('.fosfato-potasio').val("");
+      $('.gluconato-calcio').val("");
+      $('.albumina').val("");
+      $('.heparina').val("");
+      $('.insulina-humana').val("");
+      $('.zinc').val("");
+      $('.mvi-adulto').val("");
+      $('.oligoelementos').val("");
+      $('.vitamina').val("");
+
+      ConsultarViasAdministracion();
+
+      $.ajax({
+          url: base_url+"Sections/Documentos/AjaxDosisMaxima",
+          type: 'GET',
+          dataType: 'json',
+          data:{
+            medicamento_id:medicamento_id
+          },success: function (data, textStatus, jqXHR) {
+            var categoria_safe = data[0].categoria_safe;
+
+            if(categoria_safe == "npt"){
+
+              $("#categoria_safe").val(categoria_safe);
+              $('#btn-form-onco-anti').attr("hidden", true);
+              $('#btn-form-npt').removeAttr("hidden");
+              FormularioNPT();
+
+            }else if(categoria_safe == "antimicrobiano" || categoria_safe == "oncologico"){
+              $("#categoria_safe").val(categoria_safe);
+              $('#btn-form-npt').attr("hidden", true);
+              $('#btn-form-onco-anti').removeAttr("hidden");
+              FormularioAntimicrobianoOncologico();
+            }else{
+              $('#btn-form-npt').attr("hidden", true);
+              $('#btn-form-onco-anti').attr("hidden", true);
+            }
+
+            var data_dosis_max = data[0].dosis_max;
+            var caracter_delimitador = (data_dosis_max.indexOf(" ") != -1) ? " " : "-";
+            //Se remplaza el guion por un espacio y obtener el valor maximo
+            data_dosis_max = data_dosis_max.replace("-"," ");
+            //Se obtine el valor absoluto de la dosis
+            var dosis_val_abosulut = data_dosis_max.slice(0,data_dosis_max.indexOf(" "));
+            //dosis_val_abosulut = dosis_val_abosulut.slice(0, dosis_val_abosulut.indexOf("-"));
+            //var dosis_gramaje = data_dosis_max.;
+            var gramaje_dosis_max = data_dosis_max.substr(-data_dosis_max.indexOf(" "));
+            gramaje_dosis_max = gramaje_dosis_max.replace(" ","");
+            $('#dosis_max').text("");
+            $('#gramaje_dosis_max').text("");
+            $('#dosis_max').text(dosis_val_abosulut);
+            $('#gramaje_dosis_max').text(gramaje_dosis_max);
+
+
+
+
+
+
+          },error: function (e) {
+              msj_error_serve();
+          }
+      });
+    });
+
     $('.Form-Notas-HojaFrontal').submit(function (e) {
         e.preventDefault();
         $.ajax({
@@ -439,7 +715,7 @@ $(document).ready(function () {
           var categoria_farmacologica = $('#fila_categoria_farmacologica'+prescripcion_id).text();
           var fecha_prescripcion = $('#fila_fecha_prescripcion'+prescripcion_id).text();
           var dosis = $('#fila_dosis'+prescripcion_id).text();
-          var via_administracion = $('#fila_via_administracion'+prescripcion_id).text();
+          var via = $('#fila_via'+prescripcion_id).text();
           var frecuencia = $('#fila_frecuencia'+prescripcion_id).text();
           var aplicacion = $('#fila_aplicacion'+prescripcion_id).text();
           var fecha_inicio = $('#fila_fecha_inicio'+prescripcion_id).text();
@@ -458,7 +734,7 @@ $(document).ready(function () {
           $('#input_dosis').val(arregloDosis[0]);
           $('#select_unidad').val(arregloDosis[1]).trigger('change.select2');
 
-          $('#via_administracion').val(via_administracion).trigger('change.select2');
+          $('#via').val(via).trigger('change.select2');
           $('#frecuencia').val(frecuencia);
           $('#aplicacion').val(aplicacion);
           $('#fechaInicio').val(fecha_inicio);
@@ -477,7 +753,7 @@ $(document).ready(function () {
 
           if(categoria_farmacologica.toLowerCase() == 'antibiotico'){
             formulario =
-            "<div class='col-sm-1' style='padding: 0;' >"+
+            "<div class='col-sm-2' style='padding: 0;' >"+
               "<label id='categoria_farmacologica' hidden>"+categoria_farmacologica+"</label>"+
               "<label><b>Dias</b></label>"+
               "<div id='borderDuracion'>"+
@@ -497,14 +773,14 @@ $(document).ready(function () {
               "</div>"+
             "</div>"+
             "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
-              "<label><b>Fecha Fin</b></label>"+
+              "<label><b>Fecha fin</b></label>"+
               "<div id='borderFechaFin'>"+
               "<input class='form-control' id='fechaFin'  >"+
               "</div>"+
             "</div>";
           }else{
             formulario =
-            "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
+            "<div class='col-sm-2' style='padding-right: 0; padding-left: 0;' >"+
               "<label id='categoria_farmacologica' hidden>"+categoria_farmacologica+"</label>"+
               "<label><b>Tiempo</b></label>"+
               "<div class='input-group' >"+
@@ -527,12 +803,13 @@ $(document).ready(function () {
               "</select>"+
             "</div>"+
             "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
-              "<label><b>Fecha Fin</b></label>"+
+              "<label><b>Fecha fin</b></label>"+
               "<div id='borderFechaFin'>"+
               "<input class='form-control' id='fechaFin' >"+
               "</div>"+
             "</div>";
           }
+
           $('.tiempo_tipo_medicamento').append(formulario);
           $('.tiempo_tipo_medicamento').append(motivo);
           $('#fechaFin').val(fecha_fin);
@@ -991,6 +1268,18 @@ $(document).ready(function () {
       }
     });
 
+    //Permite cambiar el contenido del horario de aplicacion del medicamento
+    $('.edit-aplicacion').click(function(){
+      if($(this).val() == 0){
+        $('#aplicacion').removeAttr('disabled');
+        $(this).val('1')
+      }else if($(this).val() == 1){
+        $('#aplicacion').attr('disabled', true);
+        $(this).val('0')
+      }
+      $('#aplicacion').val('');
+    });
+
     $('input[name=es_residente]').click(function () {
         if($(this).val()=='Si'){
             $('.notas_medicotratante').removeClass('hide');
@@ -1059,7 +1348,7 @@ $(document).ready(function () {
       var dosis_cantidad = $('#input_dosis').val();
       var unidad = $('#select_unidad').val();
       var dosis = (dosis_cantidad+' '+unidad);
-      var via_administracion = $('#via_administracion').val();
+      var via = $('#via').val();
       var frecuencia = $('#frecuencia').val();
       var aplicacion = $('#aplicacion').val();
       var fecha_inicio = $('#fechaInicio').val();
@@ -1068,7 +1357,7 @@ $(document).ready(function () {
 
       var datos_viejos = DatosTabplaPrescripcionActivas(prescripcion_id);
       var motivo_datos_viejos =
-      datos_viejos['via_administracion']+","+
+      datos_viejos['via']+","+
       datos_viejos['frecuencia']+","+
       datos_viejos['aplicacion']+","+
       datos_viejos['fecha_inicio']+","+
@@ -1081,7 +1370,7 @@ $(document).ready(function () {
         type: 'GET',
         dataType: 'json',
         data:{
-          via_administracion : via_administracion,
+          via : via,
           frecuencia : frecuencia,
           aplicacion : aplicacion,
           fecha_inicio : fecha_inicio,
@@ -1256,9 +1545,15 @@ function calcular() {
 }
 
 function asignarHorarioAplicacion(){
+  $('#duracion').val('');
+  $('#duracion').removeAttr('disabled');
+  $('#periodo').removeAttr('disabled');
+  $('#aplicacion').attr('disabled',true);
   var frecuencia = $('#frecuencia').val();
   var horaAplicacion = "8:00";
-  if(frecuencia == "6 hrs"){
+  if(frecuencia == "4 hrs"){
+    horaAplicacion = "8:00 / 12:00 / 16:00 / 20:00  / 24:00";
+  }else if(frecuencia == "6 hrs"){
     horaAplicacion = "6:00 / 12:00 / 18:00 / 24:00";
   }else if(frecuencia == "8 hrs"){
     horaAplicacion = "8:00 / 16:00 / 24:00";
@@ -1266,6 +1561,12 @@ function asignarHorarioAplicacion(){
     horaAplicacion = "8:00 / 20:00";
   }else if( frecuencia == 0){
     horaAplicacion = "Falta asignar frecuencia"
+  }else if(frecuencia == "Dosis unica"){
+
+      $('#duracion').val('0');
+      $('#duracion').attr('disabled',true);
+      $('#periodo').attr('disabled',true);
+
   }
   $('#aplicacion').val(horaAplicacion);
 }
@@ -1302,52 +1603,62 @@ function mostrarFechaFin(){
 // Valida el llenado del formulario, indicando si
 // algun campo falta por llenar
 function revisarCamposVaciosPrescripcion(){
+  //Declaracion de atributos
+  var categoria_farmacologica = $('#categoria_farmacologica').val();
   var medico = $('#select_medicamento').val();
   var dosis = $('#input_dosis').val();
   var unidad = $('#select_unidad').val();
-  var via = $('#via_administracion').val();
+  var via = $('#via').val();
   var frecuencia = $('#frecuencia').val();
   var horaAplicacion = $('#aplicacion').val();
   var fechaInicio = $('#fechaInicio').val();
   var duracion = $('#duracion').val();
   var fechaFin = $('#fechaFin').val();
   var validacion = false;
+
+  //Condicion en caso de no seleccionar un medicamento o categoria farmacologica
+  //if(categoria_farmacologica){
+
+  //}
   if(medico === '0'){
     $('#borderMedicamento').css("border","2px solid red");
   }else if(dosis === ''){
     $('#borderDosis').css("border","2px solid red");
   }else if(unidad === '0'){
     $('#borderUnidad').css("border","2px solid red");
-  }else if(via === '0'){
+  }
+  else if(via === '0'){
     $('#borderVia').css("border","2px solid red");
-  }else if(frecuencia === '0'){
-    $('#borderFrecuencia').css("border","2px solid red");
+  }
+  else if(frecuencia === '0'){
+    $('#borderFrecuencia').css("border","1px solid red");
   }else if(horaAplicacion === ''){
-    $('#borderAplicacion').css("border","2px solid red");
+    $('#borderAplicacion').css("border","1px solid red");
   }else if(fechaInicio === ''){
-    $('#borderFechaInicio').css("border","2px solid red");
+    $('#borderFechaInicio').css("border","1px solid red");
   }else if(duracion === ''){
-    $('#borderDuracion').css("border","2px solid red");
+    $('#borderDuracion').css("border","1px solid red");
   }else if(fechaFin === ''){
-    $('#borderFechaFin').css("border","2px solid red");
+    $('#borderFechaFin').css("border","1px solid red");
   }else{
-    $('#borderMedicamento').css("border","2px solid white");
-    $('#borderDosis').css("border","2px solid white");
-    $('#borderUnidad').css("border","2px solid white");
+    $('#borderMedicamento').css("border","1px solid white");
+    $('#borderDosis').css("border","1px solid white");
+    $('#borderUnidad').css("border","1px solid white");
     $('#borderVia').css("border","2px solid white");
-    $('#borderFrecuencia').css("border","2px solid white");
-    $('#borderAplicacion').css("border","2px solid white");
-    $('#borderFechaInicio').css("border","2px solid white");
-    $('#borderDuracion').css("border","2px solid white");
-    $('#borderFechaFin').css("border","2px solid white");
+    $('#borderFrecuencia').css("border","1px solid white");
+    $('#borderAplicacion').css("border","1px solid white");
+    $('#borderFechaInicio').css("border","1px solid white");
+    $('#borderDuracion').css("border","1px solid white");
+    $('#borderFechaFin').css("border","1px solid white");
     validacion = true;
   }
   return validacion;
+
 }
 //Limpia el formulario despues de usarse
 function limpiarFormularioPrescripcion(){
   $('#select_medicamento').val("0").trigger('change.select2');
-  $('#via_administracion').val("0").trigger('change.select2');
+  $('#via').val("0").trigger('change.select2');
   $('#input_dosis').val("");
   $('#select_unidad').val("0").trigger('change.select2');
   $('#frecuencia').val("0");
@@ -1363,6 +1674,8 @@ var arrayPrescripcion = [];
 se relaciona*/
 var arrayInteracciones = [];
 
+var arrayAntibiotico = [];
+
 function indicarInteraccion(){
   var idMedicamento = $('#select_medicamento').val();
   $('#interaccion_amarilla').val(idMedicamento).trigger('change');
@@ -1372,8 +1685,8 @@ function indicarInteraccion(){
 
 // Se almacenan los datos de la prescripcion en un arreglo
 function agregarPrescripcion(){
-  //var validar = revisarCamposVaciosPrescripcion();
-  var validar = true;
+  var validar = revisarCamposVaciosPrescripcion();
+  //var validar = true;
   if (validar === true){
     var categoria_farmacologica = $("#categoria_farmacologica").text();
     var periodo = "";
@@ -1388,7 +1701,7 @@ function agregarPrescripcion(){
     var interaccion_roja = $('#interaccion_roja option:selected').text();
     var arrayInteraccionAmarilla = interaccion_amarilla.split(',');
     var arrayInteraccionRoja = interaccion_roja.split(',');
-    var via = $('#via_administracion').val();
+    var via = $('#via option:selected').text();
     var frecuencia = $('#frecuencia').val();
     var horaAplicacion = $('#aplicacion').val();
     var fechaInicio = $('#fechaInicio').val();
@@ -1396,6 +1709,68 @@ function agregarPrescripcion(){
     var fechaFin = $('#fechaFin').val();
     var observacion = $('#observacion').val();
     var periodo = "Dias";
+    var categoria_safe = $('#categoria_safe').val();
+    //Datos NPT
+    //si su valor es indfinido, por defecto sera 0
+    var aminoacido = ($('.aminoacido').val() != "" ) ? $('.aminoacido').val(): 0 ;
+    var dextrosa = ($('.dextrosa').val() != "" ) ? $('.dextrosa').val(): 0 ;
+    var lipidos_intravenosos = ($('.lipidos-intravenosos').val() != "" ) ? $('.lipidos-intravenosos').val(): 0 ;
+    var agua_inyectable = ($('.agua-inyectable').val() != "" ) ? $('.agua-inyectable').val(): 0 ;
+    var cloruro_sodio = ($('.cloruro-sodio').val() != "" ) ? $('.cloruro-sodio').val(): 0 ;
+    var sulfato_magnesio = ($('.sulfato-magnesio').val() != "" ) ? $('.sulfato-magnesio').val(): 0 ;
+    var cloruro_potasio = ($('.cloruro-potasio').val() != "" ) ? $('.cloruro-potasio').val(): 0 ;
+    var fosfato_potasio = ($('.fosfato-potasio').val() != "" ) ? $('.fosfato-potasio').val(): 0 ;
+    var gluconato_calcio = ($('.gluconato-calcio').val() != "" ) ? $('.gluconato-calcio').val(): 0 ;
+    var albumina = ($('.albumina').val() != "" ) ? $('.albumina').val(): 0 ;
+    var heparina = ($('.heparina').val() != "" ) ? $('.heparina').val(): 0 ;
+    var insulina_humana = ($('.insulina-humana').val() != "" ) ? $('.insulina-humana').val(): 0 ;
+    var zinc = ($('.zinc').val() != "" ) ? $('.zinc').val(): 0 ;
+    var mvi_adulto = ($('.mvi-adulto').val() != "" ) ? $('.mvi-adulto').val(): 0 ;
+    var oligoelementos = ($('.oligoelementos').val() != "" ) ? $('.oligoelementos').val(): 0 ;
+    var vitamina = ($('.vitamina').val() != "" ) ? $('.vitamina').val(): 0 ;
+    var total_npt = ($('.total-npt').val() != "" ) ? $('.total-npt').val(): 0 ;
+
+    //Datos Antimicrobiano u Oncologico
+    var diluyente = ($('.diluyente').val() != "" ) ? $('.diluyente').val(): 0 ;
+    var vol_diluyente = ($('.vol_diluyente').val() != "" ) ? $('.vol_diluyente').val(): 0 ;
+
+    //Oculatar botones para antibioticos
+    $('#btn-form-npt').attr('hidden',true);
+    $('#btn-form-onco-anti').attr('hidden',true);
+    if(categoria_safe == "npt"){
+
+      arrayAntibiotico = {
+        aminoacido : aminoacido,
+        dextrosa : dextrosa,
+        lipidos_intravenosos : lipidos_intravenosos,
+        agua_inyectable : agua_inyectable,
+        cloruro_sodio : cloruro_sodio,
+        sulfato_magnesio : sulfato_magnesio,
+        cloruro_potasio : cloruro_potasio,
+        fosfato_potasio : fosfato_potasio,
+        gluconato_calcio : gluconato_calcio,
+        albumina : albumina,
+        heparina : heparina,
+        insulina_humana : insulina_humana,
+        zinc : zinc,
+        mvi_adulto : mvi_adulto,
+        oligoelementos : oligoelementos,
+        vitamina : vitamina,
+        total_npt : total_npt
+      };
+
+    }else if(categoria_safe == "antimicrobiano" || categoria_safe == "oncologico"){
+
+      arrayAntibiotico = {
+        diluyente: diluyente,
+        vol_diluyente : vol_diluyente
+      }
+
+    }
+
+
+
+
     if(observacion === ''){
       observacion = "Sin observaciones";
     }
@@ -1403,6 +1778,9 @@ function agregarPrescripcion(){
       periodo = $("#periodo").val();
 
     }
+    //se hace condicion en caso de existir npt y asi tomar los datos del modal
+
+
     var arrayLongitud = arrayPrescripcion.length;
     // verifica si el arreglo esta vacio y determinar si el registro es directo o inicia la comparacion
     if(arrayLongitud > 0){
@@ -1465,7 +1843,9 @@ function agregarPrescripcion(){
           duracion:duracion,
           periodo:periodo,
           fechaFin:fechaFin,
-          observacion:observacion
+          observacion:observacion,
+          safe:categoria_safe,
+          antibiotico:arrayAntibiotico
         }
         agregarFilaPrescripcion(arrayPrescripcion);
       }
@@ -1488,7 +1868,9 @@ function agregarPrescripcion(){
         duracion:duracion,
         periodo:periodo,
         fechaFin:fechaFin,
-        observacion:observacion
+        observacion:observacion,
+        safe:categoria_safe,
+        antibiotico:arrayAntibiotico
       }
       agregarFilaPrescripcion(arrayPrescripcion);
     }
@@ -1496,33 +1878,178 @@ function agregarPrescripcion(){
 
 }
 //pinta la fila con los datos del arraglo 'arrayPrescripcion'
-function agregarFilaPrescripcion(arrayPrescripcion){
+function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
   var arrayLongitud = arrayPrescripcion.length - 1;
+  var tipo_medicamento = "";
+  if(arrayPrescripcion[arrayLongitud]["safe"] == "npt"){
+    tipo_medicamento = "_npt";
+  }else if(arrayPrescripcion[arrayLongitud]["safe"] == "oncologico" || arrayPrescripcion[arrayLongitud]["safe"] == "antimicrobiano"){
+    tipo_medicamento = "_onco_antimicro";
+  }
+
   var fila ="<tr id='fila"+arrayLongitud+"' >"+
-  "<td hidden ><input type='text' name=idMedicamento[] size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["idMedicamento"]+"' /></td>"+
+  "<td hidden ><input name=idMedicamento"+tipo_medicamento+"[] size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["idMedicamento"]+"' /></td>"+
   "<td>"+arrayPrescripcion[arrayLongitud]["medicamento"]+"</td>"+
   "<td>"+arrayPrescripcion[arrayLongitud]["categoria_farmacologica"]+"</td>"+
-  "<td><input readonly type='text' name='dosis[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["dosis"]+" "+arrayPrescripcion[arrayLongitud]["unidad"]+"' /></td>"+
-  "<td><input readonly type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
-  "<td><input readonly type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["frecuencia"]+"' /></td>"+
-  "<td><input readonly type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["horaAplicacion"]+"' /></td>"+
-  "<td><input readonly type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaInicio"]+"' /></td>"+
-  "<td><input readonly type='text' name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["duracion"]+"' /></td>"+
-  "<td><input readonly type='text' name='periodo[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["periodo"]+"' /></td>"+
-  "<td><input readonly type='text' name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaFin"]+"' /></td>"+
+  "<td><input readonly name='dosis[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["dosis"]+" "+arrayPrescripcion[arrayLongitud]["unidad"]+"' /></td>"+
+  "<td><input readonly type='text' name='via[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
+  "<td><input readonly name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["frecuencia"]+"' /></td>"+
+  "<td><input readonly name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["horaAplicacion"]+"' /></td>"+
+  "<td><input readonly name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaInicio"]+"' /></td>"+
+  "<td><input readonly name='duracion[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["duracion"]+"' /></td>"+
+  "<td><input readonly name='periodo[]' size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["periodo"]+"' /></td>"+
+  "<td><input readonly name='fechaFin[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaFin"]+"' /></td>"+
   "<td>"+
     //"<a href='#'><i class='fa fa-pencil icono-accion' onclick=TomarDatosTablaPrescripcion("+arrayLongitud+") ></i></a>"+
     "<a href='#'> <i class='glyphicon glyphicon-remove icono-accion' onclick=EliminarFilaPrescripcion("+arrayLongitud+") ></i> </a>"+
     "<a href='#'> <i class='glyphicon glyphicon-eye-open icono-accion' onclick=MostrarOcularObservacion("+arrayLongitud+") ></i> </a>"+
   "</td>"+
   "</tr>"+
-  "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
-  "<td style='text-align: right;'><strong>Observación:  </strong></td>"+
+  "<tr hidden style='background-color:rgb(171, 171, 171); ' class='fila"+arrayLongitud+"Observacion'>"+
+  "<td style='text-align: left;'><strong>Observación:  </strong></td>"+
   "<td colspan='10' ><input hidden style='text-align: left;' class='fila"+arrayLongitud+"Val' value='0' />"+
-  "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["observacion"]+"' />"+
+  "<input readonly name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["observacion"]+"' />"+
   "</td>"+
-  "</tr>";
-  $('#tablaPrescripcion').append(fila);
+  "</tr>"+
+  "";
+
+  var fila_npt = "",
+      fila_onco_antimicro = "",
+      filas_medicamentos = "";
+
+  if(arrayPrescripcion[arrayLongitud]["safe"] == "npt"){
+
+    fila_npt = ""+
+
+    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='10' ><strong>RECETA:NPT OVERFILL: 20 / Vol. TOTAL: "+arrayPrescripcion[arrayLongitud]["antibiotico"]["total_npt"]+" <input hidden readonly class='label-input' name=total_npt[] value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["total_npt"]+"' /> </strong></td></tr>"+
+    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='10' ><strong>SOLUCIÓN BASE</strong></td></tr>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+//Iformacion NPT
+      "<td colspan='2' hidden><input readonly class='label-input' name='categoria_safe[]' value='"+arrayPrescripcion[arrayLongitud]["safe"]+"' /></td>"+
+      "<td colspan='1'>Aminoacido</td>"+
+      "<td colspan='3'>Dextrosa</td>"+
+      "<td colspan='3'>Lipidos intravenosos</td>"+
+      "<td colspan='3'>Agua inyectable</td>"+
+    "</tr>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
+      "<td colspan='1'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["aminoacido"]+" ml"+
+        "<input hidden readonly class='label-input' name='aminoacido[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["aminoacido"]+"' />"+
+      "</td>"+
+      "<td colspan='3'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["dextrosa"]+" ml"+
+        "<input hidden readonly class='label-input' name='dextrosa[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["dextrosa"]+"' /> "+
+      "</td>"+
+      "<td colspan='3'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["lipidos_intravenosos"]+" ml"+
+        "<input hidden readonly class='label-input' name='lipidos_intravenosos[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["lipidos_intravenosos"]+"' /> "+
+      "</td>"+
+      "<td colspan='3'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["agua_inyectable"]+" ml"+
+        "<input hidden readonly class='label-input' name='agua_inyectable[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["agua_inyectable"]+"' /> "+
+      "</td>"+
+    "</tr>"+
+    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='10' ><strong>SALES</strong></td></tr>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+//Iformacion NPT
+      "<td colspan='1'>Cloruro sodio</td>"+
+      "<td colspan='2'>Sulfato magnesio</td>"+
+      "<td colspan='2'>Cloruro potasio</td>"+
+      "<td colspan='2'>Fosfato potasio</td>"+
+      "<td colspan='3'>Gluconato calcio</td>"+
+    "</tr>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
+      "<td colspan='1'><input readonly class='label-input' name='cloruro_sodio[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["cloruro_sodio"]+"' /> </td>"+
+      "<td colspan='2'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["sulfato_magnesio"]+" ml"+
+        "<input hidden readonly class='label-input' name='sulfato_magnesio[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["sulfato_magnesio"]+"' /> "+
+      "</td>"+
+      "<td colspan='2'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["cloruro_potasio"]+" ml"+
+        "<input hidden readonly class='label-input' name='cloruro_potasio[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["cloruro_potasio"]+"' /> "+
+      "</td>"+
+      "<td colspan='2'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["fosfato_potasio"]+" ml"+
+        "<input hidden readonly class='label-input' name='fosfato_potasio[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["fosfato_potasio"]+"' /> "+
+      "</td>"+
+      "<td colspan='3'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["gluconato_calcio"]+" ml"+
+        "<input hidden readonly class='label-input' name='gluconato_calcio[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["gluconato_calcio"]+"' /> "+
+      "</td>"+
+    "</tr>"+
+    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='10' ><strong>ADITIVOS</strong></td></tr>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+//Iformacion NPT
+      "<td colspan='1'>Insulina humana</td>"+
+      "<td colspan='1'>Heparina</td>"+
+      "<td colspan='1'>MVI</td>"+
+      "<td colspan='1'>zinc</td>"+
+      "<td colspan='2'>Albumina</td>"+
+      "<td colspan='2'>Oligoelementos</td>"+
+      "<td colspan='2'>vitamina C</td>"+
+    "</tr>"+
+    "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
+      "<td colspan='1'>"+
+      arrayPrescripcion[arrayLongitud]["antibiotico"]["insulina_humana"]+" ml"+
+      "<input hidden readonly class='label-input' name='insulina_humana[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["insulina_humana"]+"' /> "+
+      "</td>"+
+      "<td colspan='1'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["heparina"]+" ml"+
+        "<input hidden readonly class='label-input' name='heparina[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["heparina"]+"' /> "+
+      "</td>"+
+      "<td colspan='1'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["mvi_adulto"]+" ml"+
+        "<input hidden readonly class='label-input' name='mvi_adulto[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["mvi_adulto"]+"' /> "+
+      "</td>"+
+      "<td colspan='1'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["zinc"]+" ml"+
+        "<input hidden readonly class='label-input' name='zinc[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["zinc"]+"' /> "+
+      "</td>"+
+      "<td colspan='2'>"+
+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["albumina"]+" ml"+
+        "<input hidden readonly class='label-input' name='albumina[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["albumina"]+"' /> "+
+      "</td>"+
+      "<td colspan='2'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["oligoelementos"]+" ml"+
+        "<input hidden readonly class='label-input' name='oligoelementos[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["oligoelementos"]+"' /> "+
+      "</td>"+
+      "<td colspan='2'>"+
+        arrayPrescripcion[arrayLongitud]["antibiotico"]["vitamina"]+" ml"+
+        "<input hidden readonly class='label-input' name='vitamina[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["vitamina"]+"' /> "+
+      "</td>"+
+    "</tr>"+
+    "";
+
+    filas_medicamentos = fila + fila_npt;
+
+  }else if(arrayPrescripcion[arrayLongitud]["safe"] == "antimicrobiano" || arrayPrescripcion[arrayLongitud]["safe"] == "oncologico"){
+
+    fila_onco_antimicro =
+    ""+
+      "<tr hidden class='fila"+arrayLongitud+"Observacion'>"+
+        "<td colspan='10'><strong>RECETA: "+arrayPrescripcion[arrayLongitud]["safe"].toUpperCase()+"</strong>"+
+        "<input hidden readonly name='tipo_antibiotico' value='"+arrayPrescripcion[arrayLongitud]["safe"].toUpperCase()+"' />"+
+        "</td>"+
+        "<td colspan='2' hidden><input readonly class='label-input' name='categoria_safe[]' value='"+arrayPrescripcion[arrayLongitud]["safe"]+"' /></td>"+
+      "</tr>"+
+      "<tr hidden class='fila"+arrayLongitud+"Observacion' style='background-color:rgb(228, 228, 228); '>"+
+        "<td colspan='5'><strong>Diluyente</strong></td>"+
+        "<td colspan='5'><strong>Vol. Diluyente</strong></td>"+
+      "</tr>"+
+      "<tr hidden class='fila"+arrayLongitud+"Observacion' style='background-color:rgb(228, 228, 228);' > "+
+        "<td colspan='5'>"+
+          "<input name='diluyente[]' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["diluyente"]+"' />"+
+        "</td>"+
+        "<td colspan='5'>"+
+          arrayPrescripcion[arrayLongitud]["antibiotico"]["vol_diluyente"]+" ml"+
+          "<input hidden name='vol_diluyente[]' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["vol_diluyente"]+"' />"+
+        "</td>"+
+      "</tr>"+
+    "";
+    filas_medicamentos = fila + fila_onco_antimicro;
+  }else{
+    filas_medicamentos = fila;
+  }
+
+  $('#tablaPrescripcion').append(filas_medicamentos);
   limpiarFormularioPrescripcion();
 }
 
@@ -1661,7 +2188,8 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
       folio: folio
     },success: function(data, textStatus, jqXHR){
       $('#contenido_tabla_bitacora_prescripcion'+prescripcion_id).empty();
-      var via,
+      var
+          via,
           dosis,
           frecuencia,
           aplicacion,
@@ -1679,7 +2207,7 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
         motivo = data[x].motivo;
         if(movimiento == "Actualizar"){
           datos_actualizar = motivo.split(',');
-          via_administracion = datos_actualizar[0];
+          via = datos_actualizar[0];
           dosis = datos_actualizar[5];
           frecuencia = datos_actualizar[1];
           aplicacion = datos_actualizar[2];
@@ -1695,7 +2223,7 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
           motivo_actualizar+
           "</td>";
         }else{
-          via_administracion = data[x].via_administracion;
+          via = data[x].via;
           dosis = data[x].dosis;
           frecuencia = data[x].frecuencia;
           aplicacion = data[x].aplicacion;
@@ -1712,7 +2240,7 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
         }
         filas =
         "<tr>"+
-          "<td width='120px'>"+via_administracion+"</td>"+
+          "<td width='120px'>"+via+"</td>"+
           "<td>"+dosis+"</td>"+
           "<td>"+frecuencia+"</td>"+
           "<td>"+aplicacion+"</td>"+
@@ -1797,7 +2325,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
           "<td id='fila_categoria_farmacologica"+data[x].prescripcion_id+"'  >"+data[x].categoria_farmacologica.toUpperCase()+"</td>"+
           "<td id='fila_fecha_prescripcion"+data[x].prescripcion_id+"'  >"+data[x].fecha_prescripcion+"</td>"+
           "<td id='fila_dosis"+data[x].prescripcion_id+"'  >"+data[x].dosis+"</td>"+
-          "<td id='fila_via_administracion"+data[x].prescripcion_id+"'  >"+data[x].via_administracion+"</td>"+
+          "<td id='fila_via"+data[x].prescripcion_id+"'  >"+data[x].via+"</td>"+
           "<td id='fila_frecuencia"+data[x].prescripcion_id+"'  >"+data[x].frecuencia+"</td>"+
           "<td id='fila_aplicacion"+data[x].prescripcion_id+"' style='padding: 5px;' >"+data[x].aplicacion+"</td>"+
           "<td id='fila_fecha_inicio"+data[x].prescripcion_id+"'  >"+data[x].fecha_inicio+"</td>"+
@@ -1836,7 +2364,7 @@ function actualizarPrescripcion(){
     "<td>"+arrayPrescripcion[x]["medicamento"]+"</td>"+
     "<td>"+arrayPrescripcion[arrayLongitud]["categoria_farmacologica"]+"</td>"+
     "<td><input readonly type='text' name='dosis[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["dosis"]+" "+arrayPrescripcion[x]["unidad"]+"' /></td>"+
-    "<td><input readonly type='text' name='via_administracion[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["via"]+"' /></td>"+
+    "<td><input readonly type='text' name='via[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["via"]+"' /></td>"+
     "<td><input readonly type='text' name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[x]["frecuencia"]+"' /></td>"+
     "<td><input readonly type='text' name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[x]["horaAplicacion"]+"' /></td>"+
     "<td><input readonly type='text' name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[x]["fechaInicio"]+"' /></td>"+
@@ -1850,11 +2378,46 @@ function actualizarPrescripcion(){
     "</td>"+
     "</tr>"+
     "<tr hidden style='background-color:rgb(228, 228, 228);' class='fila"+x+"Observacion'>"+
-    "<td style='text-align: right;'><strong>Observación:</strong>  </td>"+
-    "<td colspan='10' ><input hidden  class='fila"+x+"Val' value='0' />"+
-    "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[x]["observacion"]+"' />"+
-    "</td>"+
-    "</tr>";
+      "<td style='text-align: right;'><strong>Observación:</strong>  </td>"+
+      "<td colspan='10' ><input hidden  class='fila"+x+"Val' value='0' />"+
+        "<input readonly type='text' id='' name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[x]["observacion"]+"' />"+
+      "</td>"+
+    "</tr>"+
+    "<tr>"+//Iformacion NPT
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+    "</tr>"+
+    "<tr>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+      "<td>123</td>"+
+    "</tr>"+//Fin informacion npt
+    "";
     $('#tablaPrescripcion').append(fila);
     $('#div_btnActualizarPrescripcion').attr("hidden","true");
   }
@@ -1865,7 +2428,7 @@ function TomarDatosTablaPrescripcion(fila){
   $('#select_medicamento').select2('val',arrayPrescripcion[fila]["idMedicamento"]).select2();
   $('#input_dosis').val(arrayPrescripcion[fila]["dosis"]);
   $('#select_unidad').val(arrayPrescripcion[fila]["unidad"]);
-  $('#via_administracion').select2('val',arrayPrescripcion[fila]["via"]).select2();
+  $('#via').select2('val',arrayPrescripcion[fila]["via"]).select2();
   $('#frecuencia').val(arrayPrescripcion[fila]["frecuencia"]);
   $('#aplicacion').val(arrayPrescripcion[fila]["horaAplicacion"]);
   $('#fechaInicio').val(arrayPrescripcion[fila]["fechaInicio"]);
@@ -1938,7 +2501,7 @@ function DatosTabplaPrescripcionActivas(prescripcion_id){
     medicamento_id : $('#fila_idmedicamento'+prescripcion_id).text(),
     medicamento : $('#fila_medicamento'+prescripcion_id).text(),
     fecha_prescripcion : $('#fila_fecha_prescripcion'+prescripcion_id).text(),
-    via_administracion : $('#fila_via_administracion'+prescripcion_id).text(),
+    via : $('#fila_via'+prescripcion_id).text(),
     frecuencia : $('#fila_frecuencia'+prescripcion_id).text(),
     aplicacion : $('#fila_aplicacion'+prescripcion_id).text(),
     fecha_inicio : $('#fila_fecha_inicio'+prescripcion_id).text(),
@@ -1988,14 +2551,18 @@ function TipoMedicamento(medicamento_id){
         "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
           "<label><b>Fecha Fin</b></label>"+
           "<div id='borderFechaFin'>"+
-          "<input class='form-control' id='fechaFin'  >"+
+          "<input class='form-control' id='fechaFin'  disabled='disabled'>"+
           "</div>"+
         "</div>";
       }else{
         formulario =
-        "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
+        "<div class='col-sm-2' >"+
           "<label id='categoria_farmacologica' hidden>"+farmacologica+"</label>"+
-          "<label><b>Tiempo</b></label>"+
+          "<label><b>Duración</b></label>"+
+          "<div class='input-group'>"+
+            "<input type='number' min='0' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
+          "</div>"+
+          /*
           "<div class='input-group' >"+
             "<input type='text' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
             "<span class='input-group-btn'>"+
@@ -2007,6 +2574,7 @@ function TipoMedicamento(medicamento_id){
               "</div>"+
             "</span>"+
           "</div>"+
+          */
         "</div>"+
         "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
           "<label><b>Periodo</b></label>"+
@@ -2018,7 +2586,7 @@ function TipoMedicamento(medicamento_id){
         "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
           "<label><b>Fecha Fin</b></label>"+
           "<div id='borderFechaFin'>"+
-          "<input class='form-control' id='fechaFin' >"+
+          "<input class='form-control' id='fechaFin' disabled='disabled' >"+
           "</div>"+
         "</div>";
       }
@@ -2307,4 +2875,269 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
         $("#historial_notificaciones").removeAttr('hidden');
       break;
   }
+}
+
+
+
+function FormularioAntimicrobianoOncologico(){
+
+  var medicamento_id = $('#select_medicamento').val();
+
+  $.ajax({
+      url: base_url+"Sections/Documentos/AjaxConsultarDiluyente",
+      type: 'GET',
+      dataType: 'json',
+      data:{
+        medicamento_id:medicamento_id
+      },success: function (data, textStatus, jqXHR) {
+        var diluyente = data[0].diluyente,
+            vol_diluyente = data[0].volumen_diluyente;
+
+        $('.diluyente').val(diluyente);
+        $('.vol_diluyente').val(vol_diluyente);
+
+        bootbox.confirm({
+          title: "Antimicrobiano / Oncologico",
+          message: "<label><b>Diluyente</b></label>"+
+                    "<div class='input-group'>"+
+                      "<select class='form-control' ><option value='"+diluyente+"' >"+diluyente+"</option></select>"+
+                      "<span class='input-group-btn'>"+
+                        "<button class='btn btn-default edit-aplicacion' type='button' value='0' title='Cambiar el diluyente'>Cambiar</button>"+
+                      "</span>"+
+                    "</div>"+
+                    "<label><b>Vol. Diluyente</b></label>"+
+                    '<div class="input-group">'+
+                      '<input type="text" class="form-control" placeholder="Volumen de diluyente" value='+vol_diluyente+' />'+
+                      '<span class="input-group-addon ">ml</span>'+
+                    '</div>',
+          buttons: {
+            confirm: {
+                label: 'Aceptar',
+                className: 'back-imss'
+            },
+            cancel: {
+                label: 'Cancelar',
+                className: 'btn-basic'
+            }
+          },
+          callback:function(result){
+
+          }
+        });
+
+      },error: function (e) {
+          msj_error_serve();
+      }
+  });
+
+
+
+
+}
+
+function FormularioNPT(){
+
+  bootbox.confirm({
+    title: "OVERFILL: 20 / Vol. Total: <label id='vol_total_npt'>"+$('.total-npt').val()+"</label> ",
+    message: '<span class="input-group-addon back-imss border-back-imss"><strong>Solucion Base:</strong></span>'+
+
+            '<div class="row">'+
+               '<div class="col-sm-4">'+
+               '<label>Aminoácidos Cristalinos 10% adultos</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-aminoacido" placeholder="0" value="'+$(".aminoacido").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Dextrosa al 50% <br>.</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-dextrosa" placeholder="0" value="'+$(".dextrosa").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Lipidos Intravenosos con Acidos grasos, Omega 3 y 9</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-lipidos-intravenosos" placeholder="0" value="'+$(".lipidos-intravenosos").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Agua Inyectable</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-agua-inyectable" placeholder="0" value="'+$(".agua-inyectable").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+             '</div>'+
+             '<div style="padding-top:10px" ></div><span class="input-group-addon back-imss border-back-imss"><strong>Sales:</strong></span>'+
+              '<div class="row">'+
+               '<div class="col-sm-4">'+
+               '<label>Cloruro de Sodio 17.7% <br>.</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-cloruro-sodio" placeholder="0" value="'+$(".cloruro-sodio").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Sulfato de Magnesio (0.81) mEq/ml</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-sulfato-magnesio" placeholder="0" value="'+$(".sulfato-magnesio").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Cloruro de Potasio (4 mEq/ml K)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-cloruro-potasio" placeholder="0" value="'+$(".cloruro-potasio").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Fosfato de Potasio (2 mEq/ml k/1.11 m mol PO4)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-fosfato-potasio" placeholder="0" value="'+$(".fosfato-potasio").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Gluconato de Calcio (0.465 mEq/ml)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-gluconato-calcio" placeholder="0" value="'+$(".gluconato-calcio").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+
+               '</div>'+
+            '<div style="padding-top:10px" ></div><span class="input-group-addon back-imss border-back-imss"><strong>Aditivos:</strong></span>'+
+            '<div class="row">'+
+               '<div class="col-sm-4">'+
+               '<label>Albúmina 20% (0.20 g/ml)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-albumina" placeholder="0" value="'+$(".albumina").val()+'" />'+
+                 '<span class="input-group-addon ">gr</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Heparina (1000 UI/ml)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-heparina" placeholder="0" value="'+$(".heparina").val()+'" />'+
+                 '<span class="input-group-addon ">UI</span>'+
+               '</div>'+
+              '</div>'+
+              '<div class="col-sm-4">'+
+               '<label>Insulina Humana (100 UI/ml)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-insulina-humana" placeholder="0" value="'+$(".insulina-humana").val()+'" />'+
+                 '<span class="input-group-addon ">UI</span>'+
+               '</div>'+
+              '</div>'+
+              '<div class="col-sm-4">'+
+               '<label>Zinc</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-zinc" placeholder="0" value="'+$(".zinc").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+              '</div>'+
+              '<div class="col-sm-4">'+
+               '<label>MVI - Adulto</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-mvi-adulto" placeholder="0" value="'+$(".mvi-adulto").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+              '</div>'+
+              '<div class="col-sm-4">'+
+               '<label>Oligoelementos Tracefusin</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-oligoelementos" placeholder="0" value="'+$(".oligoelementos").val()+'" />'+
+                 '<span class="input-group-addon ">ml</span>'+
+               '</div>'+
+               '</div>'+
+               '<div class="col-sm-4">'+
+               '<label>Vitamina C (100 mg/ml)</label>'+
+               '<div class="input-group">'+
+                 '<input type="number" min="0" class="sum-total-npt form-control modal-vitamina" placeholder="0" value="'+$(".vitamina").val()+'" />'+
+                 '<span class="input-group-addon ">mg</span>'+
+               '</div>'+
+               '</div>'+
+               '</div>'+
+'</div>',
+    buttons: {
+      confirm: {
+          label: 'Aceptar',
+          className: 'back-imss'
+      },
+      cancel: {
+          label: 'Cancelar',
+          className: 'btn-basic'
+      }
+    },
+    callback: function(result){
+      if(result){
+        $('.aminoacido').val($('.modal-aminoacido').val());
+        $('.dextrosa').val($('.modal-dextrosa').val());
+        $('.lipidos-intravenosos').val($('.modal-lipidos-intravenosos').val());
+        $('.agua-inyectable').val($('.modal-agua-inyectable').val());
+        $('.cloruro-sodio').val($('.modal-cloruro-sodio').val());
+        $('.sulfato-magnesio').val($('.modal-sulfato-magnesio').val());
+        $('.cloruro-potasio').val($('.modal-cloruro-potasio').val());
+        $('.fosfato-potasio').val($('.modal-fosfato-potasio').val());
+        $('.gluconato-calcio').val($('.modal-gluconato-calcio').val());
+        $('.albumina').val($('.modal-albumina').val());
+        $('.heparina').val($('.modal-heparina').val());
+        $('.insulina-humana').val($('.modal-insulina-humana').val());
+        $('.zinc').val($('.modal-zinc').val());
+        $('.mvi-adulto').val($('.modal-mvi-adulto').val());
+        $('.oligoelementos').val($('.modal-oligoelementos').val());
+        $('.vitamina').val($('.modal-vitamina').val());
+        $('.total-npt').val($('#vol_total_npt').text());
+      }else{
+        $('.modal-aminoacido').val("");
+        $('.modal-dextrosa').val("");
+        $('.modal-lipidos-intravenosos').val("");
+        $('.modal-agua-inyectable').val("");
+        $('.modal-cloruro-sodio').val("");
+        $('.modal-sulfato-magnesio').val("");
+        $('.modal-cloruro-potasio').val("");
+        $('.modal-fosfato-potasio').val("");
+        $('.modal-gluconato-calcio').val("");
+        $('.modal-albumina').val("");
+        $('.modal-heparina').val("");
+        $('.modal-insulina-humana').val("");
+        $('.modal-zinc').val("")
+        $('.modal-mvi-adulto').val("");
+        $('.modal-oligoelementos').val("");
+        $('.modal-vitamina').val("");
+        $('#vol_total_npt').text("0")
+      }
+
+
+    }
+  });
+}
+
+function ConsultarViasAdministracion(){
+  var medicamento = $('#select_medicamento option:selected').text().substr(0,4);
+  $.ajax({
+      url: base_url+"Sections/Documentos/AjaxConsultarViasAdministracion",
+      type: 'GET',
+      dataType: 'json',
+      data:{
+        medicamento:medicamento
+      },success: function (data, textStatus, jqXHR) {
+        var option = "";
+        $('#via').empty();
+        option = "<option value='0'>-Seleccionar-</option>";
+        $('#via').append(option);
+        for(var x = 0; x < data.length; x++){
+          option = "<option value="+data[x].via+">"+data[x].via+"</option>";
+          $('#via').append(option);
+        }
+      },error: function (e) {
+          msj_error_serve();
+      }
+  });
+
+
 }

@@ -180,14 +180,33 @@ class Documentos extends Config{
             'triage_id'=>$Paciente
         ))[0];
 
-        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT medicamento,gramaje, via_administracion,frecuencia,
-          aplicacion, fecha_inicio, tiempo, observacion,fecha_fin,dosis
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT *
           FROM prescripcion INNER JOIN nm_hojafrontal_prescripcion ON
           prescripcion.prescripcion_id = nm_hojafrontal_prescripcion.prescripcion_id
           INNER JOIN catalogo_medicamentos
 	        ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
           WHERE triage_id = ".$Paciente);
-
+        /*
+        Consulta para las prescripciones de cuadro basico
+        antibioticos NPT y Oncologico o antimicrobiano
+        */
+        $sql['Prescripcion_Basico'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
+                                                                 INNER JOIN prescripcion
+                                                                	 ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                                 WHERE triage_id =$Paciente AND safe = 0;");
+        $sql['Prescripcion_NPT'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
+                                                              INNER JOIN prescripcion
+                                                              	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                              INNER JOIN prescripcion_npt
+                                                              	ON prescripcion.prescripcion_id = prescripcion_npt.prescripcion_id
+                                                              WHERE triage_id =$Paciente AND safe = 1 AND categoria_safe = 'npt';");
+        $sql['Prescripcion_Onco_Anti'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
+                                                                    INNER JOIN prescripcion
+                                                                    	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                                    INNER JOIN prescripcion_onco_antimicrobianos
+                                                                    	ON prescripcion.prescripcion_id = prescripcion_onco_antimicrobianos.prescripcion_id
+                                                                    WHERE triage_id =$Paciente AND safe = 1;");
+        //fin consultas para la prescripción
         $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, tipo_diagnostico FROM um_cie10
                                     INNER JOIN paciente_diagnosticos
                                     	ON um_cie10.cie10_id = paciente_diagnosticos.cie10_id
@@ -708,7 +727,7 @@ class Documentos extends Config{
 
         $sql['Prescripcion'] = $this->config_mdl->_query(
           "SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
-          CONCAT(medicamento,' ',gramaje)medicamento, dosis, via_administracion, frecuencia,
+          CONCAT(medicamento,' ',gramaje)medicamento, dosis, via, frecuencia,
           aplicacion, fecha_inicio, tiempo, observacion,fecha_fin, estado,doc_notas.notas_id
           FROM prescripcion
           INNER JOIN nm_notas_prescripcion
