@@ -1905,9 +1905,9 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
     "<a href='#'> <i class='glyphicon glyphicon-eye-open icono-accion' onclick=MostrarOcularObservacion("+arrayLongitud+") ></i> </a>"+
   "</td>"+
   "</tr>"+
-  "<tr hidden style='background-color:rgb(171, 171, 171); ' class='fila"+arrayLongitud+"Observacion'>"+
-  "<td style='text-align: left;'><strong>Observación:  </strong></td>"+
-  "<td colspan='10' ><input hidden style='text-align: left;' class='fila"+arrayLongitud+"Val' value='0' />"+
+  "<tr hidden class='fila"+arrayLongitud+"Observacion'>"+
+  "<td style='text-align: left; background-color:rgb(171, 171, 171);' ><strong>Observación:  </strong></td>"+
+  "<td colspan='10' style='background-color:rgb(228, 228, 228); ' ><input hidden style='text-align: left;' class='fila"+arrayLongitud+"Val' value='0' />"+
   "<input readonly name='observacion[]' style='text-align: left;' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["observacion"]+"' />"+
   "</td>"+
   "</tr>"+
@@ -1921,14 +1921,14 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
 
     fila_npt = ""+
 
-    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='10' ><strong>RECETA:NPT OVERFILL: 20 / Vol. TOTAL: "+arrayPrescripcion[arrayLongitud]["antibiotico"]["total_npt"]+" <input hidden readonly class='label-input' name=total_npt[] value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["total_npt"]+"' /> </strong></td></tr>"+
-    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='10' ><strong>SOLUCIÓN BASE</strong></td></tr>"+
+    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='11' ><strong>RECETA:NPT OVERFILL: 20 / Vol. TOTAL: "+arrayPrescripcion[arrayLongitud]["antibiotico"]["total_npt"]+" <input hidden readonly class='label-input' name=total_npt[] value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["total_npt"]+"' /> </strong></td></tr>"+
+    "<tr hidden class='fila"+arrayLongitud+"Observacion'><td colspan='11' ><strong>SOLUCIÓN BASE</strong></td></tr>"+
     "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+//Iformacion NPT
       "<td colspan='2' hidden><input readonly class='label-input' name='categoria_safe[]' value='"+arrayPrescripcion[arrayLongitud]["safe"]+"' /></td>"+
       "<td colspan='1'>Aminoacido</td>"+
       "<td colspan='3'>Dextrosa</td>"+
       "<td colspan='3'>Lipidos intravenosos</td>"+
-      "<td colspan='3'>Agua inyectable</td>"+
+      "<td colspan='4'>Agua inyectable</td>"+
     "</tr>"+
     "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+
       "<td colspan='1'>"+
@@ -1943,7 +1943,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
         arrayPrescripcion[arrayLongitud]["antibiotico"]["lipidos_intravenosos"]+" ml"+
         "<input hidden readonly class='label-input' name='lipidos_intravenosos[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["lipidos_intravenosos"]+"' /> "+
       "</td>"+
-      "<td colspan='3'>"+
+      "<td colspan='4'>"+
         arrayPrescripcion[arrayLongitud]["antibiotico"]["agua_inyectable"]+" ml"+
         "<input hidden readonly class='label-input' name='agua_inyectable[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["agua_inyectable"]+"' /> "+
       "</td>"+
@@ -1952,7 +1952,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
     "<tr hidden style='background-color:rgb(228, 228, 228); ' class='fila"+arrayLongitud+"Observacion'>"+//Iformacion NPT
       "<td colspan='1'>Cloruro sodio</td>"+
       "<td colspan='2'>Sulfato magnesio</td>"+
-      "<td colspan='2'>Cloruro potasio</td>"+
+      "<td colspan='3'>Cloruro potasio</td>"+
       "<td colspan='2'>Fosfato potasio</td>"+
       "<td colspan='3'>Gluconato calcio</td>"+
     "</tr>"+
@@ -1962,7 +1962,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
         arrayPrescripcion[arrayLongitud]["antibiotico"]["sulfato_magnesio"]+" ml"+
         "<input hidden readonly class='label-input' name='sulfato_magnesio[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["sulfato_magnesio"]+"' /> "+
       "</td>"+
-      "<td colspan='2'>"+
+      "<td colspan='3'>"+
         arrayPrescripcion[arrayLongitud]["antibiotico"]["cloruro_potasio"]+" ml"+
         "<input hidden readonly class='label-input' name='cloruro_potasio[]'  value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["cloruro_potasio"]+"' /> "+
       "</td>"+
@@ -1980,7 +1980,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
       "<td colspan='1'>Insulina humana</td>"+
       "<td colspan='1'>Heparina</td>"+
       "<td colspan='1'>MVI</td>"+
-      "<td colspan='1'>zinc</td>"+
+      "<td colspan='2'>zinc</td>"+
       "<td colspan='2'>Albumina</td>"+
       "<td colspan='2'>Oligoelementos</td>"+
       "<td colspan='2'>vitamina C</td>"+
@@ -1998,7 +1998,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
         arrayPrescripcion[arrayLongitud]["antibiotico"]["mvi_adulto"]+" ml"+
         "<input hidden readonly class='label-input' name='mvi_adulto[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["mvi_adulto"]+"' /> "+
       "</td>"+
-      "<td colspan='1'>"+
+      "<td colspan='2'>"+
         arrayPrescripcion[arrayLongitud]["antibiotico"]["zinc"]+" ml"+
         "<input hidden readonly class='label-input' name='zinc[]' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["zinc"]+"' /> "+
       "</td>"+
@@ -2025,17 +2025,17 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
     fila_onco_antimicro =
     ""+
       "<tr hidden class='fila"+arrayLongitud+"Observacion'>"+
-        "<td colspan='10'><strong>RECETA: "+arrayPrescripcion[arrayLongitud]["safe"].toUpperCase()+"</strong>"+
+        "<td colspan='11'><strong>RECETA: "+arrayPrescripcion[arrayLongitud]["safe"].toUpperCase()+"</strong>"+
         "<input hidden readonly name='tipo_antibiotico' value='"+arrayPrescripcion[arrayLongitud]["safe"].toUpperCase()+"' />"+
         "</td>"+
         "<td colspan='2' hidden><input readonly class='label-input' name='categoria_safe[]' value='"+arrayPrescripcion[arrayLongitud]["safe"]+"' /></td>"+
       "</tr>"+
-      "<tr hidden class='fila"+arrayLongitud+"Observacion' style='background-color:rgb(228, 228, 228); '>"+
-        "<td colspan='5'><strong>Diluyente</strong></td>"+
+      "<tr hidden class='fila"+arrayLongitud+"Observacion' style='background-color:rgb(171, 171, 171); '>"+
+        "<td colspan='6'><strong>Diluyente</strong></td>"+
         "<td colspan='5'><strong>Vol. Diluyente</strong></td>"+
       "</tr>"+
       "<tr hidden class='fila"+arrayLongitud+"Observacion' style='background-color:rgb(228, 228, 228);' > "+
-        "<td colspan='5'>"+
+        "<td colspan='6'>"+
           "<input name='diluyente[]' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["antibiotico"]["diluyente"]+"' />"+
         "</td>"+
         "<td colspan='5'>"+

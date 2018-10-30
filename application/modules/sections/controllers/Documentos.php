@@ -635,30 +635,8 @@ class Documentos extends Config{
               $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
+
             //Número de antibioticos apt
             for($x = 0; $x < count( $this->input->post('idMedicamento_npt')); $x++){
               //Se guardan en un arreglo los datos del medicamento
@@ -1179,9 +1157,7 @@ class Documentos extends Config{
                                                              WHERE empleado_id = (
                                                                SELECT empleado_id FROM doc_notas WHERE notas_id = $Nota
                                                              )");
-        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, concat(medicamento, ' ', gramaje)medicamento,
-                                                          dosis,fecha_prescripcion,via,
-                                                          frecuencia,aplicacion,fecha_inicio,tiempo,fecha_fin,estado
+        $sql['Prescripcion'] = $this->config_mdl->_query("SELECT *
                                                           FROM prescripcion INNER JOIN catalogo_medicamentos ON
                                                           prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                           INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
@@ -1276,10 +1252,7 @@ class Documentos extends Config{
     }
     public function AjaxPrescripciones(){
       $estado = $_GET['estado'];
-      $sql['Prescripcion'] = $this->config_mdl->_query("SELECT prescripcion_id, catalogo_medicamentos.medicamento_id,
-                                                        concat(medicamento, ' ', gramaje)medicamento,categoria_farmacologica,
-                                                        dosis,fecha_prescripcion,via,observacion,
-                                                        frecuencia,aplicacion,fecha_inicio,tiempo,periodo,fecha_fin,estado
+      $sql['Prescripcion'] = $this->config_mdl->_query("SELECT *
                                                         FROM prescripcion INNER JOIN catalogo_medicamentos ON
                                                         prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                         INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
@@ -1580,9 +1553,91 @@ class Documentos extends Config{
               $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
 
 
-
-
             }
+
+            //Número de antibioticos apt
+            for($x = 0; $x < count( $this->input->post('idMedicamento_npt')); $x++){
+              //Se guardan en un arreglo los datos del medicamento
+              $datosPrescripcion = array(
+                'empleado_id' => $this->UMAE_USER,
+                'triage_id' => $this->input->post('triage_id'),
+                'medicamento_id' => $this->input->post("idMedicamento_npt[$x]"),
+                'dosis' => $this->input->post("dosis[$x]"),
+                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
+                'via' => $this->input->post("via[$x]"),
+                'frecuencia' => $this->input->post("frecuencia[$x]"),
+                'aplicacion' => $this->input->post("horaAplicacion[$x]"),
+                'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
+                'tiempo' => $this->input->post("duracion[$x]"),
+                'periodo' => $this->input->post("periodo[$x]"),
+                'fecha_fin' => $this->input->post("fechaFin[$x]"),
+                'observacion' => $this->input->post("observacion[$x]"),
+                'estado' => "1"
+              );
+              //Se registra el medicamento
+              $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
+              //Se consulta la ultima prescripcion registrada
+              $ultima_prescripcion = $this->config_mdl->_get_last_id('prescripcion','prescripcion_id');
+              /*
+              Se toman los datos necesarios para un npt
+              con la variable $ultima_prescripcion, identificamos la prescripcion con la que se
+              asocia prescripcion y npt
+              */
+              $datos_npt = array(
+                'prescripcion_id' => $ultima_prescripcion,
+                'aminoacido' => $this->input->post("aminoacido[$x]"),
+                'dextrosa' => $this->input->post("dextrosa[$x]"),
+                'lipidos' => $this->input->post("lipidos_intravenosos[$x]"),
+                'agua_inyect' => $this->input->post("agua_inyectable[$x]"),
+                'cloruro_sodio' => $this->input->post("cloruro_sodio[$x]"),
+                'sulfato' => $this->input->post("sulfato_magnesio[$x]"),
+                'cloruro_potasio' => $this->input->post("cloruro_potasio[$x]"),
+                'fosfato' => $this->input->post("fosfato_potasio[$x]"),
+                'gluconato' => $this->input->post("gluconato_calcio[$x]"),
+                'albumina' => $this->input->post("albumina[$x]"),
+                'heparina' => $this->input->post("heparina[$x]"),
+                'insulina' => $this->input->post("insulina_humana[$x]"),
+                'zinc' => $this->input->post("zinc[$x]"),
+                'mvi' => $this->input->post("mvi_adulto[$x]"),
+                'oligoelementos' => $this->input->post("oligoelementos[$x]"),
+                'vitamina' => $this->input->post("vitamina[$x]")
+              );
+
+              $this->config_mdl->_insert('prescripcion_npt', $datos_npt);
+            }
+
+            //Número de antibioticos antimicrobiano u oncologico
+            for($x = 0; $x < count( $this->input->post('idMedicamento_onco_antimicro')); $x++){
+              $datosPrescripcion = array(
+                'empleado_id' => $this->UMAE_USER,
+                'triage_id' => $this->input->post('triage_id'),
+                'medicamento_id' => $this->input->post("idMedicamento_onco_antimicro[$x]"),
+                'dosis' => $this->input->post("dosis[$x]"),
+                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
+                'via' => $this->input->post("via[$x]"),
+                'frecuencia' => $this->input->post("frecuencia[$x]"),
+                'aplicacion' => $this->input->post("horaAplicacion[$x]"),
+                'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
+                'tiempo' => $this->input->post("duracion[$x]"),
+                'periodo' => $this->input->post("periodo[$x]"),
+                'fecha_fin' => $this->input->post("fechaFin[$x]"),
+                'observacion' => $this->input->post("observacion[$x]"),
+                'estado' => "1"
+              );
+              $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
+
+              $ultima_prescripcion = $this->config_mdl->_get_last_id('prescripcion','prescripcion_id');
+              $categoria_safe = $this->input->post("categoria_safe[$x]");
+              $datos_onco_antimicrobiano = array(
+                'prescripcion_id' => $ultima_prescripcion,
+                'categoria_safe' => $categoria_safe,
+                'diluente' => $this->input->post("diluyente[$x]"),
+                'vol_dilucion' => $this->input->post("vol_diluyente[$x]")
+              );
+              $this->config_mdl->_insert('prescripcion_onco_antimicrobianos', $datos_onco_antimicrobiano);
+            }
+
+
             // Se toma el ID de las precripcines activas
             $Prescripciones = $this->config_mdl->_query("SELECT prescripcion_id
                                                          FROM prescripcion

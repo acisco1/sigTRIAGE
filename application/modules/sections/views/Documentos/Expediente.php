@@ -102,11 +102,7 @@
                             <style>th,td{padding-left: 5px!important;padding-right: 0px!important;}</style>
                             <!-- Inicio navegador para seleccion de tipo de documento -->
                             <ul class="nav navbar-nav back-imss width100 table-hover">
-                              <li class="li-hover"><a href="#" id="btnNotasTriage">Notas Triage</a></li>
-                              <li class="li-hover"><a href="#">Hoja Clasificación</a></li>
-                              <li class="li-hover"><a href="#">Hoja Inicial</a></li>
-                              <li class="li-hover"><a href="#">Nota Medica</a></li>
-                              <li class="li-hover"><a href="#" id="btnExpedientePrescripcion">Prescripcion</a></li>
+                              <li class="li-hover"><a href="#" id="btnNotasTriage">Notas</a></li>
                               <li class="li-hover"><a href="#">Imagenología</a></li>
                               <li class="li-hover"><a href="#">Estudio de laboratorio</a></li>
                             </ul>

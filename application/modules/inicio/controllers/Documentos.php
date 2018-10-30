@@ -727,7 +727,7 @@ class Documentos extends Config{
 
         $sql['Prescripcion'] = $this->config_mdl->_query(
           "SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,
-          CONCAT(medicamento,' ',gramaje)medicamento, dosis, via, frecuencia,
+          CONCAT(medicamento,' ',gramaje)medicamento, dosis, prescripcion.via AS via_administracion, frecuencia,
           aplicacion, fecha_inicio, tiempo, observacion,fecha_fin, estado,doc_notas.notas_id
           FROM prescripcion
           INNER JOIN nm_notas_prescripcion
@@ -741,6 +741,28 @@ class Documentos extends Config{
           WHERE prescripcion.triage_id = ".$sql['Nota']['triage_id']." AND doc_notas.notas_id = ".$Nota."
           ORDER BY fecha_prescripcion DESC"
         );
+
+        /*
+        Consulta para las prescripciones de cuadro basico
+        antibioticos NPT y Oncologico o antimicrobiano
+        */
+        $sql['Prescripcion_Basico'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
+                                                                 INNER JOIN prescripcion
+                                                                	 ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                                 WHERE triage_id = ".$sql['Nota']['triage_id']." AND safe = 0;");
+        $sql['Prescripcion_NPT'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
+                                                              INNER JOIN prescripcion
+                                                              	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                              INNER JOIN prescripcion_npt
+                                                              	ON prescripcion.prescripcion_id = prescripcion_npt.prescripcion_id
+                                                              WHERE triage_id = ".$sql['Nota']['triage_id']." AND safe = 1 AND categoria_safe = 'npt';");
+        $sql['Prescripcion_Onco_Anti'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
+                                                                    INNER JOIN prescripcion
+                                                                    	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                                    INNER JOIN prescripcion_onco_antimicrobianos
+                                                                    	ON prescripcion.prescripcion_id = prescripcion_onco_antimicrobianos.prescripcion_id
+                                                                    WHERE triage_id = ".$sql['Nota']['triage_id']." AND safe = 1;");
+
         $sql['valores'] = array($sql['Nota']['triage_id'], $Nota);
         if($sqlSV[0]['sv_temp']!='' && !empty($sqlSV)){
             $sql['SignosVitales']=$sqlSV[0];
