@@ -3,13 +3,13 @@ $(document).ready(function () {
     $('#input_search').keyup(function (e){
         var input=$(this);
         var triage_id=$(this).val();
-        if(triage_id.length==11 && triage_id!=''){ 
+        if(triage_id.length==11 && triage_id!=''){
             SendAjaxGet("Triage/EtapaPaciente/"+triage_id,function (response) {
                 if(response.accion=='1'){
                     window.open(base_url+'Triage/Paciente/'+triage_id,'_blank');
                 }if(response.accion=='2'){
                     msj_error_noti('EL N° de paciente no existe');
-                }     
+                }
             });
             input.val('');
         }
@@ -30,7 +30,7 @@ $(document).ready(function () {
         $('.col-no-espontaneo').removeClass('hidden');
         $('input[name=pia_procedencia_espontanea][value="No"]').prop("checked",true);
         $('input[name=pia_procedencia_espontanea_lugar]').prop('type','hidden').removeAttr('required');
-        
+
         $("select[name=pia_procedencia_hospital]").val($('select[name=pia_procedencia_hospital]').attr('data-value'));
         $('input[name=pia_procedencia_hospital_num]').attr('required',true);
     }
@@ -71,6 +71,7 @@ $(document).ready(function () {
             $('.triage_paciente_sexo').addClass('hide');
             $('input[name=pic_indicio_embarazo][value=No]').attr('checked',true);
             $('.paciente-sexo').html('<i class="fa fa-male " style="color: blue"></i>').removeClass('hide');
+            $('#lbl_cod_mater').empty();
         }else{
             $('.paciente-sexo-mujer').addClass('hide');
             $('.paciente-sexo').html('');
@@ -82,8 +83,10 @@ $(document).ready(function () {
     $('input[name=pic_indicio_embarazo]').click(function () {
         if($(this).val()=='Si'){
             $('.paciente-embarazo').html('EMBARAZO').removeClass('hide');
+            $('#lbl_cod_mater').html('<input type="radio" name="triage_codigo_atencion" value="4"><i class="green"></i>Mater');
         }else{
             $('.paciente-embarazo').html('EMBARAZO').addClass('hide');
+            $('#lbl_cod_mater').empty();
         }
     });
     $('input[name=triage_fecha_nac]').mask('99/99/9999');
@@ -105,13 +108,13 @@ $(document).ready(function () {
                         $('.paciente-tipo').html('ADULTO').removeClass('hide');
                     }else if(response.Anios>60){
                         $('.paciente-tipo').html('GERIATRICO').removeClass('hide');
-                    }  
+                    }
                 },'No')
-               
-                
+
+
             }else{
                 $('.Error-Formato-Fecha').removeClass('hide').find('h2').html('FORMATO DE FECHA NO VÁLIDO ESPECIFIQUE UN FORMATO DE FECHA VÁLIDO (EJEMPLO: 05/02/1993)')
-            }  
+            }
         }
     });
     $('select[name=triage_paciente_sexo]').val($('select[name=triage_paciente_sexo]').attr('data-value'));
@@ -125,4 +128,3 @@ $(document).ready(function () {
         })
     })
 });
-

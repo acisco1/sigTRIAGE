@@ -2,7 +2,7 @@
 /**
  * Description of Triage
  *
- * @author felipe de jesus | itifjpp@gmail.com 
+ * @author felipe de jesus | itifjpp@gmail.com
  */
 include_once APPPATH.'modules/config/controllers/Config.php';
 class Triage extends Config{
@@ -11,7 +11,7 @@ class Triage extends Config{
     }
     public function Enfermeriatriage() {
         $sql['Gestion']= $this->config_mdl->_query("SELECT * FROM os_triage, os_accesos, os_empleados
-                                                    WHERE 
+                                                    WHERE
                                                     os_accesos.acceso_tipo='Triage Enfermería' AND
                                                     os_accesos.triage_id=os_triage.triage_id AND
                                                     os_accesos.empleado_id=os_empleados.empleado_id AND
@@ -24,7 +24,7 @@ class Triage extends Config{
     }
     public function Medicotriage() {
         $sql['Gestion']= $this->config_mdl->_query("SELECT * FROM os_triage, os_accesos, os_empleados
-                                                    WHERE 
+                                                    WHERE
                                                     os_accesos.acceso_tipo='Triage Médico' AND
                                                     os_accesos.triage_id=os_triage.triage_id AND
                                                     os_accesos.empleado_id=os_empleados.empleado_id AND
@@ -48,7 +48,7 @@ class Triage extends Config{
                 }else{
                     $this->setOutput(array('accion'=>'1'));
                 }
-                
+
             }else{
                 $Medico= $this->config_mdl->_get_data_condition('os_empleados',array(
                     'empleado_id'=>$sql[0]['triage_crea_medico']
@@ -56,7 +56,7 @@ class Triage extends Config{
                 $this->setOutput(array('accion'=>'2','info'=>$sql[0],'medico'=>$Medico[0]));
             }
         }
-        
+
     }
     public function Paciente($paciente) {
         $sql['info']= $this->config_mdl->_get_data_condition('os_triage',array(
@@ -79,13 +79,14 @@ class Triage extends Config{
     public function EnfemeriatriageGuardar() {
         $data=array(
             'triage_via_registro'=>'Hora Cero',
-            'triage_fecha'=> date('Y-m-d'), 
-            'triage_hora'=> date('H:i'), 
+            'triage_fecha'=> date('Y-m-d'),
+            'triage_hora'=> date('H:i'),
             'triage_nombre'=> $this->input->post('triage_nombre'),
             'triage_nombre_ap'=>$this->input->post('triage_nombre_ap'),
             'triage_nombre_am'=>$this->input->post('triage_nombre_am'),
             'triage_paciente_sexo'=> $this->input->post('triage_paciente_sexo'),
             'triage_fecha_nac'=> $this->input->post('triage_fecha_nac'),
+            'triage_codigo_atencion' => $this->input->post('triage_codigo_atencion'),
             'triage_crea_enfemeria'=> $this->UMAE_USER
         );
         $this->SignosVitales(array(
@@ -100,9 +101,9 @@ class Triage extends Config{
         $info=  $this->config_mdl->_get_data_condition('os_triage',array(
             'triage_id'=>  $this->input->post('triage_id')
         ))[0];
-        if($info['triage_fecha']!=''){ 
+        if($info['triage_fecha']!=''){
             unset($data['triage_fecha']);
-            unset($data['triage_hora']); 
+            unset($data['triage_hora']);
             unset($data['triage_crea_enfemeria']);
         }else{
             $this->AccesosUsuarios(array('acceso_tipo'=>'Triage Enfermería','triage_id'=>$this->input->post('triage_id'),'areas_id'=> $this->input->post('triage_id')));
@@ -125,7 +126,7 @@ class Triage extends Config{
         ));
         $this->config_mdl->_update_data('os_triage',$data,array('triage_id'=>  $this->input->post('triage_id')));
         $this->setOutput(array('accion'=>'1'));
-        
+
     }
     public function AjaxCalcularEdad() {
         $this->setOutput(array(
@@ -150,9 +151,9 @@ class Triage extends Config{
                                 $this->input->post('triage_preg8_s2')+
                                 $this->input->post('triage_preg9_s2')+
                                 $this->input->post('triage_preg10_s2')+
-                                $this->input->post('triage_preg11_s2')+ 
+                                $this->input->post('triage_preg11_s2')+
                                 $this->input->post('triage_preg12_s2');
-        
+
         $triege_preg_puntaje_s3=$this->input->post('triage_preg1_s3')+
                                 $this->input->post('triage_preg2_s3')+
                                 $this->input->post('triage_preg3_s3')+
@@ -186,7 +187,7 @@ class Triage extends Config{
             'triage_consultorio_nombre'=>  $this->input->post('triage_consultorio_nombre'),
             'triage_crea_medico'=> $this->UMAE_USER
         );
-        
+
         $data_clasificacion=array(
             'triage_preg1_s1'=>  $this->input->post('triage_preg1_s1'),
             'triage_preg2_s1'=>  $this->input->post('triage_preg2_s1'),
@@ -232,7 +233,7 @@ class Triage extends Config{
         $this->config_mdl->_update_data('os_triage',$data,array('triage_id'=>  $this->input->post('triage_id')));
         $this->config_mdl->_insert('os_triage_clasificacion',$data_clasificacion);
         $this->setOutput(array('accion'=>'1','triage_id'=>  $this->input->post('triage_id') ));
-    }    
+    }
     public function Indicador() {
         if($this->UMAE_AREA=='Enfermeria Triage'){
             $this->load->view('Enfermeriatrige/indicador');
@@ -242,7 +243,7 @@ class Triage extends Config{
     }
     public function AjaxIndicadorMedico() {
         $by_fecha_inicio= $this->input->post('inputFecha');
-        
+
          if($this->UMAE_AREA=='Enfermeria Triage'){
             $ConditionCre='triage_crea_enfemeria';
             $ConditionFecha='triage_fecha';
@@ -252,7 +253,7 @@ class Triage extends Config{
             $ConditionFecha='triage_fecha_clasifica';
             $ConditionHora='triage_hora_clasifica';
         }
-        $TOTAL_CAP= count($this->config_mdl->_query("SELECT * FROM os_triage WHERE os_triage.$ConditionCre=$this->UMAE_USER AND 
+        $TOTAL_CAP= count($this->config_mdl->_query("SELECT * FROM os_triage WHERE os_triage.$ConditionCre=$this->UMAE_USER AND
             os_triage.$ConditionFecha='$by_fecha_inicio' AND
             os_triage.$ConditionFecha!=''"));
         $this->setOutput(array(
@@ -343,7 +344,7 @@ class Triage extends Config{
             'empleado_id'=> $this->UMAE_USER,
             'triage_id'=> $data['triage_id']
         );
-        
+
         if($data['paciente_old']!=$data['paciente_new']){
             $this->config_mdl->_insert('um_pacientes_log',$dataPaciente);
         }

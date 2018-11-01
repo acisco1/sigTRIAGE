@@ -24,9 +24,9 @@ class Config extends MX_Controller{
            $ConfigExcepcionCMT,$ConfigExpedienteMagdalena,$ConfigExpediente430128,$ConfigDiagnosticosCIE10,
            $ConfigHojaInicialAsistentes,$ConfigHojaInicialAbierta,$ConfigEnfermeriaObsPorTipos;
     public function __construct() {
-        parent::__construct(); 
+        parent::__construct();
         error_reporting(0);
-        ini_set('max_execution_time', 0); 
+        ini_set('max_execution_time', 0);
         ini_set('memory_limit','3096M');
         date_default_timezone_set('America/Mexico_City');
         $this->UMAE_USER=$_SESSION['UMAE_USER'];
@@ -82,7 +82,7 @@ class Config extends MX_Controller{
     }
     public function SessionExpired() {
         if(isset($_SESSION['UMAE_USER'])){
-            $this->setOutput(array('accion'=>'1')); 
+            $this->setOutput(array('accion'=>'1'));
         }else{
             $this->setOutput(array('accion'=>'2'));
         }
@@ -92,15 +92,15 @@ class Config extends MX_Controller{
     }
     public function setOutput($json) {
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
-    }  
+    }
     public function setOutputV2($json) {
         header('Content-type: application/json');
         echo  json_encode($json,JSON_PRETTY_PRINT);
         //$this->output->set_content_type('application/json')->set_output(json_encode($json,JSON_PRETTY_PRINT));
-    }  
+    }
     public function mapa() {
         $this->load->view('mapa');
-    }    
+    }
     public function upload_image_pt() {
         $url_sav = $_GET['tipo'];
         $dir = 'assets/' .$url_sav . '/';
@@ -130,7 +130,7 @@ class Config extends MX_Controller{
         $this->setOutput($response);
     }
 
-    
+
     public function AccesosUsuarios($datas){
         if(strtotime(date('H:i'))>=  strtotime('07:00')){
             $turno='Mañana';
@@ -138,10 +138,10 @@ class Config extends MX_Controller{
         }if(strtotime(date('H:i'))>=  strtotime('14:00')){
             $turno='Tarde';
             $turno_test='Tarde';
-        }if(strtotime(date('H:i')) >=  strtotime('21:00')){ 
+        }if(strtotime(date('H:i')) >=  strtotime('21:00')){
             $turno='Noche';
             $turno_test='Noche A';
-        }if(strtotime(date('H:i')) >=  strtotime('00:00') && strtotime(date('H:i'))<  strtotime('07:00') ){ 
+        }if(strtotime(date('H:i')) >=  strtotime('00:00') && strtotime(date('H:i'))<  strtotime('07:00') ){
             $turno='Noche';
             $turno_test='Noche B';
         }
@@ -161,9 +161,9 @@ class Config extends MX_Controller{
             return 'Mañana';
         }if(strtotime(date('H:i'))>=  strtotime('14:00') && strtotime(date('H:i'))< strtotime('20:59')){
             return 'Tarde';
-        }if(strtotime(date('H:i')) >=  strtotime('21:00') && strtotime(date('H:i')) <  strtotime('23:59')){ 
+        }if(strtotime(date('H:i')) >=  strtotime('21:00') && strtotime(date('H:i')) <  strtotime('23:59')){
             return 'Noche A';
-        }if(strtotime(date('H:i')) >=  strtotime('00:00') && strtotime(date('H:i')) <  strtotime('06:59')){ 
+        }if(strtotime(date('H:i')) >=  strtotime('00:00') && strtotime(date('H:i')) <  strtotime('06:59')){
             return 'Noche B';
         }
     }
@@ -174,10 +174,10 @@ class Config extends MX_Controller{
         }if(strtotime(date('H:i'))>=  strtotime('14:00')){
             $turno='Tarde';
             $turno_test='Tarde';
-        }if(strtotime(date('H:i')) >=  strtotime('21:00')){ 
+        }if(strtotime(date('H:i')) >=  strtotime('21:00')){
             $turno='Noche';
             $turno_test='Noche A';
-        }if(strtotime(date('H:i')) >=  strtotime('00:00') && strtotime(date('H:i'))<  strtotime('07:00') ){ 
+        }if(strtotime(date('H:i')) >=  strtotime('00:00') && strtotime(date('H:i'))<  strtotime('07:00') ){
             $turno='Noche';
             $turno_test='Noche B';
         }
@@ -195,13 +195,13 @@ class Config extends MX_Controller{
         $Tiempo1=new DateTime($data['fecha1']);
         $Tiempo2=new DateTime($data['fecha2']);
         $diff=$Tiempo1->diff($Tiempo2);
-        return $diff->h*60 + $diff->i; 
+        return $diff->h*60 + $diff->i;
     }
     public function TiempoTranscurrido($data) {
         $Tiempo1=new DateTime(str_replace('/', '-', $data['Tiempo1_fecha']).' '.$data['Tiempo1_hora']);
         $Tiempo2=new DateTime(str_replace('/', '-', $data['Tiempo2_fecha']).' '. $data['Tiempo2_hora']);
         $diff=$Tiempo1->diff($Tiempo2);
-        return $diff->h*60 + $diff->i; 
+        return $diff->h*60 + $diff->i;
     }
     public function CalcularTiempoTranscurrido($data) {
         $Tiempo1=new DateTime($data['Tiempo1']);
@@ -222,6 +222,21 @@ class Config extends MX_Controller{
                 return 'indigo';
         }
     }
+    //Regresa el valor del codigo de atencion
+    public function ConvertirCodigoAtencion($codigo){
+      switch ($codigo) {
+        case 0:
+          return '';
+        case 1:
+          return 'Infarto';
+        case 2:
+          return 'Cerebro';
+        case 3:
+          return 'Procuración';
+        case 4:
+          return 'Mater';
+      }
+    }
     public function ColorClasificacionBorder($data) {
         switch ($data['color']){
             case 'Rojo':
@@ -238,13 +253,13 @@ class Config extends MX_Controller{
     }
     public function CalcularEdad_($fechanac) {
         $fecha_hac=  new DateTime(str_replace('/', '-', $fechanac));
-        $hoy=  new DateTime(date('d-m-Y')); 
-        return $hoy->diff($fecha_hac); 
+        $hoy=  new DateTime(date('d-m-Y'));
+        return $hoy->diff($fecha_hac);
     }
     public function ModCalcularEdad($data) {
         $fecha_hac=  new DateTime(str_replace('/', '-', $data['fecha']));
-        $hoy=  new DateTime(date('d-m-Y')); 
-        return $hoy->diff($fecha_hac); 
+        $hoy=  new DateTime(date('d-m-Y'));
+        return $hoy->diff($fecha_hac);
     }
     public function ExpiredSession() {
         if(isset($_SESSION['UMAE_USER'])){
@@ -253,7 +268,7 @@ class Config extends MX_Controller{
             $this->setOutput(array('accion'=>'2'));
         }
     }
-    public function EgresoCamas($data) { 
+    public function EgresoCamas($data) {
         $this->config_mdl->_insert('os_camas_egresos',array(
             'cama_egreso_f'=> date('d/m/Y'),
             'cama_egreso_h'=> date('H:i'),
@@ -283,6 +298,6 @@ class Config extends MX_Controller{
                         </div>
                     </div>
                 </div>';
-        echo Modules::run('Sections/Menu/footer'); 
+        echo Modules::run('Sections/Menu/footer');
     }
 }

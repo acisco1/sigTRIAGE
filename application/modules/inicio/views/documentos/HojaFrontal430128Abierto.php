@@ -100,6 +100,10 @@
             </div>
             <div style="position: absolute;margin-top:228px;margin-left: 44px;text-transform: uppercase ">
                 <b>CLASIFICACIÓN:</b> <?=$info['triage_color']?>
+                <?php
+                      $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
+                      echo ($codigo_atencion != '')?"<b>".mb_strtoupper("Código", 'UTF-8').": </b>$codigo_atencion":"";
+                  ?>
             </div>
             <div style="position: absolute;margin-top:237px;margin-left: 360px ">:[[page_cu]]/[[page_nb]]</div>
             <!-- fecha de  creacion del documento -->
@@ -162,32 +166,32 @@
         <span style="text-align: justify;">
         <?php if($hoja['hf_motivo']!=''){?>
         <h5 style="margin-bottom: -6px">MOTIVO DE CONSULTA</h5>
-        <?=$hoja['hf_motivo']?>
+        <div style="width: 570px;"><?= $hoja['hf_motivo'] ?></div>
         <br>
         <?php }?>
         <?php if($hoja['hf_antecedentes']!=''){?>
         <h5 style="margin-bottom: -6px">ANTECEDENTES</h5>
-        <?=$hoja['hf_antecedentes']?>
+        <div style="width: 570px;"><?=$hoja['hf_antecedentes']?></div>
         <br>
         <?php }?>
         <?php if($PINFO['alergias']!=''){?>
         <h5 style="margin-bottom: -6px">ALERGIAS</h5>
-        <?=$PINFO['alergias']?>
+        <div style="width: 570px;"><?=$PINFO['alergias']?></div>
         <br>
         <?php }?>
         <?php if($hoja['hf_padecimientoa']!=''){?>
         <h5 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h5>
-        <?=$hoja['hf_padecimientoa']?>
+        <div style="width: 570px;"><?=$hoja['hf_padecimientoa']?></div>
         <br>
         <?php }?>
         <?php if($hoja['hf_exploracionfisica']!=''){?>
         <h5 style="margin-bottom: -6px">EXPLORACIÓN FISICA</h5>
-        <?=$hoja['hf_exploracionfisica']?>
+        <div style="width: 570px;"><?=$hoja['hf_exploracionfisica']?></div>
         <br>
         <?php }?>
         <?php if($hoja['hf_auxiliares']!=''){?>
         <h5 style="margin-bottom: -6px">AUXILIARES DE DIAGNÓSTICO</h5>
-        <?=$hoja['hf_auxiliares']?>
+        <div style="width: 570px;"><?=$hoja['hf_auxiliares']?></div>
         <br>
         <?php }?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
@@ -301,7 +305,7 @@
             hasta el <?= $Prescripcion_Onco_Anti[$x]['fecha_fin'] ?>.
             <br>
             <strong>Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['diluente'] ?> &nbsp;</u>&nbsp;&nbsp;&nbsp;
-            <strong>Vol. Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['vol_dilucion'] ?> ml.&nbsp;</u> 
+            <strong>Vol. Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['vol_dilucion'] ?> ml.&nbsp;</u>
             <?php if($Prescripcion_Onco_Anti[$x]['observacion'] != 'Sin observaciones' ){ ?>
                 <br><strong>Observación</strong>
                 <?= $Prescripcion_Onco_Anti[$x]['observacion'] ?>

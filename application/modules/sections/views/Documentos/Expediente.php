@@ -37,7 +37,12 @@
                                         echo 'S/E';
                                     }
                                 ?> | <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA: '.$PINFO['pia_procedencia_espontanea_lugar'] : ': '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?> | <?=$info['triage_color']?>
+                                <?php
+                                      $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
+                                      echo ($codigo_atencion != '')?"<br><span style='font-size:20px'><b>Código $codigo_atencion</b></span>":"";
+                                  ?>
                             </h4>
+
                         </div>
                         <div class="col-md-3 text-right">
                             <h4><b>EDAD</b></h4>

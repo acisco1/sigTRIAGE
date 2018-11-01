@@ -1,10 +1,10 @@
-<?= modules::run('Sections/Menu/index'); ?> 
+<?= modules::run('Sections/Menu/index'); ?>
 <div class="box-row">
     <div class="box-cell">
         <div class="">
             <div class="box-inner col-md-12 col-centered" style="margin-top: 10px">
             <div class="panel panel-default " style="margin-top: 0px">
-               
+
                 <?php if($info['triage_paciente_sexo']=='MUJER'){?>
                 <div  style="background: pink;width: 100%;height: 10px;border-radius: 3px 3px 0px 0px"></div>
                 <?php }?>
@@ -23,7 +23,7 @@
                                         <?=$info['triage_paciente_sexo']?> <?=$PINFO['pic_indicio_embarazo']=='Si' ? '| POSIBLE EMBARAZO' : ''?>
                                     </h5>
                                     <h5 style="margin-top: -5px;text-transform: uppercase">
-                                        <?php 
+                                        <?php
                                             if($info['triage_fecha_nac']!=''){
                                                 $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
                                                 if($fecha->y<15){
@@ -37,14 +37,16 @@
                                                 echo 'S/E';
                                             }
                                         ?> | <?=$PINFO['pia_procedencia_espontanea']=='Si' ? 'ESPONTANEA: '.$PINFO['pia_procedencia_espontanea_lugar'] : ': '.$PINFO['pia_procedencia_hospital'].' '.$PINFO['pia_procedencia_hospital_num']?>
+                                        |
                                     </h5>
+
                                 </div>
                                 <div class="col-md-4 text-right">
                                     <h5>
                                         <b>EDAD</b>
                                     </h5>
                                     <h2 style="margin-top: -10px">
-                                        <?php 
+                                        <?php
                                         if($info['triage_fecha_nac']!=''){
                                             $fecha= Modules::run('Config/ModCalcularEdad',array('fecha'=>$info['triage_fecha_nac']));
                                             echo $fecha->y.' <span style="font-size:25px"><b>Años</b></span>';
@@ -52,11 +54,18 @@
                                             echo 'S/E';
                                         }
                                         ?>
+                                        <?php
+                                              $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
+                                              echo ($codigo_atencion != '')?"<br><span style='font-size:20px'><b>Código $codigo_atencion</b></span>":"";
+                                          ?>
                                     </h2>
+
+
+
                                 </div>
-                                <div class="col-md-4 text-right">
+                                <div class="col-md-4 text-right" style="float:right;">
                                     <h6 style="font-size: 9px;text-align: right;">
-                                        FECHA Y HORA DE REGISTRO: 
+                                        FECHA Y HORA DE REGISTRO:
                                         <b>
                                             <span style="font-size: 12px">
                                             <?=$info['triage_horacero_f']?> <?=$info['triage_horacero_h']?>
@@ -66,7 +75,7 @@
 
                                 </div>
                             </div>
-                            <div class="row " style="margin-top: -0px;">                            
+                            <div class="row " style="margin-top: -0px;">
                                 <div class="col-md-2 text-center back-imss" style="padding-left: 0px;padding: 5px;">
                                     <h5 class=""><b>P.A</b></h5>
                                     <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_ta']?> (mmHg)</h4>
@@ -92,8 +101,8 @@
                                     <h4 style="margin-top: -8px;font-weight: bold"> <?=$SignosVitales['sv_dextrostix']?></h4>
                                 </div>
                             </div>
-                          
-                            
+
+
                             <div class="row" style="margin-top: 0px">
                                 <div class="col-md-12 col-omitir-clasificacion" style="padding: 0px">
                                     <table class="evaluar-medico-area-efectiva table table-striped table-bordered table-no-padding" >
@@ -105,7 +114,7 @@
                                                 <th style="width: auto" class="text-center mayus-bold">Parámetro</th>
                                                 <th style="width: auto" class="text-center mayus-bold">Ausente</th>
                                                 <th style="width: auto" class="text-center mayus-bold">Presente</th>
-                                            </tr>      
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -135,7 +144,7 @@
                                                             <input type="radio" name="triage_preg2_s1" checked="" value="0" class="has-value">
                                                             <i class="green"></i>
                                                         </label>
-                                                        
+
                                                     </center>
                                                 </td>
                                                 <td>
@@ -144,7 +153,7 @@
                                                             <input type="radio" name="triage_preg2_s1" value="31" class="has-value">
                                                             <i class="green"></i>
                                                         </label>
-                                                        
+
                                                     </center>
                                                 </td>
                                             </tr>
@@ -218,7 +227,7 @@
                                                 <th style="width: auto" class="mayus-bold">Parámetro</th>
                                                 <th style="width: auto" colspan="4" class="mayus-bold">Puntuación</th>
                                                 <th style="width: auto"  class="mayus-bold">Puntaje</th>
-                                            </tr>      
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -560,7 +569,7 @@
                                                 <th style="width: auto" class="mayus-bold">Parámetro</th>
                                                 <th style="width: auto" colspan="5" class="mayus-bold">Puntuación</th>
                                                 <th style="width: auto" class="mayus-bold">Puntaje</th>
-                                            </tr>      
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -583,7 +592,7 @@
                                                 <td>
                                                     <label class="md-check tip" data-original-title="">
                                                         <input type="radio" name="triage_preg1_s3" value="5" class="has-value">
-                                                        <i class="green"></i>40 -59 
+                                                        <i class="green"></i>40 -59
                                                     </label>
                                                 </td>
                                                 <td>
@@ -617,7 +626,7 @@
                                                 <td>
                                                     <label class="md-check tip" data-original-title="">
                                                         <input type="radio" name="triage_preg2_s3" value="5" class="has-value">
-                                                        <i class="green"></i>34.5 - 35.9 
+                                                        <i class="green"></i>34.5 - 35.9
                                                     </label>
                                                 </td>
                                                 <td>
@@ -651,7 +660,7 @@
                                                 <td>
                                                     <label class="md-check tip" data-original-title="">
                                                         <input type="radio" name="triage_preg3_s3" value="5" class="has-value">
-                                                        <i class="green"></i>8 - 12 
+                                                        <i class="green"></i>8 - 12
                                                     </label>
                                                 </td>
                                                 <td>
@@ -685,7 +694,7 @@
                                                 <td>
                                                     <label class="md-check tip" data-original-title="">
                                                         <input type="radio" name="triage_preg4_s3" value="5" class="has-value">
-                                                        <i class="green"></i>70/50 - 90/60 
+                                                        <i class="green"></i>70/50 - 90/60
                                                     </label>
                                                 </td>
                                                 <td>
@@ -697,7 +706,7 @@
                                                 <td>
                                                     <label class="md-check tip" data-original-title="">
                                                         <input type="radio"  name="triage_preg4_s3" value="5" class="has-value">
-                                                        <i class="green"></i>121/81 - 160/110 
+                                                        <i class="green"></i>121/81 - 160/110
                                                     </label>
                                                 </td>
                                                 <td>
@@ -719,7 +728,7 @@
                                                 <td>
                                                     <label class="md-check tip" data-original-title="">
                                                         <input type="radio" name="triage_preg5_s3" value="5" class="has-value">
-                                                        <i class="green"></i>40 -60 
+                                                        <i class="green"></i>40 -60
                                                     </label>
                                                 </td>
                                                 <td>
@@ -793,7 +802,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                
+
                                 <div class="col-md-offset-9 col-md-3">
                                     <input type="hidden" name="csrf_token">
                                     <input type="hidden" name="triage_id" value="<?=$this->uri->segment(3)?>">
@@ -805,7 +814,7 @@
                                     <br>
                                     <button class="btn pull-right back-imss btn-submit-paso2 btn-block" type="submit" style="margin-bottom: -10px">
                                         Guardar
-                                    </button> 
+                                    </button>
                                 </div>
                             </div>
                         </form>

@@ -1,4 +1,4 @@
-<?= modules::run('Sections/Menu/index'); ?> 
+<?= modules::run('Sections/Menu/index'); ?>
 <div class="box-row">
     <div class="box-cell">
         <div class="col-md-9 col-centered">
@@ -30,20 +30,20 @@
                                             <div class="col-md-4">
                                                 <div class="form-group" >
                                                     <label><b>APELLIDO PATERNO</b> </label>
-                                                    <input class="form-control" name="triage_nombre_ap"  value="<?=$info['triage_nombre_ap']?>">   
+                                                    <input class="form-control" name="triage_nombre_ap"  value="<?=$info['triage_nombre_ap']?>">
 
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group" >
                                                     <label><b>APELLIDO MATERNO</b> </label>
-                                                    <input class="form-control" name="triage_nombre_am"  value="<?=$info['triage_nombre_am']?>">   
+                                                    <input class="form-control" name="triage_nombre_am"  value="<?=$info['triage_nombre_am']?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group" >
                                                     <label><b>NOMBRE</b> </label>
-                                                    <input class="form-control" name="triage_nombre" required="" placeholder="" value="<?=$info['triage_nombre']?>">   
+                                                    <input class="form-control" name="triage_nombre" required="" placeholder="" value="<?=$info['triage_nombre']?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -51,8 +51,8 @@
                                             <div class="col-md-4">
                                                 <div class="form-group" >
                                                     <label><b>FECHA DE NACIMIENTO</b></label>
-                                                    <input class="form-control dd-mm-yyyy" name="triage_fecha_nac" required="" placeholder="__/__/____" value="<?=$info['triage_fecha_nac']?>">   
-                                                </div>   
+                                                    <input class="form-control dd-mm-yyyy" name="triage_fecha_nac" required="" placeholder="__/__/____" value="<?=$info['triage_fecha_nac']?>">
+                                                </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
@@ -65,13 +65,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group triage_paciente_sexo hide" >
+                                                <div class="form-group triage_paciente_sexo <?=($info['triage_paciente_sexo'] == 'MUJER')?"":"hide";  ?>" >
                                                     <label style="margin-bottom:10px"><b>INDICIO DE EMBARAZO:</b> </label><br>
                                                     <label class="md-check">
-                                                        <input type="radio" name="pic_indicio_embarazo" value="Si" data-value="<?=$PINFO['pic_indicio_embarazo']?>"  class="has-value "><i class="green"></i>SI
+                                                        <input type="radio" name="pic_indicio_embarazo" value="Si" data-value="<?=$PINFO['pic_indicio_embarazo']?>" <?=($PINFO['pic_indicio_embarazo'] == 'Si')? 'checked="" ':'';  ?> ><i class="green"></i>SI
                                                     </label>&nbsp;&nbsp;
                                                     <label class="md-check">
-                                                        <input type="radio" name="pic_indicio_embarazo" value="No" data-value="<?=$PINFO['pic_indicio_embarazo']?>" checked=""><i class="green"></i>NO
+                                                        <input type="radio" name="pic_indicio_embarazo" value="No" data-value="<?=$PINFO['pic_indicio_embarazo']?>" <?=($PINFO['pic_indicio_embarazo'] == 'No')? 'checked="" ':'';  ?> ><i class="green"></i>NO
                                                     </label>
                                                 </div>
                                             </div>
@@ -103,12 +103,31 @@
                                             <div class="col-sm-6 col-no-espontaneo hidden">
                                                 <div class="form-group">
                                                     <label class="mayus-bold">NOMBRE/NUMERO DEL HOSPITAL</label>
-                                                    <input class="form-control" name="pia_procedencia_hospital_num"  value="<?=$PINFO['pia_procedencia_hospital_num']?>">   
+                                                    <input class="form-control" name="pia_procedencia_hospital_num"  value="<?=$PINFO['pia_procedencia_hospital_num']?>">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="col-md-12" style="padding-bottom: 10px; padding-top: 5px;">
+                                      <label class="mayus-bold">activar código de atención &nbsp;&nbsp;</label>
+                                      <label class="radio-inline md-check">
+                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 0)?'checked=""':'';?> value="0" ><i class="green"></i>Ninguno
+                                      </label>
+                                      <label class="radio-inline md-check">
+                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 1)?'checked=""':'';?> value="1" ><i class="green"></i>Infarto
+                                      </label>
+                                      <label class="radio-inline md-check">
+                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 2)?'checked=""':'';?> value="2" ><i class="green"></i>Cerebro
+                                      </label>
+                                      <label class="radio-inline md-check">
+                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 3)?'checked=""':'';?> value="3" ><i class="green"></i>Procuracion
+                                      </label>
+                                      <label class="radio-inline md-check" id="lbl_cod_mater">
+                                        <?php echo ($info['triage_codigo_atencion'] == 4) ? '<input type="radio" name="triage_codigo_atencion" value="4" checked="" ><i class="green"></i>Mater':''; ?>
+                                      </label>
+                                    </div>
+
                                     <div class="col-md-6 <?=$this->ConfigSolicitarOD=='No' ?'hidden' : ''?>">
                                         <div class="form-group">
                                             <label class="mayus-bold">OXIMETRÍA</label>
@@ -126,7 +145,7 @@
                                             <a href="<?=  base_url()?>assets/triage/anexo_2.pdf" target="blank" tabindex="-1" style="cursor: pointer;color: #5697E6">
                                                 <label><b>TENSIÓN ARTERIAL</b> </label>
                                             </a><!--Blood Pressure-->
-                                            <input class="form-control"  name="sv_ta" value="<?=$SignosVitales['sv_ta']?>" >   
+                                            <input class="form-control"  name="sv_ta" value="<?=$SignosVitales['sv_ta']?>" >
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -134,7 +153,7 @@
                                             <a href="<?=  base_url()?>assets/triage/anexo_1.pdf" target="blank" tabindex="-1" style="cursor: pointer;color: #5697E6">
                                                 <label><b>TEMPERATURA</b></label>
                                             </a>
-                                            <input class="form-control" name="sv_temp"  value="<?=$SignosVitales['sv_temp']?>">   
+                                            <input class="form-control" name="sv_temp"  value="<?=$SignosVitales['sv_temp']?>">
                                         </div><!--TEMPERATURE-->
                                     </div>
                                     <div class="col-md-3">
@@ -142,7 +161,7 @@
                                             <a href="<?=  base_url()?>assets/triage/anexo_3.pdf" target="blank" tabindex="-1" style="cursor: pointer;color: #5697E6">
                                                 <label><b>FRECUENCIA CARD.</b> </label>
                                             </a><!---->
-                                            <input class="form-control" name="sv_fc"  value="<?=$SignosVitales['sv_fc']?>">   
+                                            <input class="form-control" name="sv_fc"  value="<?=$SignosVitales['sv_fc']?>">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -150,7 +169,7 @@
                                             <a href="<?=  base_url()?>assets/triage/anexo_4.pdf" target="blank" tabindex="-1" style="cursor: pointer;color: #5697E6">
                                                 <label><b>FRECUENCIA RESP.</b></label>
                                             </a><!--Sp02-->
-                                            <input class="form-control" name="sv_fr"  value="<?=$SignosVitales['sv_fr']?>">   
+                                            <input class="form-control" name="sv_fr"  value="<?=$SignosVitales['sv_fr']?>">
                                         </div>
                                     </div>
                                     <div class="col-md-offset-6 col-md-3">
@@ -165,11 +184,11 @@
                                         <input type='hidden' name="inputModelName">
                                         <input type='hidden' name="inputModelNumber">
                                         <input type='hidden' name="inputSerialNumber">
-                                        <button class="btn btn-block back-imss" type="submit" style="margin-bottom: -10px">Guardar</button>                     
+                                        <button class="btn btn-block back-imss" type="submit" style="margin-bottom: -10px">Guardar</button>
                                     </div>
-                                    
+
                                 </div>
-                                
+
                             </form>
                         </div>
                         <form name="myform">
@@ -205,7 +224,7 @@
                                         <label>Timeout</label>
                                         <input type="text"  name="inputTimeOut" value="2000" class="form-control">
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label>Status</label>
                                         <input type="text" class="form-control" readonly="" name="inputEstatus" value="Initializing..........."><br>
@@ -221,7 +240,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>SetTime (yyyy-mm-dd h:i:s)</label>
-                                        <input type="text" name="inputSetTime" class="form-control"> 
+                                        <input type="text" name="inputSetTime" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-center">
@@ -262,7 +281,7 @@
                                         <label>Height</label>
                                         <input type='text' name="inputHeight" class="form-control">
                                     </div>
-                                    
+
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -424,7 +443,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

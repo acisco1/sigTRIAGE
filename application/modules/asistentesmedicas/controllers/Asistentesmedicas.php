@@ -63,7 +63,10 @@ class Asistentesmedicas extends Config{
                                                             AND os_empleados.empleado_roles = '2' ");
         $sql['info']=  $this->config_mdl->sqlGetDataCondition('os_triage',array(
            'triage_id'=>  $paciente
-        ),'triage_id,triage_nombre,triage_nombre_am,triage_nombre_ap,triage_fecha_nac,triage_paciente_sexo,triage_paciente_estadocivil,triage_paciente_curp,triage_color,triage_consultorio_nombre');
+        ),'triage_id,triage_nombre,triage_nombre_am,triage_nombre_ap,
+          triage_fecha_nac,triage_paciente_sexo,triage_paciente_estadocivil,
+          triage_paciente_curp,triage_color,triage_consultorio_nombre,
+          triage_codigo_atencion');
         $sql['solicitud']= $this->config_mdl->sqlGetDataCondition('os_asistentesmedicas',array(
            'triage_id'=> $paciente
         ),'asistentesmedicas_hoja,asistentesmedicas_renglon,asistentesmedicas_exectuar_st7');

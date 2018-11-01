@@ -36,6 +36,10 @@
                                                 echo 'S/E';
                                             }
                                             ?>
+                                            <?php
+                                                  $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info[0]['triage_codigo_atencion']);
+                                                  echo ($codigo_atencion != '')?"<br><b>Código $codigo_atencion</b>":"";
+                                              ?>
                                         </h4>
                                     </div>
                                     <div class="col-md-4 text-right">

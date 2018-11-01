@@ -191,10 +191,14 @@
                                     echo 'S/E';
                                 }
                                 ?>
+                                <?php
+                                      $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
+                                      echo ($codigo_atencion != '')?"<br><span style='font-size:20px'><b>Código $codigo_atencion</b></span>":"";
+                                  ?>
                             </h3>
                         </div>
                     </div>
-
+                    
                 <div class="back-imss" style="margin-top: -4px; margin-left:-24px; margin-right:-24px;">
                     <div class="col-sm-12 back-imss" >
                       <h5>Fecha de última toma de signos: <?=$UltimosSignosVitales[0]['fecha']?></h5>

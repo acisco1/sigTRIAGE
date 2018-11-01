@@ -84,6 +84,12 @@ if(count($Residentes) == 3){
                 ?>
             </div>
             <div style="position: absolute;margin-top:238px;margin-left: 302px ">[[page_cu]]/[[page_nb]]</div>
+            <div style="position: absolute;margin-top:238px;margin-left: 12px ">
+              <?php
+                    $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
+                    echo ($codigo_atencion != '')?"<b>".mb_strtoupper("Código", 'UTF-8').": ".mb_strtoupper($codigo_atencion)."</b>":"";
+                ?>
+            </div>
             <div style="position: absolute;margin-left: 40px;margin-top: 290px;width: 270px;text-transform: uppercase;font-size: 12px;">
                 <?=$Nota['notas_fecha']?> <?=$Nota['notas_hora']?><br>
             </div>
@@ -194,7 +200,7 @@ if(count($Residentes) == 3){
         <?php }else{ ?> <!-- Informacion general de la nota evolucion -->
           <?php if($Nota['nota_problema']!=''){?>
               <h5 style="margin-bottom: -6px">PROBLEMA</h5>
-              <?=$Nota['nota_problema']?>
+              <div style="width: 570px;"><?= $Nota['nota_problema'] ?></div>
           <?php }?>
           <?php if($Nota['nota_interrogatorio']!=''){?>
             <?php

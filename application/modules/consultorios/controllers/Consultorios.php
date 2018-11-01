@@ -231,7 +231,10 @@ class Consultorios extends Config{
             $this->setOutput(array('accion'=>'NO_AM'));
         }
     }
+
     public function AjaxAgregarConsultorioV2() {
+
+
         $this->config_mdl->_insert('os_consultorios_especialidad',array(
             'ce_fe'=>  date('Y-m-d'),
             'ce_he'=>  date('H:i'),
@@ -241,6 +244,13 @@ class Consultorios extends Config{
             'ce_interconsulta'=>'No',
             'triage_id'=> $this->input->post('triage_id')
         ));
+
+        $this->config_mdl->_insert('um_medico_tratante', array(
+          'triage_id' => $this->input->post('triage_id'),
+          'empleado_id' => $this->UMAE_USER,
+          'fecha_inicio' => date('d-m-Y')." ".date('H:i')
+        ));
+
         $sqlMaxId= $this->config_mdl->_get_last_id('os_consultorios_especialidad','ce_id');
         $this->config_mdl->_insert('os_consultorios_especialidad_llamada',array(
             'triage_id'=> $this->input->post('triage_id'),
@@ -254,7 +264,9 @@ class Consultorios extends Config{
         ));
         $this->AccesosUsuarios(array('acceso_tipo'=>'Consultorios Especialidad','triage_id'=>$this->input->post('triage_id'),'areas_id'=>$sqlMaxId));
         $this->setOutput(array('accion'=>'1'));
+
     }
+
     public function AjaxIngresoConsultorioV2() {
         $sqlConsultorio= $this->config_mdl->_get_data_condition('os_consultorios_especialidad',array(
             'triage_id'=> $this->input->post('triage_id')
