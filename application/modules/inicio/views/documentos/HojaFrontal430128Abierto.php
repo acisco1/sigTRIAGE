@@ -98,8 +98,8 @@
                 }
                 ?>
             </div>
-            <div style="position: absolute;margin-top:228px;margin-left: 44px;text-transform: uppercase ">
-                <b>CLASIFICACIÓN:</b> <?=$info['triage_color']?>
+            <div style="position: absolute;margin-top:228px;margin-left: 10px;text-transform: uppercase ">
+                <b>CLASIFICACIÓN:</b> <?=$info['triage_color']?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <?php
                       $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
                       echo ($codigo_atencion != '')?"<b>".mb_strtoupper("Código", 'UTF-8').": </b>$codigo_atencion":"";
@@ -179,6 +179,7 @@
         <div style="width: 570px;"><?=$PINFO['alergias']?></div>
         <br>
         <?php }?>
+
         <?php if($hoja['hf_padecimientoa']!=''){?>
         <h5 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h5>
         <div style="width: 570px;"><?=$hoja['hf_padecimientoa']?></div>
@@ -272,11 +273,17 @@
         <?php }?>
 
 
+        <!-- Alergia a medicamentos -->
+        <?php  echo (count($AlergiaMedicamentos > 0))?'<h5 style="margin-bottom: -6px">ALERGIA A MEDICAMENTOS</h5>':'';?>
+        <?php for($x = 0; $x < count($AlergiaMedicamentos); $x++){ ?>
+          <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento'] ?><br>
+        <?php } ?>
+        <!-- Fin alergia a medicamentos -->
 
-
-         <!-- Prescripcion -->
+          <!-- Prescripcion -->
+            <!-- se enlistan las prescripciones de cuadro basico y antibioticos -->
           <h5>PRESCRIPCIÓN</h5>
-          <br>
+
           <?php for($x = 0; $x < count($Prescripcion_Basico); $x++){ ?>
             <strong><?= $x+1 ?>) <?= $Prescripcion_Basico[$x]['medicamento']." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
             Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>

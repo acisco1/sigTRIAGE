@@ -317,10 +317,15 @@ if(count($Residentes) == 3){
         <?php if($Nota['nota_solucionesp'] != ''){ ?>
         SOLUCIONES PARENTERALES:<br> <?= $Nota['nota_solucionesp'] ?><br>
         <?php } ?>
-
+        <!-- Alergia a medicamentos -->
+        <?php  echo (count($AlergiaMedicamentos > 0))?'<h5 style="margin-bottom: -6px">ALERGIA A MEDICAMENTOS</h5>':'';?>
+        <?php for($x = 0; $x < count($AlergiaMedicamentos); $x++){ ?>
+          <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento'] ?><br>
+        <?php } ?>
+        <!-- Fin alergia a medicamentos -->
         <!-- Prescripcion -->
          <h5>PRESCRIPCIÓN</h5>
-         <br>
+
          <?php for($x = 0; $x < count($Prescripcion_Basico); $x++){ ?>
            <strong><?= $x+1 ?>) <?= $Prescripcion_Basico[$x]['medicamento']." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
            Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>

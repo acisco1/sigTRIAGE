@@ -548,13 +548,13 @@ class Documentos extends Config{
         ),'hf_id');
         if(empty($sqlCheckHojaFrontal)){
 
-
+              //Se toman los medicamentos a los que es alergico el paciente y se registra
               for($x = 0; $x < count($this->input->post('alergias_medicamento')); $x++){
                 $datos = array(
                   'medicamento_id' => $this->input->post("alergias_medicamento[$x]"),
                   'triage_id' => $this->input->post('triage_id')
                 );
-                $this->config_mdl->_insert('um_ram',$datos);
+                $this->config_mdl->_insert('um_alergias_medicamentos',$datos);
               }
 
 
@@ -1202,8 +1202,10 @@ class Documentos extends Config{
         }
         $sql['ReaccionesAdversas'] = $this->config_mdl->_get_data_condition('um_ram', array('triage_id' => $_GET['folio']));
 
-
-
+        $sql['AlergiaMedicamentos'] = $this->config_mdl->_query("SELECT medicamento FROM um_alergias_medicamentos
+                                          INNER JOIN catalogo_medicamentos
+                                            ON um_alergias_medicamentos.medicamento_id = catalogo_medicamentos.medicamento_id
+                                          WHERE triage_id = ".$_GET['folio']);
 
         $this->load->view('Documentos/Doc_Notas',$sql);
     }
@@ -1830,6 +1832,16 @@ class Documentos extends Config{
                                         WHERE um_ram.triage_id = '.$paciente);
       print json_encode($sql);
     }
+
+    public function AjaxHistorialAlergiaMedicamentos(){
+      $paciente = $this->input->get('paciente');
+      $sql = $this->config_mdl->_query("SELECT medicamento FROM um_alergias_medicamentos
+                                        INNER JOIN catalogo_medicamentos
+                                          ON um_alergias_medicamentos.medicamento_id = catalogo_medicamentos.medicamento_id
+                                        WHERE triage_id = $paciente");
+      print json_encode($sql);
+    }
+
 
     public function AjaxRegistrarEfectoAdverso(){
       $data = array(

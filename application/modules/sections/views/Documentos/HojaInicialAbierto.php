@@ -277,15 +277,17 @@
                                              </div>
 
                                             <textarea class="form-control alergias" rows="2" name="alergias" placeholder="Escriba aquí las alergias"<?= $estilo_alergias ?> ><?= $textarea_alergias ?></textarea>
-                                        </div>
-                                        <!--
-                                        <label><b>¿Alegia a medicamentos? </b> &nbsp; </label><input type="checkbox" id="check_form_alergia_medicamento">&nbsp;<label id="label_check_alergia_medicamentos">- NO DETECTADAS</label>
-                                        <div id="alergia_medicamentos" hidden>
+
 
                                         </div>
-                                        -->
+                                        <!-- Alergias a medicamentos -->
+                                        <label><b>¿Alegia a medicamentos? </b> &nbsp;
+                                        </label><input type="checkbox" id="check_form_alergia_medicamento">&nbsp;
+                                        <label id="label_check_alergia_medicamentos">- NO DETECTADAS</label>
+                                        <div id="alergia_medicamentos" hidden></div>
+                                        <!--Fin alergias a medicamentos -->
 
-                                        <div class="form-group">
+                                        <div class="form-group" style="padding-bottom:20px;">
                                             <h4><span class = "label back-imss border-back-imss">PADECIMIENTO ACTUAL</span></h4>
                                             <textarea class="form-control hf_padecimientoa" rows="5" name="hf_padecimientoa" placeholder="Escriba aquí el/los pacedimiento actual"><?=$hojafrontal[0]['hf_padecimientoa']?></textarea>
                                         </div>

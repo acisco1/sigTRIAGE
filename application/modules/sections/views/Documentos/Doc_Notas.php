@@ -198,7 +198,7 @@
                             </h3>
                         </div>
                     </div>
-                    
+
                 <div class="back-imss" style="margin-top: -4px; margin-left:-24px; margin-right:-24px;">
                     <div class="col-sm-12 back-imss" >
                       <h5>Fecha de última toma de signos: <?=$UltimosSignosVitales[0]['fecha']?></h5>
@@ -876,10 +876,13 @@
                                 </div>
                                 <!-- Fin seccion play y ordenes médicas -->
 
+                                            <!--Historial de alergias a medicamentos -->
 
+                                            <!--Fin historial de alergias a medicamentos -->
                                             <div>
 
                                             <label><b>f) Prescripción: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
+
                                             <!-- Panel con el historial de prescripciones -->
                                             <nav class=" back-imss">
 
@@ -892,14 +895,20 @@
                                                   </li>
                                                   <li>
                                                     <a id="acordeon_prescripciones_canceladas">
-                                                        Canceladas o Actualizadas:
+                                                        Canceladas o actualizadas:
                                                         <label id="label_total_canceladas"><?= count($Prescripciones_canceladas) ?></label>
                                                     </a>
                                                   </li>
                                                   <li>
                                                     <a id="acordeon_reacciones">
-                                                        Reacciones Adversas:
+                                                        Reacciones adversas:
                                                         <label id="label_total_reacciones"><?= count($ReaccionesAdversas) ?></label>
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a id="acordeon_alergia_medicamentos">
+                                                        Alergia a medicamentos:
+                                                        <label id="label_total_reacciones"><?= count($AlergiaMedicamentos) ?></label>
                                                     </a>
                                                   </li>
                                                   <!--
@@ -956,6 +965,23 @@
                                                 </tbody>
                                               </table>
 
+                                            </div>
+                                            <div id="historial_alergia_medicamentos" >
+                                              <table style="width:100%;" >
+                                                <thead>
+
+                                                  <th>Medicamentos que presentan alergias</th>
+                                                </thead>
+                                                <tbody >
+                                                  <tr>
+                                                    <td id="table_historial_alergia_medicamentos">
+                                                    <?php for($x=0 ;$x < count($AlergiaMedicamentos); $x++){ ?>
+                                                      <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento']."&nbsp;&nbsp;&nbsp;"?>
+                                                    <?php } ?>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
                                             </div>
                                             <div id='historial_notificaciones'>
 

@@ -224,6 +224,11 @@ class Documentos extends Config{
                                                             	SELECT hf_id FROM os_consultorios_especialidad_hf
                                                             	WHERE triage_id = $Paciente	)");
 
+        $sql['AlergiaMedicamentos'] = $this->config_mdl->_query("SELECT medicamento FROM um_alergias_medicamentos
+                                                                INNER JOIN catalogo_medicamentos
+                                                                	ON um_alergias_medicamentos.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                                WHERE triage_id = $Paciente");
+
         $this->load->view('documentos/HojaFrontal430128Abierto',$sql);
     }
     public function FormatosJefaAsistentesMedicas() {
@@ -772,6 +777,11 @@ class Documentos extends Config{
                 'sv_tipo'=>'Triage'
             ))[0];
         }
+
+        $sql['AlergiaMedicamentos'] = $this->config_mdl->_query("SELECT medicamento FROM um_alergias_medicamentos
+                                          INNER JOIN catalogo_medicamentos
+                                            ON um_alergias_medicamentos.medicamento_id = catalogo_medicamentos.medicamento_id
+                                          WHERE triage_id = ".$sql['Nota']['triage_id']);
 
         $this->load->view('documentos/Notas',$sql);
     }

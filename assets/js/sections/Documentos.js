@@ -135,6 +135,8 @@ $(document).ready(function () {
         })
     })
 
+
+
     $('body').on('change','.sum-total-npt',function(){
 
       var aminoacido = $('.modal-aminoacido').val() == "" ? 0:  $('.modal-aminoacido').val(),
@@ -995,6 +997,12 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
     $('#acordeon_reacciones').click(function(){
       var paciente = $('input[name=triage_id]').val();
       var val_accion = 3;
+      AccionPanelPrescripcion(val_accion, paciente);
+    });
+    //Ejecuta la funcion para mostrar alergia a medicamentos
+    $('#acordeon_alergia_medicamentos').click(function(){
+      var paciente = $('input[name=triage_id]').val();
+      var val_accion = 5;
       AccionPanelPrescripcion(val_accion, paciente);
     });
 
@@ -2825,6 +2833,32 @@ function RegistrarEfectoAdverso(prescripcion_id, paciente, motivo){
       }
   });
 }
+
+function HistorialAlergiaMedicamentos(paciente){
+  $.ajax({
+      url:base_url+'Sections/Documentos/AjaxHistorialAlergiaMedicamentos',
+      type: 'get',
+      dataType: 'json',
+      data:{
+          paciente:paciente
+      },success: function (data, textStatus, jqXHR) {
+        $('#table_historial_alergia_medicamentos').empty();
+        var fila = "";
+        var count = 0;
+        data.forEach(function(val){
+          count = count + 1;
+          fila = count + ") "+ val.medicamento+ "&nbsp;&nbsp;&nbsp;";
+          $('#table_historial_alergia_medicamentos').append(fila);
+        });
+
+
+      },error: function (jqXHR, textStatus, errorThrown) {
+          bootbox.hideAll();
+          MsjError();
+      }
+  });
+}
+
 function HitorialReaccionesAdversas(paciente){
   $.ajax({
       url:base_url+'Sections/Documentos/AjaxHistorialReaccionesAdversas',
@@ -2857,6 +2891,7 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
   $("#historial_movimientos").attr('hidden',true);
   $("#historial_reacciones").attr('hidden',true);
   $("#historial_notificaciones").attr('hidden',true);
+  $("#historial_alergia_medicamentos").attr('hidden',true);
 
   switch (tipo_accion) {
     case 1:
@@ -2873,6 +2908,10 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
       break;
     case 4:
         $("#historial_notificaciones").removeAttr('hidden');
+      break;
+    case 5:
+      $("#historial_alergia_medicamentos").removeAttr('hidden');
+      HistorialAlergiaMedicamentos(paciente);
       break;
   }
 }
