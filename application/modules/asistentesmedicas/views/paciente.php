@@ -38,7 +38,7 @@
                                             ?>
                                             <?php
                                                   $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info[0]['triage_codigo_atencion']);
-                                                  echo ($codigo_atencion != '')?"<br><b>Código $codigo_atencion</b>":"";
+                                                  echo ($codigo_atencion != '')?"<br><b style='color:rgb(208, 0, 0);' >Código $codigo_atencion</b>":"";
                                               ?>
                                         </h4>
                                     </div>

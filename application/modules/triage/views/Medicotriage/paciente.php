@@ -56,7 +56,7 @@
                                         ?>
                                         <?php
                                               $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
-                                              echo ($codigo_atencion != '')?"<br><span style='font-size:20px'><b>Código $codigo_atencion</b></span>":"";
+                                              echo ($codigo_atencion != '')?"<br><span style='font-size:20px'><b style='color:rgb(208, 0, 0);' >Código $codigo_atencion</b></span>":"";
                                           ?>
                                     </h2>
 

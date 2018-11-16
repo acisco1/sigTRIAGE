@@ -355,7 +355,7 @@ class Documentos extends Config{
         $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
                                                                     WHERE estado = 1 AND triage_id = ".$_GET['folio']);
 
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre FROM paciente_diagnosticos
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, complemento FROM paciente_diagnosticos
                                                           INNER JOIN diagnostico_hoja_frontal
                                                           	ON paciente_diagnosticos.diagnostico_id = diagnostico_hoja_frontal.diagnostico_id
                                                           INNER JOIN um_cie10
@@ -474,23 +474,14 @@ class Documentos extends Config{
             'hf_antecedentes'=> $this->input->post('hf_antecedentes'), //Antecedentes
             'hf_padecimientoa'=> $this->input->post('hf_padecimientoa'), // Padecimiento actual
             'hf_exploracionfisica'=> $this->input->post('hf_exploracionfisica'), // Eploracion fisica
+
             // ESCALA DE GLASGOW
-            'hf_glasgow_expontanea'=> $this->input->post('hf_glasgow_expontanea'),//Apertura Ocular
-            'hf_glasgow_hablar'=> $this->input->post('hf_glasgow_hablar'),
-            'hf_glasgow_dolor'=> $this->input->post('hf_glasgow_dolor'),
-            'hf_glasgow_ausente'=> $this->input->post('hf_glasgow_ausente'),
-            'hf_glasgow_obedece'=> $this->input->post('hf_glasgow_obedece'), // Respuesta Motora
-            'hf_glasgow_localiza'=> $this->input->post('hf_glasgow_localiza'),
-            'hf_glasgow_retira'=> $this->input->post('hf_glasgow_retira'),
-            'hf_glasgow_flexion'=> $this->input->post('hf_glasgow_flexion'),
-            'hf_glasgow_extension'=> $this->input->post('hf_glasgow_extension'),
-            'hf_glasgow_ausencia'=> $this->input->post('hf_glasgow_ausencia'),
-            'hf_glasgow_orientado'=> $this->input->post('hf_glasgow_orientado'),// Respuesta Verbal
-            'hf_glasgow_confuso'=> $this->input->post('hf_glasgow_confuso'),
-            'hf_glasgow_incoherente'=> $this->input->post('hf_glasgow_incoherente'),
-            'hf_glasgow_sonidos'=> $this->input->post('hf_glasgow_sonidos'),
-            'hf_glasgow_arespuesta'=> $this->input->post('hf_glasgow_arespuesta'),
+            'hf_glasgow_ocular'=> $this->input->post('apertura_ocular'),
+            'hf_glasgow_motora'=> $this->input->post('respuesta_motora'),
+            'hf_glasgow_verbal'=> $this->input->post('respuesta_verbal'),
+
             'hf_escala_glasgow'=> $this->input->post('hf_escala_glasgow'),
+
             'hf_auxiliares'=>$this->input->post('hf_auxiliares'), // Auxiliares Diagnóstico
             'hf_diagnosticos_lechaga'=>  $this->input->post('hf_diagnosticos_lechaga'), //Diagnóstico de Ingreso
             'hf_diagnosticos'=> $this->input->post('hf_diagnosticos'), // Comorbilidades
@@ -559,10 +550,12 @@ class Documentos extends Config{
 
 
             for($x = 0; $x < count($this->input->post('cie10_id')); $x++){
+              $complemento = ($this->input->post("complemento[$x]") == '')?'S/C' : $this->input->post("complemento[$x]");
               $datos_diagnostico = array(
                 'triage_id' => $this->input->post('triage_id'),
                 'cie10_id' => $this->input->post("cie10_id[$x]"),
-                'tipo_diagnostico' => $this->input->post("tipo_diagnostico[$x]")
+                'tipo_diagnostico' => $this->input->post("tipo_diagnostico[$x]"),
+                'complemento' => $complemento
               );
               $this->config_mdl->_insert('paciente_diagnosticos',$datos_diagnostico);
 
@@ -1173,7 +1166,7 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id, triage_id, (paciente_diagnosticos.cie10_id)cie10_id1,
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id, complemento, triage_id, (paciente_diagnosticos.cie10_id)cie10_id1,
                                                                  tipo_diagnostico, (um_cie10.cie10_id)cie10_id2, cie10_clave, cie10_nombre
                                                          FROM paciente_diagnosticos
                                                          INNER JOIN um_cie10
@@ -1187,7 +1180,8 @@ class Documentos extends Config{
                                                                   ORDER BY fecha DESC");
 
         $sql['DiagnosticoPaciente'] = $this->config_mdl->_query("SELECT diagnostico_id, triage_id, (paciente_diagnosticos.cie10_id)cie10_id1,
-                                                                        tipo_diagnostico, (um_cie10.cie10_id)cie10_id2, cie10_clave, cie10_nombre
+                                                                        tipo_diagnostico, (um_cie10.cie10_id)cie10_id2, cie10_clave, cie10_nombre,
+                                                                        complemento
                                                                 FROM paciente_diagnosticos
                                                                 INNER JOIN um_cie10
                                                                     ON paciente_diagnosticos.cie10_id = um_cie10.cie10_id
@@ -1386,32 +1380,38 @@ class Documentos extends Config{
 
           $accion_diagnosticos = $this->input->post('accion_diagnostico_principal');
           //Se consulta la existencia de diagnosticos principales
-          $consulta = "SELECT cie10_id FROM paciente_diagnosticos
+          $consulta = "SELECT cie10_id, complemento FROM paciente_diagnosticos
                        WHERE triage_id = ".$this->input->post('triage_id')." AND tipo_diagnostico = 1";
           $sqlResult = $this->config_mdl->_query($consulta);
 
           if($accion_diagnosticos == "add"){
             //si no existe registra el diagnostico principal
             if(COUNT($sqlResult) == 0){
+                $complemento = ($this->input->post('complemento[0]') == '')?'S/C':$this->input->post('complemento[0]');
                 $data = array(
                     'triage_id' => $this->input->post('triage_id'),
                     'cie10_id' => $this->input->post('cie10_id_principal'),
-                    'tipo_diagnostico' => 1
+                    'tipo_diagnostico' => 1,
+                    'complemento' => $complemento
                 );
                 $this->config_mdl->_insert('paciente_diagnosticos',$data);
             }
 
           }else if ($accion_diagnosticos == "edit"){
+
               $dataInsert = array(
                 'triage_id' => $this->input->post('triage_id'),
                 'cie10_id' => $sqlResult[0]['cie10_id'],
-                'tipo_diagnostico' => 2
+                'tipo_diagnostico' => 2,
+                'complemento' => $sqlResult[0]['complemento']
               );
               $this->config_mdl->_insert('paciente_diagnosticos',$dataInsert);
 
-              $this->config_mdl->_update_data('paciente_diagnosticos',
-              array('cie10_id' => $this->input->post('cie10_id_principal')),
-              array('triage_id' => $this->input->post('triage_id'), 'tipo_diagnostico' => 1)
+              $complemento = ($this->input->post('complemento[0]') == '')?'S/C':$this->input->post('complemento[0]');
+              $this->config_mdl->_update_data('paciente_diagnosticos', // tabla
+              array('cie10_id' => $this->input->post('cie10_id_principal'), //Campos a modificar
+                    'complemento' =>  $complemento),
+              array('triage_id' => $this->input->post('triage_id'), 'tipo_diagnostico' => 1) //condicion
               );
 
           }
@@ -1419,10 +1419,12 @@ class Documentos extends Config{
 
 
           for($x = 0; $x < count($this->input->post('cie10_id')); $x++){
+            $complemento = ($this->input->post("complemento[($x+1)]") == '')? 'S/C' : $this->input->post("complemento[($x+1)]");
             $datos_diagnostico = array(
               'triage_id' => $this->input->post('triage_id'),
               'cie10_id' => $this->input->post("cie10_id[$x]"),
-              'tipo_diagnostico' => $this->input->post("tipo_diagnostico[$x]")
+              'tipo_diagnostico' => $this->input->post("tipo_diagnostico[$x]"),
+              'complemento' => $complemento
             );
             $this->config_mdl->_insert('paciente_diagnosticos',$datos_diagnostico);
 

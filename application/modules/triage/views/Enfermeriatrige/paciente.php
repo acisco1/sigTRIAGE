@@ -110,22 +110,28 @@
                                     </div>
 
                                     <div class="col-md-12" style="padding-bottom: 10px; padding-top: 5px;">
-                                      <label class="mayus-bold">activar código de atención &nbsp;&nbsp;</label>
-                                      <label class="radio-inline md-check">
-                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 0)?'checked=""':'';?> value="0" ><i class="green"></i>Ninguno
-                                      </label>
-                                      <label class="radio-inline md-check">
-                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 1)?'checked=""':'';?> value="1" ><i class="green"></i>Infarto
-                                      </label>
-                                      <label class="radio-inline md-check">
-                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 2)?'checked=""':'';?> value="2" ><i class="green"></i>Cerebro
-                                      </label>
-                                      <label class="radio-inline md-check">
-                                        <input type="radio" name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 3)?'checked=""':'';?> value="3" ><i class="green"></i>Procuracion
-                                      </label>
-                                      <label class="radio-inline md-check" id="lbl_cod_mater">
-                                        <?php echo ($info['triage_codigo_atencion'] == 4) ? '<input type="radio" name="triage_codigo_atencion" value="4" checked="" ><i class="green"></i>Mater':''; ?>
-                                      </label>
+                                      <label class="mayus-bold">activar código de atención: &nbsp;&nbsp;</label>
+
+                                      <label class="md-check">
+                                        <input type="radio" required name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 1)?'checked':'';?> value="1" >
+                                        <i class="green"></i>Infarto
+                                      </label>&nbsp;&nbsp;
+                                      <label class="md-check">
+                                        <input type="radio" required name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 2)?'checked':'';?> value="2" >
+                                        <i class="green"></i>Cerebro
+                                      </label>&nbsp;&nbsp;
+                                      <label class="md-check">
+                                        <input type="radio" required name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] == 3)?'checked':'';?> value="3" >
+                                        <i class="green"></i>Procuración
+                                      </label>&nbsp;&nbsp;
+                                      <label class="md-check" id="lbl_cod_mater">
+                                        <?php echo ($info['triage_codigo_atencion'] == 4) ? '<input type="radio" required name="triage_codigo_atencion" value="4" checked ><i class="green"></i>Mater':''; ?>
+                                      </label>&nbsp;&nbsp;
+                                      <label class="md-check">
+                                        <input type="radio" required name="triage_codigo_atencion" <?=($info['triage_codigo_atencion'] === 0)?'checked':'';?> value="0" >
+                                        <i class="green"></i>Ninguno
+                                      </label>&nbsp;&nbsp;
+
                                     </div>
 
                                     <div class="col-md-6 <?=$this->ConfigSolicitarOD=='No' ?'hidden' : ''?>">

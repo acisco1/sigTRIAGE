@@ -98,7 +98,7 @@
                 }
                 ?>
             </div>
-            <div style="position: absolute;margin-top:228px;margin-left: 10px;text-transform: uppercase ">
+            <div style="position:absolute; margin-top:210px; margin-left: 10px; text-transform: uppercase ">
                 <b>CLASIFICACIÓN:</b> <?=$info['triage_color']?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <?php
                       $codigo_atencion = Modules::run('Config/ConvertirCodigoAtencion', $info['triage_codigo_atencion']);
@@ -196,11 +196,16 @@
         <br>
         <?php }?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
-        <?=$Diagnosticos[0]['cie10_clave']?> -
-        <?=$Diagnosticos[0]['cie10_nombre']?>
+        <?=$Diagnosticos[0]['cie10_clave']?> - <?=$Diagnosticos[0]['cie10_nombre']?>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?=($Diagnosticos[0]['complemento'] === 'S/C')?'':$Diagnosticos[0]['complemento'];?>
         <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
         <?php for($x = 1; $x < count($Diagnosticos); $x++){ ?>
           <?=$Diagnosticos[$x]['cie10_clave']?> - <?=$Diagnosticos[$x]['cie10_nombre']?>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <?=($Diagnosticos[$x]['complemento'] === 'S/C')?'':$Diagnosticos[$x]['complemento'];?>
           <br>
         <?php } ?>
 

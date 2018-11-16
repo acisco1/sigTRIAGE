@@ -237,18 +237,32 @@ if(count($Residentes) == 3){
               <div style="width: 570px;"><?=$Nota['nota_diagnostico']?></div>
           <?php }?>
           <?php if($Nota['nota_pronosticos']!=''){?>
-                 <h5 style="margin-bottom: -6px">PRONÓSTICOS</h5>
+                 <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
                  <div style="width: 570px;"><?=$Nota['nota_pronosticos']?></div>
           <?php }?>
 
+          <!-- Diagnosticos de ingreso -->
           <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO:</h5>
           <?= $Diagnosticos[0]['cie10_clave']." - ".$Diagnosticos[0]['cie10_nombre']?>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <?=($Diagnosticos[0]['complemento'] === 'S/C')?'':$Diagnosticos[0]['complemento'];?>
+
+          <!-- Diagnosticos de principal -->
           <h5 style="margin-bottom: -6px">DIAGNÓSTICO PRINCIPAL:</h5>
           <?= $Diagnosticos[1]['cie10_clave']." - ".$Diagnosticos[1]['cie10_nombre']?>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <?=($Diagnosticos[1]['complemento'] === 'S/C')?'':$Diagnosticos[1]['complemento'];?>
+
+          <!-- Diagnosticos de secundarios -->
           <h5 style="margin-bottom: -6px">DIAGNÓSTICO(S) SECUNDARIO(S) (COMORBILIDADES):</h5>
           <?php for($x = 2; $x < count($Diagnosticos); $x++){
-              echo $Diagnosticos[$x]['cie10_clave']." - ".$Diagnosticos[$x]['cie10_nombre']."<br>";
-          } ?>
+              echo $Diagnosticos[$x]['cie10_clave']." - ".$Diagnosticos[$x]['cie10_nombre']."<br>";?>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <?=($Diagnosticos[$x]['complemento'] === 'S/C')?'':$Diagnosticos[$x]['complemento'];?>
+              <br>
+          <?php } ?>
 
           <h5 style="margin-botton: -6px">ORDENES MÉDICAS:</h5>
         <?php } ?>

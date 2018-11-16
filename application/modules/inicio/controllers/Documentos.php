@@ -207,7 +207,7 @@ class Documentos extends Config{
                                                                     	ON prescripcion.prescripcion_id = prescripcion_onco_antimicrobianos.prescripcion_id
                                                                     WHERE triage_id =$Paciente AND safe = 1;");
         //fin consultas para la prescripción
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, tipo_diagnostico FROM um_cie10
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, complemento, tipo_diagnostico FROM um_cie10
                                     INNER JOIN paciente_diagnosticos
                                     	ON um_cie10.cie10_id = paciente_diagnosticos.cie10_id
                                     INNER JOIN diagnostico_hoja_frontal
@@ -687,7 +687,10 @@ class Documentos extends Config{
                                               INNER JOIN um_especialidades
                                                ON os_empleados.empleado_servicio = um_especialidades.especialidad_id
                                               WHERE empleado_id =".$sql['Nota']['empleado_id']);
-        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, diagnostico_notas.tipo_diagnostico AS tipodiag FROM diagnostico_notas
+        $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, complemento, cie10_nombre, diagnostico_notas.tipo_diagnostico AS tipodiag
+                                                          FROM diagnostico_notas
+                                                          INNER JOIN paciente_diagnosticos
+                                                            ON  diagnostico_notas.diagnostico_id = paciente_diagnosticos.diagnostico_id
                                                           INNER JOIN um_cie10
                                                           	ON diagnostico_notas.cie10_id = um_cie10.cie10_id
                                                           WHERE notas_id = ".$Nota." ORDER BY tipodiag");

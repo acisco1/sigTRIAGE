@@ -266,8 +266,8 @@
                                             }
                                              ?>
                                              <div class="row">
-                                               <div class="col-sm-2" style="padding-bottom:12px;">
-                                                 <label><b>¿Tiene alegias?</b></label>
+                                               <div class="col-sm-3" style="padding-bottom:12px;">
+                                                 <label><b>¿Alergias a medicamentos u otro?</b></label>
                                                  <select class="form-control opcion_alergias"  name="select_alergias" data-value="<?= $select_alergias ?>" required>
                                                    <option value="">- Indicar opcion -</option>
                                                    <option value="1">Si</option>
@@ -280,12 +280,7 @@
 
 
                                         </div>
-                                        <!-- Alergias a medicamentos -->
-                                        <label><b>¿Alegia a medicamentos? </b> &nbsp;
-                                        </label><input type="checkbox" id="check_form_alergia_medicamento">&nbsp;
-                                        <label id="label_check_alergia_medicamentos">- NO DETECTADAS</label>
-                                        <div id="alergia_medicamentos" hidden></div>
-                                        <!--Fin alergias a medicamentos -->
+
 
                                         <div class="form-group" style="padding-bottom:20px;">
                                             <h4><span class = "label back-imss border-back-imss">PADECIMIENTO ACTUAL</span></h4>
@@ -317,55 +312,55 @@
       </div>
       <div class="modal-body">
         <fieldset class="scheduler-border">
-            <legend class="scheduler-border"><b>APERTURA OCULAR</b></legend>
+            <legend class="scheduler-border label_glasgow_ocular"><b>APERTURA OCULAR</b></legend>
                 <div class="form-group">
                     <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_expontanea" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_expontanea']?>" class="has-value"><i class="indigo"></i>Espontánea</label>&nbsp;&nbsp;
+                    <input type="radio" class='sum_glasgow' name="apertura_ocular" value="4" <?= ($hojafrontal[0]['hf_glasgow_ocular'] == 4 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Espontánea</label>&nbsp;&nbsp;
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_hablar" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_hablar']?>" class="has-value"><i class="indigo"></i>Hablar</label>&nbsp;&nbsp;
+                    <input type="radio" class='sum_glasgow' name="apertura_ocular" value="3" <?= ($hojafrontal[0]['hf_glasgow_ocular'] == 3 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Hablar</label>&nbsp;&nbsp;
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_dolor" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_dolor']?>" class="has-value"><i class="indigo"></i>Dolor</label>&nbsp;&nbsp;
+                    <input type="radio" class='sum_glasgow' name="apertura_ocular" value="2" <?= ($hojafrontal[0]['hf_glasgow_ocular'] == 2 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Dolor</label>&nbsp;&nbsp;
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_ausente" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausente']?>" class="has-value"><i class="indigo"></i>Ausente</label>
+                    <input type="radio" class='sum_glasgow' name="apertura_ocular" value="1" <?= ($hojafrontal[0]['hf_glasgow_ocular'] == 1 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Ausente</label>
                 </div>
         </fieldset>
         <fieldset class="scheduler-border">
-            <legend class="scheduler-border"><B>RESPUESTA MOTORA</B></legend>
+            <legend class="scheduler-border label_glasgow_motora"><b>RESPUESTA MOTORA</b></legend>
                 <div class="form-group">
                     <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_obedece" value="6" data-value="<?=$hojafrontal[0]['hf_glasgow_obedece']?>" class="has-value"><i class="indigo"></i>Obedece</label>&nbsp;&nbsp;
+                        <input type="radio" class='sum_glasgow' name="respuesta_motora" value="6" <?= ($hojafrontal[0]['hf_glasgow_motora'] == 6 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Obedece</label>&nbsp;&nbsp;
                         <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_localiza" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_localiza']?>" class="has-value"><i class="indigo"></i>Localiza</label>&nbsp;&nbsp;
+                        <input type="radio" class='sum_glasgow' name="respuesta_motora" value="5" <?= ($hojafrontal[0]['hf_glasgow_motora'] == 5 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Localiza</label>&nbsp;&nbsp;
                         <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_retira" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_retira']?>" class="has-value"><i class="indigo"></i>Retira</label>
+                        <input type="radio" class='sum_glasgow' name="respuesta_motora" value="4" <?= ($hojafrontal[0]['hf_glasgow_motora'] == 4 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Retira</label>
                         <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_flexion" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_flexion']?>" class="has-value"><i class="indigo"></i>Flexión normal</label>&nbsp;&nbsp;
+                        <input type="radio" class='sum_glasgow' name="respuesta_motora" value="3" <?= ($hojafrontal[0]['hf_glasgow_motora'] == 3 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Flexión normal</label>&nbsp;&nbsp;
                         <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_extension" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_extension']?>" class="has-value"><i class="indigo"></i>Extensión anormal</label>&nbsp;&nbsp;
+                        <input type="radio" class='sum_glasgow' name="respuesta_motora" value="2" <?= ($hojafrontal[0]['hf_glasgow_motora'] == 2 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Extensión anormal</label>&nbsp;&nbsp;
                         <label class="md-check">
-                        <input type="checkbox" class='sum' name="hf_glasgow_ausencia" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_ausencia']?>" class="has-value"><i class="indigo"></i>Ausencia de repuesta</label>
+                        <input type="radio" class='sum_glasgow' name="respuesta_motora" value="1" <?= ($hojafrontal[0]['hf_glasgow_motora'] == 1 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Ausencia de repuesta</label>
                 </div>
         </fieldset>
         <fieldset class="scheduler-border">
-            <legend class="scheduler-border"><b>RESPUESTA VERBAL</b></legend>
+            <legend class="scheduler-border label_glasgow_verbal"><b>RESPUESTA VERBAL</b></legend>
                 <div class="form-group">
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_orientado" value="5" data-value="<?=$hojafrontal[0]['hf_glasgow_orientado']?>" class="has-value"><i class="indigo"></i>Orientado&nbsp;&nbsp;</label>
+                    <input type="radio" class='sum_glasgow' name="respuesta_verbal" value="5" <?= ($hojafrontal[0]['hf_glasgow_verbal'] == 5 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Orientado&nbsp;&nbsp;</label>
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_confuso" value="4" data-value="<?=$hojafrontal[0]['hf_glasgow_confuso']?>" class="has-value"><i class="indigo"></i>Confuso&nbsp;&nbsp;</label>
+                    <input type="radio" class='sum_glasgow' name="respuesta_verbal" value="4" <?= ($hojafrontal[0]['hf_glasgow_verbal'] == 4 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Confuso&nbsp;&nbsp;</label>
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_incoherente" value="3" data-value="<?=$hojafrontal[0]['hf_glasgow_incoherente']?>" class="has-value"><i class="indigo"></i>Incoherente&nbsp;&nbsp;</label>
+                    <input type="radio" class='sum_glasgow' name="respuesta_verbal" value="3" <?= ($hojafrontal[0]['hf_glasgow_verbal'] == 3 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Incoherente&nbsp;&nbsp;</label>
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_sonidos" value="2" data-value="<?=$hojafrontal[0]['hf_glasgow_sonidos']?>" class="has-value"><i class="indigo"></i>Sonidos Incomprensibles&nbsp;&nbsp;</label>
+                    <input type="radio" class='sum_glasgow' name="respuesta_verbal" value="2" <?= ($hojafrontal[0]['hf_glasgow_verbal'] == 2 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Sonidos Incomprensibles&nbsp;&nbsp;</label>
                     <label class="md-check">
-                    <input type="checkbox" class='sum' name="hf_glasgow_arespuesta" value="1" data-value="<?=$hojafrontal[0]['hf_glasgow_arespuesta']?>" class="has-value"><i class="indigo"></i>Ausencia de respuesta</label>
+                    <input type="radio" class='sum_glasgow' name="respuesta_verbal" value="1" <?= ($hojafrontal[0]['hf_glasgow_verbal'] == 1 )?"checked":""; ?> class="has-value"><i class="indigo"></i>Ausencia de respuesta</label>
                 </div>
 
-                    <div class="form-group">PUNTUACIÓN TOTAL: &nbsp;<input type="text" name="hf_escala_glasgow" size="3" data-value="<?=$hojafrontal[0]['hf_escala_glasgow']?>" disable></div>
+                    <div class="form-group">PUNTUACIÓN TOTAL: &nbsp;<input type="text" name="hf_escala_glasgow" size="3" value="<?=$hojafrontal[0]['hf_escala_glasgow']?>" disable></div>
         </fieldset>
     </div> <!-- div del cuerpo del modal -->
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-primary btn_modal_glasgow" data-dismiss="">Aceptar</button>
     </div>
   </div>
  </div>
@@ -537,7 +532,7 @@
                                 <div class="form-group">
                                   <label for="">Diagnóstico</label>
 
-                                  <input type="text" class="form-control" id="text_diagnostico_0" onkeydown="BuscarDiagnostico(0)" value="<?= $Diagnosticos[0]['cie10_nombre'] ?>">
+                                  <input type="text" class="form-control" autocomplete="off" id="text_diagnostico_0" onkeydown="BuscarDiagnostico(0)" value="<?= $Diagnosticos[0]['cie10_nombre'] ?>">
                                   <!-- lista que almacenan los diagnosticos consultados por el médico -->
                                   <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_0">
 
@@ -549,6 +544,17 @@
                                 <input type="text" class="form-control" id="text_codigo_diagnostico_0" value="<?= $Diagnosticos[0]['cie10_clave'] ?>" disabled>
                                 <input type="hidden" name="cie10_id[]" id="text_id_diagnostico_0" >
                                 <input type="hidden" name="tipo_diagnostico[]" value="0" >
+                              </div>
+                              <div class="col-sm-1" style="padding-top:25px;">
+                                <button type="button" class="btn btn-default width100" id="btn_diagnostico_complementario_0" title="Complemento de diagnóstico" value="0" onclick="MostrarDiagnosticoComplementario(0);">
+                                  <span class="fa fa-file-text-o"></span>
+                                </button>
+                              </div>
+                              <div class="col-sm-12" id="div_complento_diagnostico_0" <?= ($Diagnosticos[0]['complemento'] == "S/C") ? "hidden" : ""; ?>>
+                                <div class="form-group">
+                                  <label>Complemento de diagnóstico</label>
+                                  <textarea name="complemento[]" rows="2" class="form-control"><?= ($Diagnosticos[0]['complemento'] == "S/C") ? "" : $Diagnosticos[0]['complemento']; ?></textarea>
+                                </div>
                               </div>
                             </div>
 
@@ -567,8 +573,12 @@
                           ?>
                             <h4>
                               <span class = "label back-imss border-back-imss">DIAGNÓSTICOS SECUNDARIOS (COMORBILIDADES)</span>
-                              <input type="checkbox" class="check_diagnosticos_secundarios" value="<?=$check_value?>" <?=$check_checked?>>
-                              <label style="padding-left:5px;" class="label_check_secundarios"><?=$check_text?></label>
+                              <label class="md-check">
+                                <input type="checkbox" class="check_diagnosticos_secundarios" value="<?=$check_value?>" <?=$check_checked?>>
+                                <i class="indigo"></i>
+                                <label style="padding-left:5px;" class="label_check_secundarios"><?=$check_text?></label>
+                              </label>
+
                             </h4>
                             <?php
                             if($check_value == 0){
@@ -596,10 +606,10 @@
 
                                 </div>
                                 -->
-                                <div class="col-sm-9">
+                                <div class="col-sm-8">
                                   <div class="form-group">
                                     <label for="">Diagnóstico secundario</label>
-                                    <input type="text" class="form-control" id="text_diagnostico_1" onkeydown="BuscarDiagnostico(1)" value="<?= $Diagnosticos[1]['cie10_nombre'] ?>">
+                                    <input type="text" class="form-control" autocomplete="off" id="text_diagnostico_1" onkeydown="BuscarDiagnostico(1)" value="<?= $Diagnosticos[1]['cie10_nombre'] ?>">
 
                                       <ul class="contenedor_consulta_diagnosticos" id="lista_resultado_diagnosticos_1">
                                       </ul>
@@ -616,6 +626,17 @@
                                   <button type="button" class="btn btn-success width100 btn_agregarDiagnostico add-diagnostico-secundario" title="Agregar diagnostico secundario" name="button">
                                     <span class="glyphicon glyphicon-plus "></span>
                                   </button>
+                                </div>
+                                <div class="col-sm-1" style="padding-top:25px;">
+                                  <button type="button" class="btn btn-default width100" id="btn_diagnostico_complementario_1" title="Complemento de diagnóstico" value="0" onclick="MostrarDiagnosticoComplementario(1);">
+                                    <span class="fa fa-file-text-o"></span>
+                                  </button>
+                                </div>
+                                <div class="col-sm-12" id="div_complento_diagnostico_1" <?= ($Diagnosticos[1]['complemento'] == "S/C") ? "hidden" : ""; ?>>
+                                  <div class="form-group">
+                                    <label>Complemento de diagnóstico</label>
+                                    <textarea name="complemento[]" rows="2" class="form-control"><?= ($Diagnosticos[1]['complemento'] == "S/C") ? "" : $Diagnosticos[1]['complemento']; ?></textarea>
+                                  </div>
                                 </div>
                               </div>
                               <div class="diagnosticos_secundarios_dinamico">
@@ -637,10 +658,10 @@
                                     </div>
                                   -->
 
-                                    <div class='col-sm-9'>
+                                    <div class='col-sm-8'>
                                       <div class='form-group'>
                                         <label>Diagnóstico secundario</label>
-                                        <input type='text' class='form-control' id='text_diagnostico_<?=$x?>' value="<?= $Diagnosticos[$x]['cie10_nombre'] ?>" onkeydown="BuscarDiagnostico(<?=$x?>)" />
+                                        <input type='text' class='form-control' autocomplete="off" id='text_diagnostico_<?=$x?>' value="<?= $Diagnosticos[$x]['cie10_nombre'] ?>" onkeydown="BuscarDiagnostico(<?=$x?>)" />
 
                                           <ul class='contenedor_consulta_diagnosticos' id='lista_resultado_diagnosticos_<?=$x?>' ></ul>
 
@@ -658,6 +679,17 @@
                                       <a class='btn btn-imms-cancel width100 delete-diagnostico-secundario' title='Borrar diagnostico secundario' onclick="BorrarDiagnosticoDinamico(<?=$x?>)">
                                         <span class='glyphicon glyphicon-remove'></span>
                                       </a>
+                                    </div>
+                                    <div class="col-sm-1" style="padding-top:25px;">
+                                      <button type="button" class="btn btn-default width100" id="btn_diagnostico_complementario_<?=$x?>" title="Complemento de diagnóstico" value="0" onclick="MostrarDiagnosticoComplementario(<?=$x?>);">
+                                        <span class="fa fa-file-text-o"></span>
+                                      </button>
+                                    </div>
+                                    <div class="col-sm-12" id="div_complento_diagnostico_<?=$x?>" <?= ($Diagnosticos[$x]['complemento'] == "S/C") ? "hidden" : ""; ?> >
+                                      <div class="form-group">
+                                        <label>Complemento de diagnóstico</label>
+                                        <textarea name="complemento[]" rows="2" class="form-control"><?= ($Diagnosticos[$x]['complemento'] == "S/C") ? "" : $Diagnosticos[$x]['complemento']; ?></textarea>
+                                      </div>
                                     </div>
 
                                   </div>
@@ -789,8 +821,11 @@
                                             $hiddenCheck = '';
                                           }
                                           ?>
-                                        <input type="checkbox" id="checkCuidadosGenerales" name="nota_cgenfermeria" value="1" <?= $check_generales ?> > -
-                                        <label id="labelCheckCuidadosGenerales"><?= $labelCheck ?></label>
+                                          <label class="md-check">
+                                            <input type="checkbox" id="checkCuidadosGenerales" name="nota_cgenfermeria" value="1" <?= $check_generales ?> ><i class="indigo"></i> -
+                                            <label id="labelCheckCuidadosGenerales"><?= $labelCheck ?></label>
+                                          </label>
+
                                       </label>
                                       <ul id="listCuidadosGenerales" <?= $hiddenCheck ?> >
                                         <li>a. Estado neurológico</li>
@@ -827,7 +862,11 @@
                                 </div>
 
                                 <br>
-                                <label><b>f) Prescripción: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
+                                <label><b>f) Prescripción: </b> &nbsp;</label>
+
+                                <label class="md-check">
+                                  <input type="checkbox" id="check_form_prescripcion"><i class="indigo"></i><label id="label_check_prescripcion">- SI</label>
+                                </label>
 
                                 <!-- Panel con el historial de prescripciones -->
                                 <!--
@@ -1029,8 +1068,8 @@
                                   </div>
                                   <div class="col-sm-12" style="padding:0">
 
-                                    <div class="col-sm-3" style="padding-left: 0;">
-                                      <label><b>Aplicación</b></label>
+                                    <div class="col-sm-4" style="padding-left: 0;">
+                                      <label><b>Horario de administración</b></label>
                                       <div class="input-group" id="borderAplicacion">
                                         <input type="text" class="form-control" id="aplicacion" disabled='disabled' >
                                         <span class="input-group-btn">
@@ -1042,7 +1081,7 @@
                                     <div class="col-sm-2" style="padding-left: 0;">
                                       <label><b>Fecha inicio</b></label>
                                       <div id="borderFechaInicio">
-                                      <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
+                                      <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  >
                                       </div>
                                     </div>
                                     <!-- El div cambia dependiendo el medicamento que sea prescrito -->
@@ -1201,8 +1240,12 @@
                             }
                             ?>
                             <span class = "label back-imss border-back-imss">SOLICITUD DE INTERCONSULTAS</span>
-                            <input type="checkbox" name="check_solicitud_interconsulta" value="<?=$value_check?>" <?=$check  ?>>
-                            <label id="lbl_check_interconsulta"><?=$lable_text?></label>
+                            <label class="md-check">
+                              <input type="checkbox" name="check_solicitud_interconsulta" value="<?=$value_check?>" <?=$check  ?>>
+                              <i class="indigo"></i>
+                              <label id="lbl_check_interconsulta"><?=$lable_text?></label>
+                            </label>
+
                           </h4>
                               <?php
                               $interconsulta_solicitada = "";

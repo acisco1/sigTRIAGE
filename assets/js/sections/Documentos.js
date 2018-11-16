@@ -513,6 +513,10 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
 
     });
 
+    $('#btn_otro_diluyente').click(function(){
+      alert("otro diluyente");
+    });
+
     $('.edit-form-npt').click(function(){
       FormularioNPT();
     });
@@ -927,11 +931,16 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
     $('.btn-edit-diagnostico-principal').click(function(){
       $('input[name=accion_diagnostico_principal]').val("edit");
       $('#text_diagnostico_1').removeAttr('disabled');
+      $('#complemento_diagnostico_principal').removeAttr('disabled');
+      $('#text_diagnostico_1').val('');
+      $('#text_codigo_diagnostico_1').val('');
+      $('#complemento_diagnostico_principal').val('');
     });
 
     $('.btn-diagnostico-principal').click(function(){
       $('#text_diagnostico_1').val('');
       $('#text_codigo_diagnostico_1').val('');
+      $('#complemento_diagnostico_principal').val('');
     });
 
     $('#consulta_diagnosticos').click(function(){
@@ -1167,10 +1176,10 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
         "</div>"+
         */
 
-        "<div class='col-sm-9'>"+
+        "<div class='col-sm-8'>"+
           "<div class='form-group'>"+
             "<label>Diagnóstico secundario</label>"+
-            "<input type='text' class='form-control' id='text_diagnostico_"+indice_diagnosticos_secundarios+"' onkeydown=BuscarDiagnostico("+indice_diagnosticos_secundarios+") />"+
+            "<input type='text' class='form-control' autocomplete='off' id='text_diagnostico_"+indice_diagnosticos_secundarios+"' onkeydown=BuscarDiagnostico("+indice_diagnosticos_secundarios+") />"+
 
               "<ul class='contenedor_consulta_diagnosticos' id='lista_resultado_diagnosticos_"+indice_diagnosticos_secundarios+"' ></ul>"+
 
@@ -1188,6 +1197,19 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           "<a class='btn btn-imms-cancel width100 delete-diagnostico-secundario' title='Borrar diagnostico secundario' onclick=BorrarDiagnosticoDinamico("+indice_diagnosticos_secundarios+")> "+
             "<span class='glyphicon glyphicon-remove'></span>"+
           "</a>"+
+        "</div>"+
+
+        "<div class='col-sm-1' style='padding-top:25px;'>"+
+          "<button type='button' class='btn btn-default width100' id='btn_diagnostico_complementario_"+indice_diagnosticos_secundarios+"' title='Complemento de diagnóstico' value='0' onclick=MostrarDiagnosticoComplementario("+indice_diagnosticos_secundarios+") >"+
+            "<span class='fa fa-file-text-o'></span>"+
+          "</button>"+
+        "</div>"+
+
+        "<div class='col-sm-12' id='div_complento_diagnostico_"+indice_diagnosticos_secundarios+"' hidden>"+
+          "<div class='form-group' >"+
+            "<label>Complemento de diagnóstico</label>"+
+            "<textarea name='complemento[]' rows='2' class='form-control'></textarea>"+
+          "</div>"+
         "</div>"+
 
       "</div>";
@@ -1413,50 +1435,6 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
     });
 
 
-    $('#check_form_alergia_medicamento').change(function(){
-      if($(this).is(':checked')){
-
-        $('#label_check_alergia_medicamentos').text("");
-        $('#alergia_medicamentos').removeAttr('hidden');
-
-        var formulario =
-        "<div class='col-sm-11' style='padding-left:0px;'>"+
-          "<label>Medicamento</label>"+
-          "<select id='medicamento_select' name='alergias_medicamento[]' class='width100'>"+
-          "</select>"+
-        "</div>"+
-        "<div class='col-sm-1' style='padding-top:25px; padding-right:0px;' >"+
-          "<button type='button' class='btn btn-success width100' onClick=AgregaFormularioAlergiaMedicamento(); title='Agregar alergia a medicamentos' name='button'>"+
-            "<span class='glyphicon glyphicon-plus'></span>"+
-          "</button>"+
-        "</div>";
-
-        $('#alergia_medicamentos').append(formulario);
-        $('#medicamento_select').select2();
-
-        $.ajax({
-          url: base_url+"Sections/Documentos/ObtenerMedicamentos",
-          type: 'GET',
-          dataType:'json',
-          data: {
-          },success: function (data, textStatus, jqXHR) {
-            for(var x = 0; x < data.medicamentos.length; x++){
-            $('#medicamento_select').append("<option value='"+data.medicamentos[x].medicamento_id+"'>"+data.medicamentos[x].medicamento+"</option>");
-            }
-          },error: function (e) {
-              msj_error_serve(e)
-              bootbox.hideAll();
-          }
-        });
-
-
-      }else {
-        $('#label_check_alergia_medicamentos').text("- NO DETECTADAS");
-        $('#alergia_medicamentos').attr('hidden',true);
-        $('#alergia_medicamentos').empty();
-      }
-    });
-
     $('#check_form_prescripcion').change(function(){
       $('.btn_modificarPrescripcion').attr('hidden','true');
       $('.btn_agregarPrescripcion').removeAttr('hidden');
@@ -1503,6 +1481,43 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           '</div>');
         }
 
+    });
+    // valida que se selecciones los campos de la escala de glasgow
+    $('.btn_modal_glasgow').click(function(){
+      var ocular = ($('input[name=apertura_ocular]').is(':checked')) ? parseInt($('input[name=apertura_ocular]:checked').val()) : 0;
+      var motora = ($('input[name=respuesta_motora]').is(':checked')) ? parseInt($('input[name=respuesta_motora]:checked').val()) : 0;
+      var verbal = ($('input[name=respuesta_verbal]').is(':checked')) ? parseInt($('input[name=respuesta_verbal]:checked').val()) : 0;
+
+      if(ocular == 0){
+        $('.label_glasgow_ocular').css('color','red');
+      }else{
+        $('.label_glasgow_ocular').css('color','black');
+      }
+
+      if(motora == 0){
+        $('.label_glasgow_motora').css('color','red');
+      }else{
+        $('.label_glasgow_motora').css('color','black');
+      }
+
+      if(verbal == 0){
+        $('.label_glasgow_verbal').css('color','red');
+      }else{
+        $('.label_glasgow_verbal').css('color','black');
+      }
+
+      if(ocular > 0 && motora > 0 && verbal > 0 ){
+        $('#myModal1').modal('toggle');
+      }
+
+    });
+
+    $('.sum_glasgow').click(function(){
+      var ocular = ($('input[name=apertura_ocular]').is(':checked')) ? parseInt($('input[name=apertura_ocular]:checked').val()) : 0;
+      var motora = ($('input[name=respuesta_motora]').is(':checked')) ? parseInt($('input[name=respuesta_motora]:checked').val()) : 0;
+      var verbal = ($('input[name=respuesta_verbal]').is(':checked')) ? parseInt($('input[name=respuesta_verbal]:checked').val()) : 0;
+      var total = (ocular + motora + verbal);
+      $('input[name=hf_escala_glasgow]').val(total);
     });
 
     var Total=0;
@@ -2564,7 +2579,7 @@ function TipoMedicamento(medicamento_id){
         "</div>";
       }else{
         formulario =
-        "<div class='col-sm-2' >"+
+        "<div class='col-sm-1' style='padding-right:0;' >"+
           "<label id='categoria_farmacologica' hidden>"+farmacologica+"</label>"+
           "<label><b>Duración</b></label>"+
           "<div class='input-group'>"+
@@ -2727,46 +2742,6 @@ function BorrarDiagnosticoDinamico(indice){
   $('#form_diagnosticos_secundarios_'+indice).remove();
 }
 
-var contador_alergia_medicamentos = 0;
-function AgregaFormularioAlergiaMedicamento(){
-  contador_alergia_medicamentos = contador_alergia_medicamentos + 1;
-  var formulario =
-  "<div id='input_medicamento_alergia_"+contador_alergia_medicamentos+"'>"+
-    "<div class='col-sm-11' style='padding-left:0px;'>"+
-      "<label>Medicamento</label>"+
-      "<select id='medicamento_select_"+contador_alergia_medicamentos+"' name='alergias_medicamento[]' class='width100'>"+
-      "</select>"+
-    "</div>"+
-    "<div class='col-sm-1' style='padding-top:25px; padding-right:0px;' >"+
-      "<button type='button' class='btn btn-imms-cancel width100' "+
-      " onClick=BorrarFormularioAlergiaMedicamento("+contador_alergia_medicamentos+"); title='Agregar alergia a medicamentos' name='button'>"+
-        "<span class='glyphicon glyphicon-remove'></span>"+
-      "</button>"+
-    "</div>"+
-  "</div>";
-
-  $('#alergia_medicamentos').append(formulario);
-  $('#medicamento_select_'+contador_alergia_medicamentos).select2();
-
-  $.ajax({
-    url: base_url+"Sections/Documentos/ObtenerMedicamentos",
-    type: 'GET',
-    dataType:'json',
-    data: {
-    },success: function (data, textStatus, jqXHR) {
-      for(var x = 0; x < data.medicamentos.length; x++){
-      $('#medicamento_select_'+contador_alergia_medicamentos).append("<option value='"+data.medicamentos[x].medicamento_id+"'>"+data.medicamentos[x].medicamento+"</option>");
-      }
-    },error: function (e) {
-        msj_error_serve(e)
-        bootbox.hideAll();
-    }
-  });
-}
-
-function BorrarFormularioAlergiaMedicamento(indice){
-  $('#input_medicamento_alergia_'+indice).remove();
-}
 
 function BuscarDiagnostico(indice){
 
@@ -2916,8 +2891,42 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
   }
 }
 
+var diluyente_original = "";
+function OtroDiluyente(){
+
+  if(diluyente_original == ""){
+    diluyente_original = $('#select_diluyente').val();
+  }
+
+  var val_opcion = $('#btn_otro_diluyente').val();
+  var soluciones = ['Cloruro de sodio 0.9%','SSF 0.9%','SGluc 5%'];
+  var opciones = "";
+
+  $('#select_diluyente').empty();
+
+  switch (val_opcion) {
+
+    case "0":
+      $('#btn_otro_diluyente').val(1);
+      opciones = "<option value='0'>- Seleccionar otro diluyente -</option>";
+      $('#select_diluyente').append(opciones);
+      soluciones.forEach(function(val){
+        opciones = "<option value='"+val+"'>"+val+"</option>";
+        $('#select_diluyente').append(opciones);
+      });
+      break;
+
+    case "1":
+      $('#btn_otro_diluyente').val(0);
+      $('#select_diluyente').append("<option value='"+diluyente_original+"'>"+diluyente_original+"</option>");
+
+      break;
+
+  }
 
 
+
+}
 function FormularioAntimicrobianoOncologico(){
 
   var medicamento_id = $('#select_medicamento').val();
@@ -2939,9 +2948,9 @@ function FormularioAntimicrobianoOncologico(){
           title: "Antimicrobiano / Oncologico",
           message: "<label><b>Diluyente</b></label>"+
                     "<div class='input-group'>"+
-                      "<select class='form-control' ><option value='"+diluyente+"' >"+diluyente+"</option></select>"+
+                      "<select class='form-control' id='select_diluyente'><option value='"+diluyente+"' >"+diluyente+"</option></select>"+
                       "<span class='input-group-btn'>"+
-                        "<button class='btn btn-default edit-aplicacion' type='button' value='0' title='Cambiar el diluyente'>Cambiar</button>"+
+                        "<button class='btn btn-default edit-aplicacion' id='btn_otro_diluyente' onClick=OtroDiluyente(); type='button' value='0' title='Cambiar el diluyente'>Cambiar</button>"+
                       "</span>"+
                     "</div>"+
                     "<label><b>Vol. Diluyente</b></label>"+
@@ -3178,5 +3187,22 @@ function ConsultarViasAdministracion(){
       }
   });
 
+
+}
+function MostrarDiagnosticoComplementario(indice){
+
+  var estado = $('#btn_diagnostico_complementario_'+indice).val();
+
+
+  switch (estado) {
+    case '0':
+        $('#btn_diagnostico_complementario_'+indice).val('1');
+        $('#div_complento_diagnostico_'+indice).removeAttr('hidden');
+      break;
+    case '1':
+        $('#btn_diagnostico_complementario_'+indice).val('0');
+        $('#div_complento_diagnostico_'+indice).attr('hidden', true);
+      break;
+  }
 
 }
