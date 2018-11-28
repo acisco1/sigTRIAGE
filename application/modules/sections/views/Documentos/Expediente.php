@@ -191,10 +191,20 @@
                                     <?php endif;?>
                                     <?php foreach ($HojasFrontales as $value) {?>
                                     <tr>
+                                      <?php
+                                      $tiempo = array(
+                                        'Tiempo1_fecha' => $value['hf_fg'],
+                                        'Tiempo1_hora' => $value['hf_hg'],
+                                        'Tiempo2_fecha' => date('d-m-Y'),
+                                        'Tiempo2_hora' => date('H:i')
+                                      );
+                                      $tiempo_transcurrido_hf = Modules::run('config/Config/TiempoTranscurrido', $tiempo);
+                                       ?>
                                         <td><?=$value['hf_fg']?> <?=$value['hf_hg']?></td>
                                         <td>Hoja Inicial(Hoja Frontal)</td>
                                         <td>Admisión Continua</td>
                                         <td><?= Modules::run('Sections/Documentos/ExpedienteEmpleado',array('empleado_id'=>$value['empleado_id']))?></td>
+                                        <!-- Acciones -->
                                         <td>
                                             <?php if($this->ConfigHojaInicialAbierta=='No'){?>
                                             <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/HojaFrontalCE/<?=$value['triage_id']?>')" data-original-title="Generar Hoja Frontal"></i>
@@ -211,11 +221,20 @@
                                             <?php if($_GET['via']!='paciente'){?>
                                             <?php if($value['empleado_id']==$_SESSION['UMAE_USER'] || $obs['observacion_medico']==$_SESSION['UMAE_USER']){?>
                                             <?php if($this->ConfigHojaInicialAbierta=='No'){?>
-                                            <a href="<?=  base_url()?>Sections/Documentos/HojaFrontal?hf=<?=$value['hf_id']?>&a=edit&folio=<?=$this->uri->segment(4)?>&tipo=<?=$_GET['tipo']?>" target="_blank">
+                                              <?php
+                                              $accion_editar_hf = base_url().'Sections/Documentos/HojaFrontal?hf='.$value['hf_id'].'&a=edit&folio='.$this->uri->segment(4).'&tipo='.$_GET['tipo'];
+                                              $opacidad = '';
+                                              if($tiempo_transcurrido_hf > 15){
+                                                $accion_editar_hf = '';
+                                                $opacidad = 'opacity: 0.4;';
+                                              }
+                                              ?>
+
+                                            <a href="<?= $accion_editar_hf ?>"  style="<?=$opacidad?>">
                                                 <i class="fa fa-pencil icono-accion"></i>
                                             </a>&nbsp;
                                             <?php }else{?>
-                                            <a href="<?=  base_url()?>Sections/Documentos/HojaInicialAbierto?hf=<?=$value['hf_id']?>&a=edit&folio=<?=$this->uri->segment(4)?>&tipo=<?=$_GET['tipo']?>" target="_blank">
+                                            <a href="<?= $accion_editar_hf ?>"  style="<?=$opacidad?>">
                                                 <i class="fa fa-pencil icono-accion"></i>
                                             </a>&nbsp;
                                             <?php }?>
@@ -225,9 +244,24 @@
                                         </td>
                                     </tr>
                                     <?php }?>
-                                    <?php foreach ($NotasAll as $value) {?>
+                                    <?php foreach ($NotasAll as $value) {
+
+                                      $tiempoNotas = array(
+                                        'Tiempo1_fecha' => $value['notas_fecha'],
+                                        'Tiempo1_hora' => $value['notas_hora'],
+                                        'Tiempo2_fecha' => date('d-m-Y'),
+                                        'Tiempo2_hora' => date('H:i')
+                                      );
+                                      $tiempo_transcurrido_notas = "hola"; //Modules::run('config/Config/TiempoTranscurrido', $tiempoNotas);
+                                      $accion_editar_notas = "hola";//'AbrirVista(base_urlSections/Documentos/Notas/'.$value['notas_id'].'/?a=edit&TipoNota='.$value['notas_tipo'].'&folio='.$this->uri->segment(4).'&via='.$_GET['via'].'&doc_id='.$_GET['doc_id'].'&inputVia='.$_GET['tipo'], 1100);
+                                      $opacidad_edit_notas = "";
+                                      if($tiempo_transcurrido_notas > 15){
+                                        $accion_editar_notas = "";
+                                        $opacidad_edit_notas = "opacity:0.4;";
+                                      }
+                                      ?>
                                     <tr>
-                                        <td><?=$value['notas_fecha']?> <?=$value['notas_hora']?></td>
+                                        <td><?=$value['notas_fecha']?> <?=$value['notas_hora']?> / Minutos: <?= $tiempo_transcurrido_notas ?> </td>
                                         <td>
                                             <?=$value['notas_tipo']?>
                                         </td>
@@ -240,7 +274,7 @@
                                             <i class="glyphicon glyphicon-list-alt icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>&indicaciones=1')" data-original-title="ORDENES MEDICAS <?=$value['notas_tipo']?>"></i>
                                             &nbsp;
                                             <?php if($value['empleado_id']==$_SESSION['UMAE_USER']){?>
-                                                <a onclick="AbrirVista(base_url+'Sections/Documentos/Notas/<?=$value['notas_id']?>/?a=edit&TipoNota=<?=$value['notas_tipo']?>&folio=<?=$this->uri->segment(4)?>&via=<?=$_GET['via']?>&doc_id=<?=$_GET['doc_id']?>&inputVia=<?=$_GET['tipo']?>',1100)">
+                                                <a onclick="<?=$accion_editar_notas ?>">
                                                     <i class="fa fa-pencil icono-accion"></i>
                                                 </a>&nbsp;
 

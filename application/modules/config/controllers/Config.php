@@ -197,6 +197,7 @@ class Config extends MX_Controller{
         $diff=$Tiempo1->diff($Tiempo2);
         return $diff->h*60 + $diff->i;
     }
+    //Retorna el valor en minutos
     public function TiempoTranscurrido($data) {
         $Tiempo1=new DateTime(str_replace('/', '-', $data['Tiempo1_fecha']).' '.$data['Tiempo1_hora']);
         $Tiempo2=new DateTime(str_replace('/', '-', $data['Tiempo2_fecha']).' '. $data['Tiempo2_hora']);

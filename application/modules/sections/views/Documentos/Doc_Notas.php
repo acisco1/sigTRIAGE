@@ -910,12 +910,14 @@
                                                         <label id="label_total_reacciones"><?= count($ReaccionesAdversas) ?></label>
                                                     </a>
                                                   </li>
+                                                  <!-- Alegia a medicamentos
                                                   <li>
                                                     <a id="acordeon_alergia_medicamentos">
                                                         Alergia a medicamentos:
                                                         <label id="label_total_reacciones"><?= count($AlergiaMedicamentos) ?></label>
                                                     </a>
                                                   </li>
+                                                  -->
                                                   <!--
                                                   <li>
                                                     <a id="acordeon_notificaciones">
@@ -971,7 +973,7 @@
                                               </table>
 
                                             </div>
-                                            <div id="historial_alergia_medicamentos" >
+                                            <div id="historial_alergia_medicamentos" hidden>
                                               <table style="width:100%;" >
                                                 <thead>
 
