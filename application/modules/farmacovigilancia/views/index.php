@@ -5,7 +5,9 @@
   }
   th, td{
     text-align: center;
+
   }
+
 </style>
 <div class="box-row">
   <div class="box-cell">
@@ -14,6 +16,7 @@
         <div class="panel-heading back-imss" style="text-align: center; font-size: 15px;">
           Actividad del dia <?= date('d-m-Y') ?>
         </div>
+        
         <div style="text-align: center; font-size: 160%;">
           <?php $url_color_estado = 'farmacovigilancia/Farmacologica/AsignarColorEstadoPrescripcion' ?>
           <div class="col-xs-4 clic-box btn_estado_prescripcion" data-value="1"  style="padding: 0px; background-color: <?=modules::run($url_color_estado,'1');?> ; color: rgb(140, 140, 102);">
@@ -27,29 +30,23 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-sm-12" style="padding:20px; padding-right:50px;padding-left:50px;">
-
-            <div class="input-group">
-              <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle back-imss" data-toggle="dropdown">
-                  <i class="fa fa-vcard-o"></i> <label id="filtro_busqueda" style="height: 1px;">Filtro de busqueda</label>
-                </button>
-                <ul class="dropdown-menu back-imss">
-                  <li><a class="op_filtro">Todos</a></li>
-                  <li><a class="op_filtro">Nombre</a></li>
-                  <li><a class="op_filtro">Folio</a></li>
-                  <li><a class="op_filtro">Cama</a></li>
-                  <li><a class="op_filtro">Area</a></li>
-                  <li><a class="op_filtro">Medico</a></li>
-                  <li><a class="op_filtro">Meicamento</a></li>
-                </ul>
-              </div>
-              <input type="text" class="form-control" placeholder="Ingresar datos de busqueda">
-            </div>
-          </div>
-
+        <div class="row" style="padding-left: 35px; padding-right: 35px;">
+          <div class="col-sm-3" style="margin-top:20px; margin-bottom: 20px;">
+            <select name="" id="select_filtro" class="form-control">
+            <option value="Todos">Todos</option>
+            <option value="triage_id">Folio</option>
+            <option value="triage_nombre">Paciente</option>
+            <option value="cama_nombre">Cama</option>
+            <option value="area_nombre">Area</option>
+            <option value="empleado_nombre">Médico</option>
+            <option value="medicamento">Medicamento</option>
+          </select>
         </div>
+          <div class="col-sm-9" style="margin-top:20px; margin-bottom: 20px;">
+            <input type="text" class="form-control" id="input_busqueda" placeholder="Ingresar datos de busqueda">
+          </div>
+        </div>
+
         <div class="table-responsive" style="padding-left:36px; padding-right: 36px;">
           <table class="table table-hover table-condensed table-bordered"
                  id="tb_pacientes" >

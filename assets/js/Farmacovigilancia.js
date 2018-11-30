@@ -5,6 +5,48 @@ $(document).ready(function () {
     ConsultarEstadoPrescripcionesPaciente('estado',estado);
   });
 
+  $('#input_busqueda').keyup(function(){
+
+      var consulta = $(this).val(),
+          filtro = $('#select_filtro option:selected').val();
+
+
+          $.ajax({
+              url: base_url+"Farmacovigilancia/AjaxBusqueda",
+              type: 'GET',
+              dataType: 'json',
+              data:{
+                  filtro:filtro,
+                  consulta: consulta
+              },success: function (data, textStatus, jqXHR) {
+                $('#tbl_paciente_prescripcion').empty(fila);
+                var fila = '',
+                    color_estado;
+                for(var x = 0; x < data.length; x++){
+                  color_estado = AsignarColorEstadoPrescripcion(data[x].estado);
+                  fila = "" +
+                  "<tr class='fila_paciente' style='cursor: pointer;' onClick=TomarDatosTabla("+x+"); data-value="+x+" >"+
+                    "<td id='id_"+x+"'  style='background-color: "+color_estado+";' >"+data[x].triage_id+"</td>"+
+                    "<td id='paciente_"+x+"' >"+data[x].triage_nombre+" "+data[x].triage_nombre_ap+"</td>"+
+                    "<td id='cama_"+x+"' >"+data[x].cama_nombre+"</td>"+
+                    "<td id='area_"+x+"' >"+data[x].area_nombre+"</td>"+
+                    "<td id='medico_"+x+"' >"+data[x].empleado_nombre+" "+data[x].empleado_apellidos+"</td>"+
+                    "<td id='medicamento_"+x+"' >"+data[x].medicamento+"</td>"+
+                  "</tr>"+
+                  "";
+                  $('#tbl_paciente_prescripcion').append(fila);
+                }
+
+              },error: function (jqXHR, textStatus, errorThrown) {
+                  bootbox.hideAll();
+                  MsjError();
+              }
+          });
+
+
+
+  });
+
   $('.fila_paciente').click(function(){
     var fila = $(this).attr('data-value'),
         folio = $('#id_'+fila).text(),
@@ -24,10 +66,6 @@ $(document).ready(function () {
   });
 
 });
-
-function SolicitudInfoPaciente(){
-
-}
 
 function ModalPacientePrescripciones(dataArray){
   var paciente = dataArray[2],
@@ -106,6 +144,22 @@ function ModalPacientePrescripciones(dataArray){
 
 
 }
+
+
+function TomarDatosTabla(fila){
+
+  var folio = $('#id_'+fila).text(),
+      paciente = $('#paciente_'+fila).text(),
+      cama = $('#cama_'+fila).text(),
+      area = $('#area_'+fila).text(),
+      medico = $('#medico_'+fila).text()
+      dataArray = [fila,folio,paciente,cama,area,medico];
+
+  ModalPacientePrescripciones(dataArray);
+
+}
+
+
 function BusquedaPorFiltroPacientePrescripcion(filtro, consulta){
   $.ajax({
       url: base_url+"Farmacovigilancia/AjaxBusquedaPorFiltroPacientePrescripcion",
@@ -121,13 +175,13 @@ function BusquedaPorFiltroPacientePrescripcion(filtro, consulta){
         for(var x = 0; x < data.length; x++){
           color_estado = AsignarColorEstadoPrescripcion(data[x].estado);
           fila = "" +
-          "<tr>"+
-            "<td style='background-color: "+color_estado+";' >"+data[x].triage_id+"</td>"+
-            "<td>"+data[x].triage_nombre+" "+data[x].triage_nombre_ap+"</td>"+
-            "<td>"+data[x].cama_nombre+"</td>"+
-            "<td>"+data[x].area_nombre+"</td>"+
-            "<td>"+data[x].empleado_nombre+" "+data[x].empleado_apellidos+"</td>"+
-            "<td>"+data[x].medicamento+"</td>"+
+          "<tr class='fila_paciente' style='cursor: pointer;' onClick=TomarDatosTabla("+x+"); data-value="+x+" >"+
+            "<td id='id_"+x+"'  style='background-color: "+color_estado+";' >"+data[x].triage_id+"</td>"+
+            "<td id='paciente_"+x+"' >"+data[x].triage_nombre+" "+data[x].triage_nombre_ap+"</td>"+
+            "<td id='cama_"+x+"' >"+data[x].cama_nombre+"</td>"+
+            "<td id='area_"+x+"' >"+data[x].area_nombre+"</td>"+
+            "<td id='medico_"+x+"' >"+data[x].empleado_nombre+" "+data[x].empleado_apellidos+"</td>"+
+            "<td id='medicamento_"+x+"' >"+data[x].medicamento+"</td>"+
           "</tr>"+
           "";
           $('#tbl_paciente_prescripcion').append(fila);
@@ -156,13 +210,13 @@ function ConsultarEstadoPrescripcionesPaciente(filtro,estado){
         for(var x = 0; x < data.length; x++){
           color_estado = AsignarColorEstadoPrescripcion(data[x].estado);
           fila = "" +
-          "<tr>"+
-            "<td style='background-color: "+color_estado+";' >"+data[x].triage_id+"</td>"+
-            "<td>"+data[x].triage_nombre+" "+data[x].triage_nombre_ap+"</td>"+
-            "<td>"+data[x].cama_nombre+"</td>"+
-            "<td>"+data[x].area_nombre+"</td>"+
-            "<td>"+data[x].empleado_nombre+" "+data[x].empleado_apellidos+"</td>"+
-            "<td>"+data[x].medicamento+"</td>"+
+          "<tr class='fila_paciente' style='cursor: pointer;' onClick=TomarDatosTabla("+x+"); data-value="+x+" >"+
+            "<td id='id_"+x+"'  style='background-color: "+color_estado+";' >"+data[x].triage_id+"</td>"+
+            "<td id='paciente_"+x+"' >"+data[x].triage_nombre+" "+data[x].triage_nombre_ap+"</td>"+
+            "<td id='cama_"+x+"' >"+data[x].cama_nombre+"</td>"+
+            "<td id='area_"+x+"' >"+data[x].area_nombre+"</td>"+
+            "<td id='medico_"+x+"' >"+data[x].empleado_nombre+" "+data[x].empleado_apellidos+"</td>"+
+            "<td id='medicamento_"+x+"' >"+data[x].medicamento+"</td>"+
           "</tr>"+
           "";
           $('#tbl_paciente_prescripcion').append(fila);

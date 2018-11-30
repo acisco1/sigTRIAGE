@@ -39,30 +39,45 @@ class Farmacovigilancia extends Config{
     print json_encode($sql);
   }
 
+  public function AjaxBusqueda(){
+
+    $filtro = $_GET['filtro'];
+    $dato = $_GET['consulta'];
+    if($filtro == 'triage_id'){
+      $filtro = "os_triage.triage_id";
+    }
+    $condicion = "WHERE $filtro LIKE '%$dato%' ";
+    $consulta = "SELECT os_triage.triage_id, area_nombre, triage_nombre, triage_nombre_ap,
+                 medicamento , cama_nombre, empleado_nombre,
+                 empleado_apellidos,estado
+                 FROM prescripcion
+                 INNER JOIN os_triage
+                 	ON os_triage.triage_id = prescripcion.triage_id
+                 INNER JOIN catalogo_medicamentos
+                 	ON catalogo_medicamentos.medicamento_id = prescripcion.medicamento_id
+                 INNER JOIN os_camas
+                 	ON os_camas.triage_id = os_triage.triage_id
+                 INNER JOIN os_areas
+                 	ON os_areas.area_id = os_camas.area_id
+                 INNER JOIN um_medico_tratante
+                 	ON um_medico_tratante.triage_id = os_triage.triage_id
+                 INNER JOIN os_empleados
+                 	ON os_empleados.empleado_id = um_medico_tratante.empleado_id
+                 $condicion";
+
+    $sql = $this->config_mdl->_query($consulta);
+    print json_encode($sql);
+
+
+  }
+
   public function PacientePrescripcion($filtro, $dato){
 
-    $condicion = "";
-    $val1 = $filtro;
-    $val2 = $dato;
-    echo "CONDICION $val1 DATO: $val2";
-    if($vall == '0' || $vall == '1' || $vall == '2' ){
-      $condicion = "WHERE $val1 = $val2";
-    }
+    $condicion = '';
 
-
-    /*
-    else if($filtro == 'triage_nombre'){
-      $condicion = "$condicion $filtro LIKE '%$dato%' "; // Nombre paciente
-    }else if($filtro == 'medicamento'){
-      $condicion = "$condicion $filtro LIKE '%$dato%' "; // Medicamento
-    }else if($filtro == 'cama_nombre'){
-      $condicion = "$condicion $filtro LIKE '%$dato%' "; // Cama paciente
-    }else if($filtro == 'empleado_nombre'){
-      $condicion = "$condicion $filtro LIKE '%$dato%' "; // Médico
-    }else if($filtro == 'area_nombre'){
-      $condicion = "$condicion $filtro LIKE '%$dato%' "; // Area
+    if($dato == '0' || $dato == '1' || $dato == '2' ){
+      $condicion = "WHERE $filtro = $dato";
     }
-    */
     $consulta = "SELECT os_triage.triage_id, area_nombre, triage_nombre, triage_nombre_ap,
                  medicamento , cama_nombre, empleado_nombre,
                  empleado_apellidos,estado
