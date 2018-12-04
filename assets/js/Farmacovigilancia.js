@@ -87,10 +87,22 @@ function ModalPacientePrescripciones(dataArray){
         var nueva_fila = "";
         var estado = 0;
         var color_estado = "";
+        var check = "";
+        var acciones = "";
 
         for(var x = 0; x < data.length; x++){
           estado = data[x].estado;
+          check = (estado == 2)? 'checked':'';
           color_estado = AsignarColorEstadoPrescripcion(estado);
+          if(estado != 0){
+            acciones = ""+
+            "<label class='md-check'>"+
+              "<input type='checkbox' data-value='"+estado+"' "+check+" onClick=ActualizarEstadoPrescripcion("+data[x].prescripcion_id+"); /><i class='blue'></i>"+
+            "</label>"+
+            "<button class='btn btn-xs btn-warning btn_msj_prescripcion' onClick=FormMensajePrescripcion(); >Mensaje</button>"+
+            "";
+          }
+
           nueva_fila = ""+
           "<tr>"+
             "<td style='background-color:"+color_estado+"'>"+data[x].prescripcion_id+"</td>"+
@@ -99,14 +111,12 @@ function ModalPacientePrescripciones(dataArray){
             "<td>"+data[x].pr_via+"</td>"+
             "<td>"+data[x].frecuencia+"</td>"+
             "<td>"+
-              "<label class='md-check'>"+
-                "<input type='checkbox' name='check_conciliacion[]' id='checid' data-value='"+estado+"' /><i class='blue'></i>"+
-              "</label>"+
-              "<button class='btn btn-xs btn-warning btn_msj_prescripcion' onClick=FormMensajePrescripcion(); >Mensaje</button>"+
+              acciones+
             "</td>"+
           "</tr>"+
           "";
           filaDatos = filaDatos + nueva_fila;
+          acciones = "";
         }
 
         bootbox.confirm({
@@ -114,8 +124,6 @@ function ModalPacientePrescripciones(dataArray){
           title:'Paciente '+paciente+' Cama: '+cama+' Area: '+area+' Médico: '+medico,
           message: ''+
           '<div class="table-responsive">'+
-
-
               '<table class="table table-hover table-responsive center">'+
                 '<thead>'+
                   '<tr>'+
@@ -145,11 +153,7 @@ function ModalPacientePrescripciones(dataArray){
             }
           },
           callback: function(result){
-            $('input[name^="check_conciliacion"]').each(function(){
-              if( $(this).is(":checked") ){
-                alert($(this).attr('data-value'));
-              }
-            });
+            window.location.reload(true);
           }
         });
 
@@ -284,6 +288,19 @@ function FormMensajePrescripcion(){
     callback: function(result){
 
     }
+  });
+
+}
+
+function ActualizarEstadoPrescripcion(prescripcion_id){
+
+  $.ajax({
+      url: base_url+"Farmacovigilancia/AjaxActivarPrescrpciones",
+      type: 'GET',
+      data: {'prescripcion_id':prescripcion_id},
+      dataType: 'json',
+      success: function (data, textStatus, jqXHR) {
+      }
   });
 
 }

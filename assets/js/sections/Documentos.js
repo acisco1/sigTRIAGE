@@ -893,7 +893,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
                             dias: dias
                           },success: function (data, textStatus, jqXHR) {
                               msj_success_noti(data.mensaje);
-                              ActualizarHistorialPrescripcion(paciente,"1");
+                              ActualizarHistorialPrescripcion(paciente,"2");
                               RegistrarAccionBitacoraPrescripcion(prescripcion_id,'Cancelar',motivo);
                               ConteoEstadoPrescripcion(paciente);
                               if(reaccion){
@@ -1414,7 +1414,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           RegistrarAccionBitacoraPrescripcion(prescripcion_id,'Actualizar',motivo_datos_viejos);
           var paciente = $('input[name=triage_id]').val();
           $('#historial_prescripcion').removeAttr('hidden');
-          ActualizarHistorialPrescripcion(paciente,"1");
+          ActualizarHistorialPrescripcion(paciente,"2");
           $('#select_medicamento').select2('enable',true);
         },error: function (e) {
             bootbox.hideAll();
@@ -2871,7 +2871,7 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
   switch (tipo_accion) {
     case 1:
         $("#historial_medicamentos_activos").removeAttr('hidden');
-        ActualizarHistorialPrescripcion(paciente,"1");
+        ActualizarHistorialPrescripcion(paciente,"2");
       break;
     case 2:
         $("#historial_movimientos").removeAttr('hidden');

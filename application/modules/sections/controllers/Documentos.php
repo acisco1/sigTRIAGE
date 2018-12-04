@@ -1156,7 +1156,7 @@ class Documentos extends Config{
                                                           INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
                                                           WHERE os_triage.triage_id =".$_GET['folio']);
         $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
-                                                                    WHERE estado = 1 AND triage_id = ".$_GET['folio']);
+                                                                    WHERE estado = 2 AND triage_id = ".$_GET['folio']);
         $sql['Prescripciones_canceladas'] = $this->config_mdl->_query("SELECT prescripcion.prescripcion_id
                                                                       FROM prescripcion
                                                                       INNER JOIN catalogo_medicamentos ON

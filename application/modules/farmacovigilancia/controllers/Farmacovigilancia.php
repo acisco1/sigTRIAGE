@@ -30,7 +30,7 @@ class Farmacovigilancia extends Config{
   public function AjaxPrescripcionesPaciente(){
     $folio = $_GET['folio'];
     $consulta = "SELECT prescripcion_id, medicamento, prescripcion.via AS pr_via,
-                  frecuencia, dosis, estado 
+                  frecuencia, dosis, estado
                  FROM prescripcion
                  INNER JOIN os_triage
                   ON os_triage.triage_id = prescripcion.triage_id
@@ -120,6 +120,24 @@ class Farmacovigilancia extends Config{
 
     }
 
+  }
+  public function AjaxActivarPrescrpciones(){
+
+    $prescripcion_id = $this->input->get('prescripcion_id');
+    $consultar_estado = "SELECT estado FROM prescripcion WHERE prescripcion_id = $prescripcion_id";
+    $resultado_estado = $this->config_mdl->_query($consultar_estado);
+
+    $nuevo_estado = 0;
+    if($resultado_estado[0]['estado'] == 1){
+      $nuevo_estado = 2;
+    }else if($resultado_estado[0]['estado'] == 2){
+      $nuevo_estado = 1;
+    }
+
+    $this->config_mdl->_update_data('prescripcion',
+                                    array('estado' => $nuevo_estado),
+                                    array('prescripcion_id' => $prescripcion_id)
+                                    );
   }
 
 
