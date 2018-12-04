@@ -199,9 +199,17 @@
                                         'Tiempo2_hora' => date('H:i')
                                       );
                                       $tiempo_transcurrido_hf = Modules::run('config/Config/TiempoTranscurrido', $tiempo);
+                                      $accion_editar_hf1 = base_url().'Sections/Documentos/HojaFrontal?hf='.$value['hf_id'].'&a=edit&folio='.$this->uri->segment(4).'&tipo='.$_GET['tipo'];
+                                      $accion_editar_hf2 = base_url().'Sections/Documentos/HojaInicialAbierto?hf='.$value['hf_id'].'&a=edit&folio='.$this->uri->segment(4).'&tipo='.$_GET['tipo'];
+                                      $opacidad = '';
+                                      if($tiempo_transcurrido_hf > 15){
+                                        $accion_editar_hf1 = '#';
+                                        $accion_editar_hf2 = '#';
+                                        $opacidad = 'opacity: 0.4;';
+                                      }
                                        ?>
                                         <td><?=$value['hf_fg']?> <?=$value['hf_hg']?></td>
-                                        <td>Hoja Inicial(Hoja Frontal)</td>
+                                        <td>Hoja Inicial(Hoja Frontal) </td>
                                         <td>Admisión Continua</td>
                                         <td><?= Modules::run('Sections/Documentos/ExpedienteEmpleado',array('empleado_id'=>$value['empleado_id']))?></td>
                                         <!-- Acciones -->
@@ -221,21 +229,14 @@
                                             <?php if($_GET['via']!='paciente'){?>
                                             <?php if($value['empleado_id']==$_SESSION['UMAE_USER'] || $obs['observacion_medico']==$_SESSION['UMAE_USER']){?>
                                             <?php if($this->ConfigHojaInicialAbierta=='No'){?>
-                                              <?php
-                                              $accion_editar_hf = base_url().'Sections/Documentos/HojaFrontal?hf='.$value['hf_id'].'&a=edit&folio='.$this->uri->segment(4).'&tipo='.$_GET['tipo'];
-                                              $opacidad = '';
-                                              if($tiempo_transcurrido_hf > 15){
-                                                $accion_editar_hf = '';
-                                                $opacidad = 'opacity: 0.4;';
-                                              }
-                                              ?>
 
-                                            <a href="<?= $accion_editar_hf ?>"  style="<?=$opacidad?>">
-                                                <i class="fa fa-pencil icono-accion"></i>
+
+                                            <a href="<?= $accion_editar_hf1 ?>"  target="_blank">
+                                                <i class="fa fa-pencil icono-accion" style="<?= $opacidad ?>" ></i>
                                             </a>&nbsp;
                                             <?php }else{?>
-                                            <a href="<?= $accion_editar_hf ?>"  style="<?=$opacidad?>">
-                                                <i class="fa fa-pencil icono-accion"></i>
+                                            <a href="<?= $accion_editar_hf2 ?>"  target="_blank">
+                                                <i class="fa fa-pencil icono-accion" style="<?= $opacidad ?>" ></i>
                                             </a>&nbsp;
                                             <?php }?>
                                             <?php }?>
@@ -252,16 +253,18 @@
                                         'Tiempo2_fecha' => date('d-m-Y'),
                                         'Tiempo2_hora' => date('H:i')
                                       );
-                                      $tiempo_transcurrido_notas = "hola"; //Modules::run('config/Config/TiempoTranscurrido', $tiempoNotas);
-                                      $accion_editar_notas = "hola";//'AbrirVista(base_urlSections/Documentos/Notas/'.$value['notas_id'].'/?a=edit&TipoNota='.$value['notas_tipo'].'&folio='.$this->uri->segment(4).'&via='.$_GET['via'].'&doc_id='.$_GET['doc_id'].'&inputVia='.$_GET['tipo'], 1100);
+                                      $tiempo_transcurrido_notas = Modules::run('config/Config/TiempoTranscurrido', $tiempoNotas);
+                                      $accion_editar_notas = "AbrirVista(base_url+'Sections/Documentos/Notas/".$value['notas_id']."/?a=edit&TipoNota=".$value['notas_tipo']."&folio=".$this->uri->segment(4)."&via=".$_GET['via']."&doc_id=".$_GET['doc_id']."&inputVia=".$_GET['tipo']."',1100)";
                                       $opacidad_edit_notas = "";
+                                      $mensaje_edit_notas = '';
                                       if($tiempo_transcurrido_notas > 15){
                                         $accion_editar_notas = "";
                                         $opacidad_edit_notas = "opacity:0.4;";
+                                        $mensaje_edit_notas = 'El tiempo de edición a expirado';
                                       }
                                       ?>
                                     <tr>
-                                        <td><?=$value['notas_fecha']?> <?=$value['notas_hora']?> / Minutos: <?= $tiempo_transcurrido_notas ?> </td>
+                                        <td><?=$value['notas_fecha']?> <?=$value['notas_hora']?></td>
                                         <td>
                                             <?=$value['notas_tipo']?>
                                         </td>
@@ -269,12 +272,13 @@
                                         <td><?=$value['empleado_nombre']?> <?=$value['empleado_apellidos']?></td>
 
                                         <td>
-                                            <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>&indicaciones=0')" data-original-title="Generar <?=$value['notas_tipo']?>"></i>
+                                            <i class="fa fa-file-pdf-o icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>')" data-original-title="Generar <?=$value['notas_tipo']?>"></i>
                                             &nbsp;
                                             <i class="glyphicon glyphicon-list-alt icono-accion tip pointer" onclick="AbrirDocumento(base_url+'Inicio/Documentos/GenerarNotas/<?=$value['notas_id']?>?inputVia=<?=$_GET['tipo']?>&indicaciones=1')" data-original-title="ORDENES MEDICAS <?=$value['notas_tipo']?>"></i>
                                             &nbsp;
                                             <?php if($value['empleado_id']==$_SESSION['UMAE_USER']){?>
-                                                <a onclick="<?=$accion_editar_notas ?>">
+
+                                                <a onclick="<?=$accion_editar_notas  ?>" style="<?=$opacidad_edit_notas?>" title="<?= $mensaje_edit_notas ?>">
                                                     <i class="fa fa-pencil icono-accion"></i>
                                                 </a>&nbsp;
 

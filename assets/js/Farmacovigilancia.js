@@ -47,6 +47,10 @@ $(document).ready(function () {
 
   });
 
+  $('.form_conciliacion_prescripciones').submit(function(){
+    alert("hola");
+  });
+
   $('.fila_paciente').click(function(){
     var fila = $(this).attr('data-value'),
         folio = $('#id_'+fila).text(),
@@ -81,16 +85,23 @@ function ModalPacientePrescripciones(dataArray){
       },success: function (data, textStatus, jqXHR) {
         var filaDatos = "";
         var nueva_fila = "";
+        var estado = 0;
+        var color_estado = "";
+
         for(var x = 0; x < data.length; x++){
+          estado = data[x].estado;
+          color_estado = AsignarColorEstadoPrescripcion(estado);
           nueva_fila = ""+
           "<tr>"+
-            "<td>"+data[x].prescripcion_id+"</td>"+
+            "<td style='background-color:"+color_estado+"'>"+data[x].prescripcion_id+"</td>"+
             "<td>"+data[x].medicamento+"</td>"+
             "<td>"+data[x].dosis+"</td>"+
             "<td>"+data[x].pr_via+"</td>"+
             "<td>"+data[x].frecuencia+"</td>"+
             "<td>"+
-              "<label class='md-check'><input type='checkbox'/><i class='blue'></i></label>"+
+              "<label class='md-check'>"+
+                "<input type='checkbox' name='check_conciliacion[]' id='checid' data-value='"+estado+"' /><i class='blue'></i>"+
+              "</label>"+
               "<button class='btn btn-xs btn-warning btn_msj_prescripcion' onClick=FormMensajePrescripcion(); >Mensaje</button>"+
             "</td>"+
           "</tr>"+
@@ -103,21 +114,24 @@ function ModalPacientePrescripciones(dataArray){
           title:'Paciente '+paciente+' Cama: '+cama+' Area: '+area+' Médico: '+medico,
           message: ''+
           '<div class="table-responsive">'+
-            '<table class="table table-hover table-responsive center">'+
-              '<thead>'+
-                '<tr>'+
-                  '<th>Folio</th>'+
-                  '<th>Prescripción</th>'+
-                  '<th>Dosis</th>'+
-                  '<th>Via</th>'+
-                  '<th>Frecuencia</th>'+
-                  '<th>Acciones</th>'+
-                '</tr>'+
-              '</thead>'+
-              '<tbody>'+
-                filaDatos+
-              '</tbody>'+
-            '</table>'+
+
+
+              '<table class="table table-hover table-responsive center">'+
+                '<thead>'+
+                  '<tr>'+
+                    '<th>Folio</th>'+
+                    '<th>Prescripción</th>'+
+                    '<th>Dosis</th>'+
+                    '<th>Via</th>'+
+                    '<th>Frecuencia</th>'+
+                    '<th>Acciones</th>'+
+                  '</tr>'+
+                '</thead>'+
+                '<tbody>'+
+                  filaDatos+
+                '</tbody>'+
+              '</table>'+
+
           '</div>'+
           '',
           buttons: {
@@ -131,7 +145,11 @@ function ModalPacientePrescripciones(dataArray){
             }
           },
           callback: function(result){
-
+            $('input[name^="check_conciliacion"]').each(function(){
+              if( $(this).is(":checked") ){
+                alert($(this).attr('data-value'));
+              }
+            });
           }
         });
 

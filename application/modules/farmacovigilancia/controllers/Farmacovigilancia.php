@@ -29,7 +29,9 @@ class Farmacovigilancia extends Config{
 
   public function AjaxPrescripcionesPaciente(){
     $folio = $_GET['folio'];
-    $consulta = "SELECT prescripcion_id, medicamento, prescripcion.via AS pr_via, frecuencia, dosis FROM prescripcion
+    $consulta = "SELECT prescripcion_id, medicamento, prescripcion.via AS pr_via,
+                  frecuencia, dosis, estado 
+                 FROM prescripcion
                  INNER JOIN os_triage
                   ON os_triage.triage_id = prescripcion.triage_id
                  INNER JOIN catalogo_medicamentos
