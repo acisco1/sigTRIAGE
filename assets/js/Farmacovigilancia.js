@@ -99,7 +99,7 @@ function ModalPacientePrescripciones(dataArray){
             "<label class='md-check'>"+
               "<input type='checkbox' data-value='"+estado+"' "+check+" onClick=ActualizarEstadoPrescripcion("+data[x].prescripcion_id+"); /><i class='blue'></i>"+
             "</label>"+
-            "<button class='btn btn-xs btn-warning btn_msj_prescripcion' onClick=FormMensajePrescripcion(); >Mensaje</button>"+
+            "<button class='btn btn-xs back-imss btn_msj_prescripcion' onClick=FormMensajePrescripcion("+data[x].prescripcion_id+"); >Mensaje</button>"+
             "";
           }
 
@@ -264,31 +264,60 @@ function AsignarColorEstadoPrescripcion(estado){
 
 }
 
-function FormMensajePrescripcion(){
+function FormMensajePrescripcion(prescripcion_id){
+  $.ajax({
+    url: base_url+"Farmacovigilancia/AjaxConsultarMensajePrescripcion",
+    type: 'GET',
+    dataType: 'JSON',
+    data: {
+      'prescripcion_id' : prescripcion_id
+    },success: function(data){
 
-  bootbox.confirm({
-    size: 'large',
-    title:'Notificacion',
-    message: ''+
-    '<div class="form-group">'+
-    '<label>Mensaje</label>'+
-    '<textarea class="form-control"></textarea>'+
-    '</div>'+
-    '',
-    buttons: {
-      confirm: {
-          label: 'Aceptar',
-          className: 'back-imss'
-      },
-      cancel: {
-          label: 'Cancelar',
-          className: 'btn-basic'
-      }
-    },
-    callback: function(result){
+      var mensaje =(data.num_resultados > 0)?data.consulta[0].notificacion : '';
+      bootbox.confirm({
+        size: 'large',
+        title:'Notificación',
+        message: ''+
+        '<div class="form-group">'+
+        '<label>Mensaje</label>'+
+        '<input type="text" id="prescripcion_id" value="'+prescripcion_id+'" hidden />'+
+        '<textarea class="form-control" id="mensaje_prescripcion" >'+mensaje+'</textarea>'+
+        '</div>'+
+        '',
+        buttons: {
+          confirm: {
+              label: 'Aceptar',
+              className: 'back-imss'
+          },
+          cancel: {
+              label: 'Cancelar',
+              className: 'btn-basic'
+          }
+        },
+        callback: function(result){
+          var prescripcion_id = $('#prescripcion_id').val(),
+              mensaje_prescripcion = $('#mensaje_prescripcion').val();
+
+          $.ajax({
+              url: base_url+"Farmacovigilancia/AjaxGestionMensajePrescripcion",
+              type: 'GET',
+              dataType: 'JSON',
+              data: {
+                'prescripcion_id' : prescripcion_id,
+                'mensaje_prescripcion' : mensaje_prescripcion
+              },success: function(data){
+                console.log(data.mensaje);
+              }
+          });
+
+        }
+      });
+
 
     }
   });
+
+
 
 }
 

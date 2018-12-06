@@ -141,5 +141,73 @@ class Farmacovigilancia extends Config{
   }
 
 
+  public function AjaxGestionMensajePrescripcion(){
+    $prescripcion_id = $_GET['prescripcion_id'];
+    $mensaje_prescripcion = $_GET['mensaje_prescripcion'];
+
+    if($this->VerificarExistenciaMensajePrescripcion($prescripcion_id)){
+
+        if($mensaje_prescripcion == ''){
+          $this->BorrarMensajePrescripcion($prescripcion_id);
+          $mensaje = array('mensaje' => 'Delete' );
+        }else{
+          $this->ActualizarMensajePrescripcion($prescripcion_id, $mensaje_prescripcion);
+          $mensaje = array('mensaje' => 'Update' );
+        }
+
+    }else{
+      $this->RegistrarMensajePrescripcion($prescripcion_id, $mensaje_prescripcion);
+      $mensaje = array('mensaje' => 'Insert' );
+    }
+
+    print json_encode($mensaje);
+  }
+
+  public function RegistrarMensajePrescripcion($prescripcion_id, $mensaje){
+    $sql = "INSERT INTO um_notificaciones_prescripciones(notificacion, prescripcion_id)
+            VALUES('$mensaje' , $prescripcion_id)";
+
+    return $this->config_mdl->_query($sql);
+
+  }
+
+  public function VerificarExistenciaMensajePrescripcion($prescripcion_id){
+    $query = "SELECT notificacion_id
+              FROM um_notificaciones_prescripciones
+              WHERE prescripcion_id = $prescripcion_id";
+    return $this->config_mdl->_query($query);
+  }
+
+  public function BorrarMensajePrescripcion($prescripcion_id){
+    $query = "DELETE FROM um_notificaciones_prescripciones
+              WHERE prescripcion_id = $prescripcion_id";
+    return $this->config_mdl->_query($query);
+  }
+
+  public function ActualizarMensajePrescripcion($prescripcion_id, $mensaje){
+    $query = "UPDATE um_notificaciones_prescripciones
+              SET notificacion =  '$mensaje'
+              WHERE prescripcion_id = $prescripcion_id ";
+    return $this->config_mdl->_query($query);
+  }
+
+  public function ConsultarMensajePrescripcion($prescripcion_id){
+    $consulta = "SELECT notificacion, prescripcion_id, notificacion_id
+              FROM um_notificaciones_prescripciones
+              WHERE prescripcion_id = $prescripcion_id";
+    $query = $this->config_mdl->_query($consulta);
+    return $query;
+  }
+
+  public function AjaxConsultarMensajePrescripcion(){
+    $prescripcion_id = $_GET['prescripcion_id'];
+    $consultar_mensaje = $this->ConsultarMensajePrescripcion($prescripcion_id);
+
+    $resultado_array = array('num_resultados' => count($consultar_mensaje),
+                              'consulta' => $consultar_mensaje);
+
+    print json_encode($resultado_array);
+
+  }
 
 }
