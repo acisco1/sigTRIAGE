@@ -2303,7 +2303,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
       var fechaActual = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
 
       for(var x = 0; x < data.length; x++){
-        var color_estado = "255, 195, 195";//rojo
+
         var accion_cancelar = "";
         var accion_editar = "";
         var accion_observaciones = "class='glyphicon glyphicon-eye-open pointer observaciones-prescripcion '";
@@ -2317,7 +2317,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
           tiempo_transcurrido = total_dias+" dias";
         }
         if(data[x].estado == 1){
-          color_estado = "";//verde
+
           accion_cancelar = "class='glyphicon glyphicon-remove pointer desactivar-prescripcion'";
 
           accion_editar = "class='fa fa-pencil pointer editar-prescripcion'";
@@ -2342,7 +2342,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
           $('#col_fechaFin').text('Fecha Fin');
           $('#col_acciones').removeAttr('hidden');
         }
-        var prescripciones = "<tr style='background:rgb("+color_estado+")' >"+
+        var prescripciones = "<tr >"+
           "<td hidden id='fila_idmedicamento"+data[x].prescripcion_id+"'  >"+data[x].medicamento_id+"</td>"+
           "<td id='fila_medicamento"+data[x].prescripcion_id+"'  >"+data[x].medicamento+"</td>"+
           "<td id='fila_categoria_farmacologica"+data[x].prescripcion_id+"'  >"+data[x].categoria_farmacologica.toUpperCase()+"</td>"+
@@ -2445,6 +2445,7 @@ function actualizarPrescripcion(){
     $('#div_btnActualizarPrescripcion').attr("hidden","true");
   }
 }
+
 function TomarDatosTablaPrescripcion(fila){
   $('#div_btnActualizarPrescripcion').removeAttr("hidden");
   $('#indiceArrayPrescripcion').val(fila);

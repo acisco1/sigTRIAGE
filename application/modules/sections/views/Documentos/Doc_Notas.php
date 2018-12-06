@@ -946,9 +946,9 @@
                                                     <th>Fecha Fin</th>
                                                     <th id="col_dias">Días Transcurridos</th>
                                                     <th id="col_fechaFin" >Acciones</th>
-                                                    <th id="col_acciones" >Acciones</th>
+                                                    <!-- <th id="col_acciones" >Acciones</th>
                                                     <th id="col_movimiento" >Movimiento</th>
-                                                    <th id="col_fecha_movimiento" >Fecha Movimiento</th>
+                                                    <th id="col_fecha_movimiento" >Fecha Movimiento</th> -->
                                                   </tr>
                                                 </thead>
                                                 <tbody id="table_prescripcion_historial">
