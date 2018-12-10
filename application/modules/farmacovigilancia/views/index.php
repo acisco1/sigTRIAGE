@@ -16,7 +16,7 @@
         <div class="panel-heading back-imss" style="text-align: center; font-size: 15px;">
           Actividad del dia <?= date('d-m-Y') ?>
         </div>
-        
+
         <div style="text-align: center; font-size: 160%;">
           <?php $url_color_estado = 'farmacovigilancia/Farmacologica/AsignarColorEstadoPrescripcion' ?>
           <div class="col-xs-4 clic-box btn_estado_prescripcion" data-value="1"  style="padding: 0px; background-color: <?=modules::run($url_color_estado,'1');?> ; color: rgb(140, 140, 102);">
@@ -43,7 +43,7 @@
           </select>
         </div>
           <div class="col-sm-9" style="margin-top:20px; margin-bottom: 20px;">
-            <input type="text" class="form-control" id="input_busqueda" placeholder="Ingresar datos de busqueda">
+            <input type="text" class="form-control" id="input_busqueda" placeholder="Ingresar datos de busqueda" disabled>
           </div>
         </div>
 

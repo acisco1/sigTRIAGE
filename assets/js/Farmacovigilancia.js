@@ -5,6 +5,17 @@ $(document).ready(function () {
     ConsultarEstadoPrescripcionesPaciente('estado',estado);
   });
 
+  $('#select_filtro').change(function(){
+
+    if($('#select_filtro option:selected').val() != 'Todos'){
+
+      $('#input_busqueda').removeAttr('disabled');
+
+    }else{
+      $('#input_busqueda').attr('disabled',true);
+    }
+  });
+
   $('#input_busqueda').keyup(function(){
 
       var consulta = $(this).val(),
@@ -89,27 +100,93 @@ function ModalPacientePrescripciones(dataArray){
         var color_estado = "";
         var check = "";
         var acciones = "";
+        var interaccion_roja = "";
+        var interaccion_amarilla = "";
+        var array_interaccion_roja = [];
+        var array_interaccion_amarilla = [];
+        var id_medicamento = '';
+        var color_interaccion = "";
+        var color_letra = "";
+        var prescripcion_id = 0;
+        var medicamento = "";
+        var dosis = "";
+        var pr_via= "";
+        var frecuencia = "";
 
         for(var x = 0; x < data.length; x++){
+          console.log('Inicio vuelta:'+(x+1)+'/'+data.length);
+          prescripcion_id = data[x].prescripcion_id;
+          medicamento = data[x].medicamento;
+          dosis = data[x].dosis;
+          pr_via = data[x].pr_via;
+          frecuencia = data[x].frecuencia;
+
           estado = data[x].estado;
           check = (estado == 2)? 'checked':'';
           color_estado = AsignarColorEstadoPrescripcion(estado);
+          id_medicamento = data[x].id_medicamento;
+          interaccion_roja = data[x].interaccion_roja; //Texto sin desglosar
+          interaccion_amarilla = data[x].interaccion_amarilla;
+
+          //primera vuelta, los arreglos no tienen datos
+          if(array_interaccion_roja.length == 0 &&
+             array_interaccion_amarilla.length == 0){
+
+               array_interaccion_roja = interaccion_roja.split(',');
+               array_interaccion_amarilla = interaccion_amarilla.split(',');
+               console.log('Primera vuelta se declaran arreglos: '+array_interaccion_roja+' / '+array_interaccion_amarilla);
+
+          }else{ //segunda vuelta
+
+              console.log('Segunda y posteriores vueltas, comparacion de medicamentos');
+              for(var y = 0; y < array_interaccion_amarilla.length; y++){
+                console.log('Comparacion amarilla: '+id_medicamento+' - '+array_interaccion_amarilla[y]);
+                if(id_medicamento === array_interaccion_amarilla[y]){
+                  color_interaccion = "rgb(255, 245, 0)";
+
+                }
+              }
+              for(var z = 0; z < array_interaccion_roja.length; z++){
+                console.log('Comparacion roja: '+id_medicamento+' - '+array_interaccion_roja[z]);
+                if(id_medicamento === array_interaccion_roja[z]){
+                  color_interaccion = "rgb(255, 1, 1)";
+                  color_letra = "rgb(255, 255, 255)";
+
+                }
+              }
+
+              if(interaccion_roja != "0"){
+
+                array_interaccion_roja = array_interaccion_roja.concat(interaccion_roja.split(','));
+
+              }
+              if(interaccion_amarilla != "0"){
+                array_interaccion_amarilla = array_interaccion_amarilla.concat(interaccion_amarilla.split(','));
+              }
+
+
+
+          }
+
+
           if(estado != 0){
             acciones = ""+
             "<label class='md-check'>"+
-              "<input type='checkbox' data-value='"+estado+"' "+check+" onClick=ActualizarEstadoPrescripcion("+data[x].prescripcion_id+"); /><i class='blue'></i>"+
+              "<input type='checkbox' data-value='"+estado+"' "+check+" onClick=ActualizarEstadoPrescripcion("+prescripcion_id+"); /><i class='blue'></i>"+
             "</label>"+
-            "<button class='btn btn-xs back-imss btn_msj_prescripcion' onClick=FormMensajePrescripcion("+data[x].prescripcion_id+"); >Mensaje</button>"+
+            "<button class='btn btn-xs back-imss btn_msj_prescripcion' onClick=FormMensajePrescripcion("+prescripcion_id+"); >Mensaje</button>"+
             "";
           }
 
+
+
           nueva_fila = ""+
           "<tr>"+
-            "<td style='background-color:"+color_estado+"'>"+data[x].prescripcion_id+"</td>"+
-            "<td>"+data[x].medicamento+"</td>"+
-            "<td>"+data[x].dosis+"</td>"+
-            "<td>"+data[x].pr_via+"</td>"+
-            "<td>"+data[x].frecuencia+"</td>"+
+            "<td style='background-color:"+color_estado+"'>"+prescripcion_id+"</td>"+
+            "<td style='background-color:"+color_interaccion+"; color:"+color_letra+"'>"+medicamento+"</td>"+
+            "<td>"+dosis+"</td>"+
+            "<td>"+pr_via+"</td>"+
+            "<td>"+frecuencia+"</td>"+
             "<td>"+
               acciones+
             "</td>"+
@@ -117,7 +194,11 @@ function ModalPacientePrescripciones(dataArray){
           "";
           filaDatos = filaDatos + nueva_fila;
           acciones = "";
+          console.log('Fin vuelta:'+(x+1)+'/'+data.length);
+          color_interaccion = "";
+          color_letra = "";
         }
+        console.log('ultima array: '+array_interaccion_roja+'/ tot: '+array_interaccion_roja.length);
 
         bootbox.confirm({
           size: 'large',
