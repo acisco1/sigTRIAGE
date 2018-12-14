@@ -182,6 +182,7 @@ function ModalPacientePrescripciones(dataArray){
 
           nueva_fila = ""+
           "<tr>"+
+            "<td>"+(x+1)+"</td>"+
             "<td style='background-color:"+color_estado+"'>"+prescripcion_id+"</td>"+
             "<td style='background-color:"+color_interaccion+"; color:"+color_letra+"'>"+medicamento+"</td>"+
             "<td>"+dosis+"</td>"+
@@ -208,6 +209,7 @@ function ModalPacientePrescripciones(dataArray){
               '<table class="table table-hover table-responsive center">'+
                 '<thead>'+
                   '<tr>'+
+                    '<th>#</th>'+
                     '<th>Folio</th>'+
                     '<th>Prescripción</th>'+
                     '<th>Dosis</th>'+

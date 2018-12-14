@@ -355,6 +355,8 @@ class Documentos extends Config{
         $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
                                                                     WHERE estado = 1 AND triage_id = ".$_GET['folio']);
 
+
+
         $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, complemento FROM paciente_diagnosticos
                                                           INNER JOIN diagnostico_hoja_frontal
                                                           	ON paciente_diagnosticos.diagnostico_id = diagnostico_hoja_frontal.diagnostico_id
@@ -403,7 +405,7 @@ class Documentos extends Config{
     public function AjaxDiagnosticos(){
       $diagnostico_solicitado = $_GET['diagnostico_solicitado'];
       $sql = $this->config_mdl->_query("SELECT * FROM um_cie10
-                                        WHERE cie10_nombre LIKE '%$diagnostico_solicitado%' ORDER BY cie10_nombre LIMIT 30 ");
+                                        WHERE cie10_nombre LIKE '%$diagnostico_solicitado%' ORDER BY cie10_nombre LIMIT 80 ");
       print json_encode($sql);
     }
     public function AjaxDiagnosticosFrecuentes(){
@@ -1128,22 +1130,7 @@ class Documentos extends Config{
                                                            FROM um_notas_residentes
                                                            WHERE notas_id = $Nota");
 
-        $sql['Vias'] = array('(cerebelomedular)','Auricular (ótica)','Bolo Intravenoso','Bucal','campo eléctrico','Conjuntival','Cutánea','Dental',
-        'Electro-osmosis','En los ventrículos cerebrales','Endocervical','Endosinusial','Endotraqueal','Enteral','Epidural','Extra-amniótico',
-        'Gastroenteral','Goteo Intravenoso','In vitro','Infiltración','Inhalatoria','Intercelular','Intersticial','Intra corpus cavernoso',
-        'Intraamniótica','Intraarterial','Intraarticular','Intrabdominal','Intrabiliar','Intrabronquial','Intrabursal','Intracardiaca',
-        'Intracartilaginoso','Intracaudal','Intracavernosa','Intracavitaria','Intracerebral','Intracervical','Intracisternal','Intracorneal',
-        'Intracoronaria','Intracoronario','Intradérmica','Intradiscal','Intraductal','Intraduodenal','Intradural','Intraepidermal','Intraesofágica',
-        'Intraesternal','Intragástrica ','Intragingival','Intrahepática','Intraileal','Intramedular','Intrameníngea','Intramuscular','Intraocular',
-        'Intraovárica','Intrapericardial','Intraperitoneal','Intrapleural','Intraprostática','Intrapulmonar','Intrasinovial',
-        'Intrasinusal (senosparanasales)','Intratecal','Intratendinosa','Intratesticular','Intratimpánica','Intratoráxica','Intratraqueal',
-        'Intratubular','Intratumoral','Intrauterina','Intravascular','Intravenosa','Intraventricular','Intravesicular','Intravítrea','Iontoforesis',
-        'Irrigación','la túnica fibrosa del ojo)','Laríngeo','Laringofaringeal','médula espinal)','Nasal','Oftálmica','Oral','Orofaríngea',
-        'Otra Administración es diferente de otros contemplados en ésta lista','Parenteral','Párpados y la superficie del globo ocular',
-        'Percutánea','Periarticular','Peridura','Perineural','Periodontal','Por difusión','Rectal','Retrobulbal','Sistémico','Sonda nasogástrica',
-        'Subaracnoidea','Subconjuntival','Subcutánea','Sublingual','Submucosa','Técnica de vendaje oclusivo','Tejido blando','tejidos del cuerpo',
-        'Tópica','Transdérmica','Transmamaria','Transmucosa','Transplacentaria','Transtimpánica','Transtraqueal','Ureteral','Uretral',
-        'Uso Intralesional','Uso Intralinfático','Uso oromucosa','Vaginal','Vía a través de Hemodiálisis');
+
 
         $sql['MedicosBaseNota'] = $this->config_mdl->_query("SELECT empleado_nombre,empleado_apellidos,empleado_matricula
                                                              FROM os_empleados
@@ -1156,7 +1143,9 @@ class Documentos extends Config{
                                                           INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
                                                           WHERE os_triage.triage_id =".$_GET['folio']);
         $sql['Prescripciones_activas'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)activas FROM prescripcion
-                                                                    WHERE estado = 2 AND triage_id = ".$_GET['folio']);
+                                                                    WHERE estado != 0 AND  triage_id = ".$_GET['folio']);
+        $sql['Prescripciones_pendientes'] = $this->config_mdl->_query("SELECT COUNT(prescripcion_id)pendientes FROM prescripcion
+                                                                    WHERE estado = 1 AND triage_id = ".$_GET['folio']);
         $sql['Prescripciones_canceladas'] = $this->config_mdl->_query("SELECT prescripcion.prescripcion_id
                                                                       FROM prescripcion
                                                                       INNER JOIN catalogo_medicamentos ON
@@ -1166,6 +1155,17 @@ class Documentos extends Config{
                                                                       INNER JOIN btcr_prescripcion ON
                                                                       prescripcion.prescripcion_id = btcr_prescripcion.prescripcion_id
                                                                       WHERE os_triage.triage_id =".$_GET['folio']." GROUP BY prescripcion_id");
+
+        $sql['Notificaciones'] = $this->config_mdl->_query("SELECT notificacion_id
+                                                          FROM um_notificaciones_prescripciones
+                                                          INNER JOIN prescripcion
+                                                          	ON um_notificaciones_prescripciones.prescripcion_id = prescripcion.prescripcion_id
+                                                          INNER JOIN catalogo_medicamentos
+                                                          	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                                                          INNER JOIN os_empleados
+                                                          	ON os_empleados.empleado_id = um_notificaciones_prescripciones.empleado_id
+                                                          WHERE triage_id =".$_GET['folio']);
+
         $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT diagnostico_id, complemento, triage_id, (paciente_diagnosticos.cie10_id)cie10_id1,
                                                                  tipo_diagnostico, (um_cie10.cie10_id)cie10_id2, cie10_clave, cie10_nombre
                                                          FROM paciente_diagnosticos
@@ -1248,14 +1248,36 @@ class Documentos extends Config{
     }
     public function AjaxPrescripciones(){
       $estado = $_GET['estado'];
-      $sql['Prescripcion'] = $this->config_mdl->_query("SELECT *
+      $sql['Prescripcion'] = $this->config_mdl->_query("SELECT catalogo_medicamentos.medicamento_id AS id_medicamento, medicamento, categoria_farmacologica,
+                                                        fecha_prescripcion, dosis, prescripcion.via AS via_administracion, frecuencia, aplicacion,
+                                                        fecha_inicio, tiempo, periodo, fecha_fin, prescripcion_id, estado
                                                         FROM prescripcion INNER JOIN catalogo_medicamentos ON
                                                         prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                         INNER JOIN os_triage ON prescripcion.triage_id = os_triage.triage_id
-                                                        WHERE os_triage.triage_id =".$_GET['folio']." AND estado =".$estado);
+                                                        WHERE os_triage.triage_id =".$_GET['folio']." AND estado !=".$estado);
 
       print json_encode($sql['Prescripcion']);
     }
+
+
+    public function AjaxNotificacionFarmacovigilancia(){
+      $triage_id = $this->input->get('folio');
+      $consulta = "SELECT notificacion_id, medicamento, notificacion,
+                  concat(empleado_nombre, ' ' ,empleado_apellidos)empleado
+                  FROM `um_notificaciones_prescripciones`
+                  INNER JOIN prescripcion
+                  	ON um_notificaciones_prescripciones.prescripcion_id = prescripcion.prescripcion_id
+                  INNER JOIN catalogo_medicamentos
+                  	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
+                  INNER JOIN os_empleados
+                  	ON os_empleados.empleado_id = um_notificaciones_prescripciones.empleado_id
+                  WHERE triage_id = $triage_id";
+      $sql = $this->config_mdl->_query($consulta);
+      print json_encode($sql);
+
+    }
+
+
     public function AjaxBitacoraPrescripciones(){
       $sql = $this->config_mdl->_query("SELECT prescripcion.prescripcion_id,fecha_prescripcion, CONCAT(medicamento, ' ', gramaje)medicamento
                                         FROM prescripcion
@@ -1285,7 +1307,7 @@ class Documentos extends Config{
 
     public function AjaxBitacoraHistorialMedicamentos(){
       $sql = $this->config_mdl->_query("SELECT fecha_prescripcion,
-                                        via, dosis,
+                                        prescripcion.via as via_administracion, dosis,
                                         frecuencia, aplicacion, fecha_inicio,
                                         fecha_fin, observacion, fecha,
                                         tipo_accion, motivo FROM prescripcion
@@ -1534,6 +1556,7 @@ class Documentos extends Config{
                 'nota_solicitud_laboratorio' => $this->input->post('nota_solicitud_laboratorio'),
                 'notas_id'=>$sqlMax
             ));
+            $fecha_actual = date('d-m-Y');
             // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
             // tabla "prescripcio"
             for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
@@ -1542,8 +1565,8 @@ class Documentos extends Config{
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento[$x]"),
                 'dosis' => $this->input->post("dosis[$x]"),
-                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
-                'via' => $this->input->post("via[$x]"),
+                'fecha_prescripcion' => $fecha_actual,
+                'via' => $this->input->post("via_admi[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
                 'aplicacion' => $this->input->post("horaAplicacion[$x]"),
                 'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
@@ -1567,8 +1590,8 @@ class Documentos extends Config{
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento_npt[$x]"),
                 'dosis' => $this->input->post("dosis[$x]"),
-                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
-                'via' => $this->input->post("via[$x]"),
+                'fecha_prescripcion' => $fecha_actual,
+                'via' => $this->input->post("via_admi[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
                 'aplicacion' => $this->input->post("horaAplicacion[$x]"),
                 'fecha_inicio' => $this->input->post("fechaInicio[$x]"),

@@ -17,8 +17,10 @@
                 padding: 0 0.20em;
                 background: white;
               }
-              #acordeon_prescripciones_activas, #acordeon_prescripciones_canceladas,
-              #acordeon_alergia_medicamentos,#acordeon_reacciones, #acordeon_notificaciones{
+              #acordeon_prescripciones_activas, #acordeon_prescripciones_pendientes,
+              #acordeon_prescripciones_canceladas, #acordeon_alergia_medicamentos,
+              #acordeon_reacciones, #acordeon_notificaciones, #acordeon_prescripciones_pendientes,
+              #acordeon_prescripciones_notificaciones{
                 color: rgb(255,255,255);
                 font-size: 16px;
                 padding-top: -4px;
@@ -26,7 +28,9 @@
 
               }
               #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover,
-              #acordeon_alergia_medicamentos:hover, #acordeon_reacciones:hover,#acordeon_notificaciones:hover{
+              #acordeon_alergia_medicamentos:hover, #acordeon_prescripciones_pendientes:hover,
+              #acordeon_reacciones:hover, #acordeon_notificaciones:hover,
+              #acordeon_prescripciones_pendientes:hover, #acordeon_prescripciones_notificaciones:hover{
                 background-color: rgba(0, 0, 0, 0.12);
               }
               .lista_resultado_diagnosticos{
@@ -152,7 +156,8 @@
               border-bottom: 1px solid #ddd;
             }
             #label_total_activas, #label_total_canceladas, #label_total_alergia_medicamentos,
-            #label_total_reacciones, #label_total_notificaciones{
+            #label_total_reacciones, #label_total_notificaciones, #label_total_pendientes,
+            #label_total_notificaciones{
               display: inline-block;
             }
             </style>
@@ -886,7 +891,11 @@
                                             <!--Fin historial de alergias a medicamentos -->
                                             <div>
 
-                                            <label><b>f) Prescripción: </b> &nbsp; </label><input type="checkbox" id="check_form_prescripcion">&nbsp;<label id="label_check_prescripcion">- SI</label>
+                                              <label><b>f) Prescripción: </b> &nbsp;</label>
+
+                                              <label class="md-check">
+                                                <input type="checkbox" id="check_form_prescripcion"><i class="indigo"></i><label id="label_check_prescripcion">- SI</label>
+                                              </label>
 
                                             <!-- Panel con el historial de prescripciones -->
                                             <nav class=" back-imss">
@@ -898,6 +907,14 @@
                                                         <label id="label_total_activas"><?= $Prescripciones_activas[0]['activas'] ?></label>
                                                     </a>
                                                   </li>
+                                                  <!--
+                                                  <li>
+                                                    <a id="acordeon_prescripciones_pendientes">
+                                                        Pendientes por conciliacion:
+                                                        <label id="label_total_pendientes"><?= $Prescripciones_pendientes[0]['pendientes'] ?></label>
+                                                    </a>
+                                                  </li>
+                                                  -->
                                                   <li>
                                                     <a id="acordeon_prescripciones_canceladas">
                                                         Canceladas o actualizadas:
@@ -908,6 +925,12 @@
                                                     <a id="acordeon_reacciones">
                                                         Reacciones adversas:
                                                         <label id="label_total_reacciones"><?= count($ReaccionesAdversas) ?></label>
+                                                    </a>
+                                                  </li>
+                                                  <li>
+                                                    <a id="acordeon_notificaciones">
+                                                        Notificaciones:
+                                                        <label id="label_total_notificaciones"><?= count($Notificaciones) ?></label>
                                                     </a>
                                                   </li>
                                                   <!-- Alegia a medicamentos
@@ -990,7 +1013,10 @@
                                                 </tbody>
                                               </table>
                                             </div>
-                                            <div id='historial_notificaciones'>
+                                            <div>
+                                              <div class="panel-group" id='historial_notificaciones' hidden>
+
+                                              </div>
 
                                             </div>
 
@@ -1013,16 +1039,27 @@
                                               <div class="col-sm-12" style="padding:0">
 
                                                 <div class="col-sm-5" style="padding: 0;">
+
+
+
                                                   <div class="form-group">
-                                                  <label><b>Medicamento / Forma farmaceutica</b></label>
-                                                  <div id="borderMedicamento">
-                                                    <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%">
-                                                        <option value="0">-Seleccionar-</option>
-                                                        <?php foreach ($Medicamentos as $value) {?>
-                                                        <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                  </div>
+
+                                                    <label><b>Medicamento / Forma farmaceutica</b></label>
+                                                    <div class="input-group" id="borderVia">
+                                                      <div id="borderMedicamento" hidden>
+                                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" hidden>
+                                                            <option value="0">-Seleccionar-</option>
+                                                            <?php foreach ($Medicamentos as $value) {?>
+                                                            <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
+                                                            <?php } ?>
+                                                        </select>
+
+                                                      </div>
+                                                      <input type="text" class="form-control" id="input_otro_medicamento">
+                                                      <span class="input-group-btn">
+                                                        <button class="btn btn-default btn_otro_medicamento" type="button" value="0" title="Indicar otro medicamento que no esta en catalogo">Otro medicamento</button>
+                                                      </span>
+                                                    </div>
 
                                                   </div>
 

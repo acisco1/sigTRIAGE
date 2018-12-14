@@ -919,7 +919,6 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
 
 
 
-
     });
 
     $('body').on('click','.prescripcion_historial',function(){
@@ -984,6 +983,23 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
 
     });
 
+    $('.btn_otro_medicamento').click(function(){
+      var val = $(this).val();
+
+      switch (val) {
+        case '0':
+          $(this).text('Ver catalogo');
+          $(this).val('1');
+          break;
+        case '1':
+        $(this).text('Otro medicamento');
+        $(this).val('0');
+          break;
+
+
+      }
+    });
+
     $('#play_ordenes_continuar').click(function(){
       var folio = $('input[name=triage_id]').val();
       ConsultarUltimasOrdenes(folio);
@@ -994,6 +1010,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       var val_accion = 1;
       AccionPanelPrescripcion(val_accion, paciente);
     });
+
 
     $('#acordeon_prescripciones_canceladas').click(function(){
       var paciente = $('input[name=triage_id]').val();
@@ -1008,6 +1025,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       var val_accion = 3;
       AccionPanelPrescripcion(val_accion, paciente);
     });
+
     //Ejecuta la funcion para mostrar alergia a medicamentos
     $('#acordeon_alergia_medicamentos').click(function(){
       var paciente = $('input[name=triage_id]').val();
@@ -1015,6 +1033,19 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       AccionPanelPrescripcion(val_accion, paciente);
     });
 
+    //Mostrar prescripciones pendientes
+    $('#acordeon_prescripciones_pendientes').click(function(){
+      var paciente = $('input[name=triage_id]').val();
+      var val_accion = 6;
+      AccionPanelPrescripcion(val_accion, paciente);
+    });
+
+    //Mostrar notificaciones
+    $('#acordeon_notificaciones').click(function(){
+      var paciente = $('input[name=triage_id]').val();
+      var val_accion = 7;
+      AccionPanelPrescripcion(val_accion, paciente);
+    });
 
 
     $('input[name=cie10_nombre]').removeClass('sui-input');
@@ -1915,7 +1946,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
   "<td>"+arrayPrescripcion[arrayLongitud]["medicamento"]+"</td>"+
   "<td>"+arrayPrescripcion[arrayLongitud]["categoria_farmacologica"]+"</td>"+
   "<td><input readonly name='dosis[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["dosis"]+" "+arrayPrescripcion[arrayLongitud]["unidad"]+"' /></td>"+
-  "<td><input readonly type='text' name='via[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
+  "<td><input readonly name='via_admi[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
   "<td><input readonly name='frecuencia[]' size='4' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["frecuencia"]+"' /></td>"+
   "<td><input readonly name='horaAplicacion[]' size='22' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["horaAplicacion"]+"' /></td>"+
   "<td><input readonly name='fechaInicio[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["fechaInicio"]+"' /></td>"+
@@ -2147,6 +2178,45 @@ function HistorialDiagnosticos(folio){
   });
 }
 
+function NotificacionesFarmacovigilancia(folio){
+
+  $.ajax({
+    url: base_url+"Sections/Documentos/AjaxNotificacionFarmacovigilancia",
+    type:"GET",
+    dataType:"json",
+    data:{
+      folio: folio
+    },success: function(data, textStatus, jqXHR){
+      $("#historial_notificaciones").empty();
+      var paneles = "";
+      for(var x = 0; x < data.length; x++){
+        console.log(data[x].notificacion_id);
+        paneles =
+        "<div class='panel-container'>"+
+          "<div class='panel-heading' >"+
+              "<a data-toggle='collapse' class='accordion-toggle prescripcion_historial' "+
+              "style='font-size: 15px;' data-parent='#accordion' "+
+              "href='#collapse"+x+"' data-value='"+data[x].notificacion_id+"'>"+
+              data[x].medicamento + " / Destinatario: "+data[x].empleado+
+              "</a>"+
+          "</div>"+
+          "<div id='collapse"+x+"' class='panel-collapse collapse'>"+
+            "<div class='panel-body panel_contenido_historial"+data[x].notificacion_id+"'>"+
+              data[x].notificacion+
+            "</div>"+
+          "</div>"+
+        "</div>";
+        $("#historial_notificaciones").append(paneles);
+      }
+
+    },error: function (e) {
+        msj_error_serve(e)
+        bootbox.hideAll();
+    }
+  });
+
+}
+
 function BitacoraPrescripcionMedicamento(folio){
 
   $.ajax({
@@ -2246,7 +2316,7 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
           motivo_actualizar+
           "</td>";
         }else{
-          via = data[x].via;
+          via = data[x].via_administracion;
           dosis = data[x].dosis;
           frecuencia = data[x].frecuencia;
           aplicacion = data[x].aplicacion;
@@ -2316,7 +2386,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
         }else if (total_dias >= 0) {
           tiempo_transcurrido = total_dias+" dias";
         }
-        if(data[x].estado == 1){
+        if(data[x].estado == 1 || data[x].estado == 2){
 
           accion_cancelar = "class='glyphicon glyphicon-remove pointer desactivar-prescripcion'";
 
@@ -2343,12 +2413,12 @@ function ActualizarHistorialPrescripcion(folio,estado){
           $('#col_acciones').removeAttr('hidden');
         }
         var prescripciones = "<tr >"+
-          "<td hidden id='fila_idmedicamento"+data[x].prescripcion_id+"'  >"+data[x].medicamento_id+"</td>"+
+          "<td hidden id='fila_idmedicamento"+data[x].prescripcion_id+"'  >"+data[x].id_medicamento+"</td>"+
           "<td id='fila_medicamento"+data[x].prescripcion_id+"'  >"+data[x].medicamento+"</td>"+
           "<td id='fila_categoria_farmacologica"+data[x].prescripcion_id+"'  >"+data[x].categoria_farmacologica.toUpperCase()+"</td>"+
           "<td id='fila_fecha_prescripcion"+data[x].prescripcion_id+"'  >"+data[x].fecha_prescripcion+"</td>"+
           "<td id='fila_dosis"+data[x].prescripcion_id+"'  >"+data[x].dosis+"</td>"+
-          "<td id='fila_via"+data[x].prescripcion_id+"'  >"+data[x].via+"</td>"+
+          "<td id='fila_via"+data[x].prescripcion_id+"'  >"+data[x].via_administracion+"</td>"+
           "<td id='fila_frecuencia"+data[x].prescripcion_id+"'  >"+data[x].frecuencia+"</td>"+
           "<td id='fila_aplicacion"+data[x].prescripcion_id+"' style='padding: 5px;' >"+data[x].aplicacion+"</td>"+
           "<td id='fila_fecha_inicio"+data[x].prescripcion_id+"'  >"+data[x].fecha_inicio+"</td>"+
@@ -2872,7 +2942,7 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
   switch (tipo_accion) {
     case 1:
         $("#historial_medicamentos_activos").removeAttr('hidden');
-        ActualizarHistorialPrescripcion(paciente,"2");
+        ActualizarHistorialPrescripcion(paciente,"0");
       break;
     case 2:
         $("#historial_movimientos").removeAttr('hidden');
@@ -2888,6 +2958,14 @@ function AccionPanelPrescripcion(tipo_accion , paciente){
     case 5:
       $("#historial_alergia_medicamentos").removeAttr('hidden');
       HistorialAlergiaMedicamentos(paciente);
+      break;
+    case 6:
+      $("#historial_medicamentos_activos").removeAttr('hidden');
+      ActualizarHistorialPrescripcion(paciente,"1");
+      break;
+    case 7:
+      $("#historial_notificaciones").removeAttr('hidden');
+      NotificacionesFarmacovigilancia(paciente);
       break;
   }
 }
