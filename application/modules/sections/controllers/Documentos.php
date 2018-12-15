@@ -326,7 +326,7 @@ class Documentos extends Config{
                                                                  CONCAT(medicamento,' ',gramaje, ', ', forma_farmaceutica)medicamento,
                                                                  interaccion_amarilla,interaccion_roja
                                                           FROM catalogo_medicamentos
-                                                          WHERE existencia = 1");
+                                                          WHERE existencia = 1 ORDER BY medicamento");
 
         $sql['Vias'] = array('(cerebelomedular)','Auricular (ótica)','Bolo Intravenoso','Bucal','campo eléctrico','Conjuntival','Cutánea','Dental',
         'Electro-osmosis','En los ventrículos cerebrales','Endocervical','Endosinusial','Endotraqueal','Enteral','Epidural','Extra-amniótico',
@@ -1125,7 +1125,7 @@ class Documentos extends Config{
                                                                  CONCAT(medicamento,' ',gramaje, ', ', forma_farmaceutica)medicamento,
                                                                  interaccion_amarilla,interaccion_roja
                                                           FROM catalogo_medicamentos
-                                                          WHERE existencia = 1");
+                                                          WHERE existencia = 1 ORDER BY medicamento");
         $sql['Residentes'] = $this->config_mdl->_query("SELECT notas_id,nombre_residente,apellido_residente,cedulap_residente
                                                            FROM um_notas_residentes
                                                            WHERE notas_id = $Nota");
@@ -1564,9 +1564,9 @@ class Documentos extends Config{
                 'empleado_id' => $this->UMAE_USER,
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento[$x]"),
-                'dosis' => $this->input->post("dosis[$x]"),
-                'fecha_prescripcion' => $fecha_actual,
                 'via' => $this->input->post("via_admi[$x]"),
+                'fecha_prescripcion' => $fecha_actual,
+                'dosis' => $this->input->post("dosis[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
                 'aplicacion' => $this->input->post("horaAplicacion[$x]"),
                 'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
@@ -1589,9 +1589,9 @@ class Documentos extends Config{
                 'empleado_id' => $this->UMAE_USER,
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento_npt[$x]"),
-                'dosis' => $this->input->post("dosis[$x]"),
-                'fecha_prescripcion' => $fecha_actual,
                 'via' => $this->input->post("via_admi[$x]"),
+                'fecha_prescripcion' => $fecha_actual,
+                'dosis' => $this->input->post("dosis[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
                 'aplicacion' => $this->input->post("horaAplicacion[$x]"),
                 'fecha_inicio' => $this->input->post("fechaInicio[$x]"),

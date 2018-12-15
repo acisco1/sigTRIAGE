@@ -1,4 +1,13 @@
-$(document).ready(function() {
+$(document).ready(function (e) {
+    $('input[name=inputOmitirClasificacion]').click(function (e) {
+        if($(this).val()=='Si'){
+            $('.col-omitir-clasificacion').addClass('hide');
+            $('.row-clasificacion-omitida').removeClass('hide')
+        }else{
+            $('.col-omitir-clasificacion').removeClass('hide');
+            $('.row-clasificacion-omitida').addClass('hide');
+        }
+    })
     $('#input_search,#input_search_am').focus()
     $('#input_search').keyup(function (e){
         var input=$(this);
@@ -57,45 +66,21 @@ $(document).ready(function() {
                     MsjError();
                 }
             })
+            
+            
         }
     });
     
-    $('input[name=inputOmitirClasificacion]').click(function (e) {
-        if($(this).val()=='Si'){
-            $('.row-clasificacion-omitida').removeClass('hide');
-                                     
-        }else{
-                $('.row-clasificacion-omitida').addClass('hide');
-        }
-    });
-    
-
-
     $('.btn-submit-paso2').on('click',function(e){
         e.preventDefault();
-        if($('input:radio[name=inputOmitirClasificacion]:checked').val() == 'Si') {    
-            console.log('Omitir Clasificacion');
-            if ($('input[name="clasificacionColor"]').is(':checked')) {                    
-                SelecionarConsultorio();
-            } else {
-                        alert('Se debe seleccionar un color de clasificación');
-                    } 
-                            
-        } else{
-                SelecionarConsultorio();
-        }
-   });
-
-    function SelecionarConsultorio() {
         SendAjaxGet("Consultorios/AjaxObtenerConsultoriosV2",function (response) {
             if($('input[name=ConfigDestinosMT]').val()=='Si'){
-               AjaxSeleccionarConsultorio(response.option);
-            } else{
+                AjaxSeleccionarConsultorio(response.option);
+            }else{
                 AjaxGuardarTriage()
             }  
-        });
-    }
-
+        })
+    })
     function AjaxSeleccionarConsultorio(option){
         bootbox.confirm({
             title: '<h5>&nbsp;&nbsp;<b>SELECCIONAR DESTINO</b></h5>',
@@ -212,5 +197,4 @@ $(document).ready(function() {
             $('.Total-Pacientes').html(response.TOTAL_INFO_CAP+' Pacientes')   
         })
     })
-
 })

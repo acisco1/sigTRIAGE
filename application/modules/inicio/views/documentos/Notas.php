@@ -18,7 +18,7 @@ if(count($Residentes) == 3){
            <div style="position: absolute;margin-left: 435px;margin-top: 50px;width: 270px;text-transform: uppercase;font-size: 11px;text-align: left;">
                 <b>NOMBRE DEL PACIENTE:</b>
             </div>
-            <div style="position: absolute;margin-left: 435px;margin-top: 62px;width: 270px;text-transform: uppercase;font-size: 14px;">
+            <div style="position: absolute;margin-left: 435px;margin-top: 62px;width: 300px;text-transform: uppercase;font-size: 14px;">
                 <?=$info['triage_nombre']?> <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?>
             </div>
             <div style="position: absolute;margin-left: 435px;margin-top: 77px;width: 270px;text-transform: uppercase;font-size: 11px;">
@@ -475,7 +475,7 @@ if(count($Residentes) == 3){
 
          $count_interconsultas = count($Interconsultas);
          if($count_interconsultas > 0){  ?>
-           <h5 style="margin-botton: -6px">INTERCONSULTAS: </h5>
+           <h5 style="margin-botton: -6px">INTERCONSULTAS SOLICITADAS: </h5>
          <?php
          $separacion = "Servicios: ";
          $motivo = $Interconsultas[0]['motivo_interconsulta'];

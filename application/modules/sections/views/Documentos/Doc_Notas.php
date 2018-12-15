@@ -1038,7 +1038,7 @@
                                               </div>
                                               <div class="col-sm-12" style="padding:0">
 
-                                                <div class="col-sm-5" style="padding: 0;">
+                                                <div class="col-sm-7" style="padding: 0;">
 
 
 
@@ -1046,7 +1046,7 @@
 
                                                     <label><b>Medicamento / Forma farmaceutica</b></label>
                                                     <div class="input-group" id="borderVia">
-                                                      <div id="borderMedicamento" hidden>
+                                                      <div id="borderMedicamento" >
                                                         <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" hidden>
                                                             <option value="0">-Seleccionar-</option>
                                                             <?php foreach ($Medicamentos as $value) {?>
@@ -1055,9 +1055,11 @@
                                                         </select>
 
                                                       </div>
-                                                      <input type="text" class="form-control" id="input_otro_medicamento">
+                                                      <div id="border_otro_medicamento" hidden>
+                                                          <input type="text" class="form-control" id="input_otro_medicamento" placeholder="Indicar otro medicamento">
+                                                      </div>
                                                       <span class="input-group-btn">
-                                                        <button class="btn btn-default btn_otro_medicamento" type="button" value="0" title="Indicar otro medicamento que no esta en catalogo">Otro medicamento</button>
+                                                        <!-- <button class="btn btn-default btn_otro_medicamento" type="button" value="0" title="Indicar otro medicamento que no esta en catalogo">Otro medicamento</button> -->
                                                       </span>
                                                     </div>
 
@@ -1132,22 +1134,7 @@
                                                   </div>
                                                 </div>
 
-                                                <div class="col-sm-2" style="padding-right: 0;">
-                                                  <label><b>Frecuencia</b></label>
-                                                  <div id="borderFrecuencia">
-                                                  <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
-                                                    <option value="0">- Frecuencia -</option>
-                                                    <option value="4 hrs">4 hrs</option>
-                                                    <option value="6 hrs">6 hrs</option>
-                                                    <option value="8 hrs">8 hrs</option>
-                                                    <option value="12 hrs">12 hrs</option>
-                                                    <option value="24 hrs">24 hrs</option>
-                                                    <option value="48 hrs">48 hrs</option>
-                                                    <option value="72 hrs">72 hrs</option>
-                                                    <option value="Dosis unica">Dosis unica</option>
-                                                  </select>
-                                                  </div>
-                                                </div>
+
 
                                                 <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
                                                      el select se llena al seleccionar un medicamento -->
@@ -1175,6 +1162,22 @@
                                                 </div>
                                               </div>
                                               <div class="col-sm-12" style="padding:0">
+                                                <div class="col-sm-2" style="padding-left: 0;">
+                                                  <label><b>Frecuencia</b></label>
+                                                  <div id="borderFrecuencia">
+                                                  <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
+                                                    <option value="0">- Frecuencia -</option>
+                                                    <option value="4 hrs">4 hrs</option>
+                                                    <option value="6 hrs">6 hrs</option>
+                                                    <option value="8 hrs">8 hrs</option>
+                                                    <option value="12 hrs">12 hrs</option>
+                                                    <option value="24 hrs">24 hrs</option>
+                                                    <option value="48 hrs">48 hrs</option>
+                                                    <option value="72 hrs">72 hrs</option>
+                                                    <option value="Dosis unica">Dosis unica</option>
+                                                  </select>
+                                                  </div>
+                                                </div>
 
                                                 <div class="col-sm-3" style="padding-left: 0;">
                                                   <label><b>Horario de administración</b></label>

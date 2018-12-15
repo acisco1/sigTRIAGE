@@ -988,12 +988,18 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
 
       switch (val) {
         case '0':
+          //$('#borderMedicamento').attr('hidden', true);
+          //$('#border_otro_medicamento').removeAttr('hidden');
+          $('#select_medicamento').val("1").trigger('change.select2');
           $(this).text('Ver catalogo');
           $(this).val('1');
           break;
         case '1':
-        $(this).text('Otro medicamento');
-        $(this).val('0');
+          //$('#borderMedicamento').removeAttr('hidden');
+          //$('#border_otro_medicamento').attr('hidden', true);
+          $('#select_medicamento').val("0").trigger('change.select2');
+          $(this).text('Otro medicamento');
+          $(this).val('0');
           break;
 
 
