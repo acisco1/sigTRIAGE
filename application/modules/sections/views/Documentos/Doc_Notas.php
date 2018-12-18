@@ -1059,7 +1059,7 @@
                                                           <input type="text" class="form-control" id="input_otro_medicamento" placeholder="Indicar otro medicamento">
                                                       </div>
                                                       <span class="input-group-btn">
-                                                        <!-- <button class="btn btn-default btn_otro_medicamento" type="button" value="0" title="Indicar otro medicamento que no esta en catalogo">Otro medicamento</button> -->
+                                                        <button class="btn btn-default btn_otro_medicamento" type="button" value="0" title="Indicar otro medicamento que no esta en catalogo">Otro medicamento</button>
                                                       </span>
                                                     </div>
 
@@ -1191,8 +1191,11 @@
 
                                                 <div class="col-sm-2" style="padding-left: 0;">
                                                   <label><b>Fecha inicio</b></label>
-                                                  <div id="borderFechaInicio">
-                                                  <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
+                                                  <div class="input-group" id="borderFechaInicio">
+                                                    <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
+                                                    <span class="input-group-btn">
+                                                      <button class="btn btn-default btn_fecha_actual" type="button" value="0" title="Fecha actual">Hoy</button>
+                                                    </span>
                                                   </div>
                                                 </div>
                                                 <!-- El div cambia dependiendo el medicamento que sea prescrito -->

@@ -843,7 +843,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
         var paciente = $('input[name=triage_id]').val();
 
         bootbox.confirm({
-          message: '<h5>¿QIERES RETIRAR ESTE MEDICAMENTO?</h5>',
+          message: '<h5>¿QUIERES RETIRAR ESTE MEDICAMENTO?</h5>',
           buttons: {
             cancel:{
               label: 'NO',
@@ -855,7 +855,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           },callback: function(response){
             if(response){
               bootbox.confirm({
-                message: '<h5>¿Se presento una reaccion adversa?</h5>',
+                message: '<h5>¿Se presento una reacción adversa?</h5>',
                 buttons: {
                   cancel:{
                     label: 'NO',
@@ -983,23 +983,38 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
 
     });
 
+    $('.btn_fecha_actual').click(function(){
+      var val = $(this).val(),
+          fecha = new Date(),
+          dia = fecha.getDate(),
+          mes = fecha.getMonth(),
+          año = fecha.getFullYear();
+
+      $('#fechaInicio').val(dia+'/'+(mes+1)+'/'+año);
+      $(this).val('1');
+      mostrarFechaFin();
+
+    });
+
     $('.btn_otro_medicamento').click(function(){
       var val = $(this).val();
 
       switch (val) {
         case '0':
-          //$('#borderMedicamento').attr('hidden', true);
-          //$('#border_otro_medicamento').removeAttr('hidden');
+          $('#borderMedicamento').attr('hidden', true);
+          $('#border_otro_medicamento').removeAttr('hidden');
           $('#select_medicamento').val("1").trigger('change.select2');
           $(this).text('Ver catalogo');
           $(this).val('1');
+
           break;
         case '1':
-          //$('#borderMedicamento').removeAttr('hidden');
-          //$('#border_otro_medicamento').attr('hidden', true);
+          $('#borderMedicamento').removeAttr('hidden');
+          $('#border_otro_medicamento').attr('hidden', true);
           $('#select_medicamento').val("0").trigger('change.select2');
           $(this).text('Otro medicamento');
           $(this).val('0');
+
           break;
 
 
@@ -1007,6 +1022,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
     });
 
     $('#play_ordenes_continuar').click(function(){
+
       var folio = $('input[name=triage_id]').val();
       ConsultarUltimasOrdenes(folio);
     });
@@ -1718,6 +1734,7 @@ function revisarCamposVaciosPrescripcion(){
 //Limpia el formulario despues de usarse
 function limpiarFormularioPrescripcion(){
   $('#select_medicamento').val("0").trigger('change.select2');
+  $('#input_otro_medicamento').val('');
   $('#via').val("0").trigger('change.select2');
   $('#input_dosis').val("");
   $('#select_unidad').val("0").trigger('change.select2');
@@ -1728,6 +1745,7 @@ function limpiarFormularioPrescripcion(){
   $('#fechaFin').val("");
   $('#observacion').val("");
 }
+
 // Arreglo donde se almacenara los datos de cada prescripcion
 var arrayPrescripcion = [];
 /* Almacena el Id del medicamento y las interacciones con las que se
@@ -1754,7 +1772,7 @@ function agregarPrescripcion(){
 
     // tomar valor del formulario y asignar variable
     var idMedicamento = $('#select_medicamento').val();
-    var medicamento = $('#select_medicamento option:selected').text();
+    var medicamento = (idMedicamento != '1')? $('#select_medicamento option:selected').text() : $('#input_otro_medicamento').val();
     var interaccion_amarilla = $('#interaccion_amarilla option:selected').text();
     var dosis = $('#input_dosis').val();
     var unidad = $('#select_unidad').val();
@@ -1949,7 +1967,7 @@ function agregarFilaPrescripcion(arrayPrescripcion, categoria_safe){
 
   var fila ="<tr id='fila"+arrayLongitud+"' >"+
   "<td hidden ><input name=idMedicamento"+tipo_medicamento+"[] size='1' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["idMedicamento"]+"' /></td>"+
-  "<td>"+arrayPrescripcion[arrayLongitud]["medicamento"]+"</td>"+
+  "<td><input readonly name='nomMedicamento[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["medicamento"]+"' /></td>"+
   "<td>"+arrayPrescripcion[arrayLongitud]["categoria_farmacologica"]+"</td>"+
   "<td><input readonly name='dosis[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["dosis"]+" "+arrayPrescripcion[arrayLongitud]["unidad"]+"' /></td>"+
   "<td><input readonly name='via_admi[]' size='8' class='label-input' value='"+arrayPrescripcion[arrayLongitud]["via"]+"' /></td>"+
@@ -2379,7 +2397,8 @@ function ActualizarHistorialPrescripcion(folio,estado){
       var fechaActual = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
 
       for(var x = 0; x < data.length; x++){
-
+        var observacion = "";
+        var medicamento = "";
         var accion_cancelar = "";
         var accion_editar = "";
         var accion_observaciones = "class='glyphicon glyphicon-eye-open pointer observaciones-prescripcion '";
@@ -2418,9 +2437,17 @@ function ActualizarHistorialPrescripcion(folio,estado){
           $('#col_fechaFin').text('Fecha Fin');
           $('#col_acciones').removeAttr('hidden');
         }
+        observacion = data[x].observacion;
+        medicamento = data[x].medicamento;
+
+
+        if(data[x].id_medicamento == 1){
+          medicamento = observacion.substring(0, observacion.indexOf("-"));
+          observacion = observacion.substring((observacion.indexOf("-") + 1), observacion.length);
+        }
         var prescripciones = "<tr >"+
           "<td hidden id='fila_idmedicamento"+data[x].prescripcion_id+"'  >"+data[x].id_medicamento+"</td>"+
-          "<td id='fila_medicamento"+data[x].prescripcion_id+"'  >"+data[x].medicamento+"</td>"+
+          "<td id='fila_medicamento"+data[x].prescripcion_id+"'  >"+medicamento+"</td>"+
           "<td id='fila_categoria_farmacologica"+data[x].prescripcion_id+"'  >"+data[x].categoria_farmacologica.toUpperCase()+"</td>"+
           "<td id='fila_fecha_prescripcion"+data[x].prescripcion_id+"'  >"+data[x].fecha_prescripcion+"</td>"+
           "<td id='fila_dosis"+data[x].prescripcion_id+"'  >"+data[x].dosis+"</td>"+
@@ -2437,7 +2464,7 @@ function ActualizarHistorialPrescripcion(folio,estado){
         "<tr id='historial_prescripcion_observacion"+data[x].prescripcion_id+"' hidden value='0'>"+
           "<th style='background-color:rgb(210, 210, 210);'>Observaciones: </th>"+
           "<td id='fila_observacion"+data[x].prescripcion_id+"' colspan='12' style='text-align:left; background-color:rgb(235, 235, 235);' >"+
-            data[x].observacion+
+            observacion+
           "</td>"+
         "</tr>";
         $("#table_prescripcion_historial").append(prescripciones);

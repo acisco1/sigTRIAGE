@@ -339,9 +339,22 @@ if(count($Residentes) == 3){
         <!-- Fin alergia a medicamentos -->
         <!-- Prescripcion -->
          <h5>PRESCRIPCIÓN</h5>
-
+         <?php
+          $observacion = "";
+          $medicamento = "";
+          ?>
          <?php for($x = 0; $x < count($Prescripcion_Basico); $x++){ ?>
-           <strong><?= $x+1 ?>) <?= $Prescripcion_Basico[$x]['medicamento']." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
+           <?php
+           $observacion = $Prescripcion_Basico[$x]['observacion'];
+           $medicamento = $Prescripcion_Basico[$x]['medicamento'];
+
+           if($medicamento === "OTRO"){
+
+             $observacion = substr($observacion, (strpos($observacion, "-") + 1),  strlen($observacion) );
+             $medicamento = substr($observacion, 0, strpos($observacion, "-"));
+           }
+            ?>
+           <strong><?= $x+1 ?>) <?= $medicamento." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
            Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>
            via <?= strtolower($Prescripcion_Basico[$x]['via_administracion']); ?>,
            <?= ($Prescripcion_Basico[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Basico[$x]['frecuencia']); ?>,
@@ -350,7 +363,7 @@ if(count($Residentes) == 3){
            hasta el <?= $Prescripcion_Basico[$x]['fecha_fin'] ?>.
            <?php if($Prescripcion_Basico[$x]['observacion'] != 'Sin observaciones' ){ ?>
                <br><strong>Observación</strong>
-               <?= $Prescripcion_Basico[$x]['observacion'] ?>
+               <?= $observacion ?>
              <?php } ?>
            <br>
          <?php } ?>

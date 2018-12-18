@@ -328,23 +328,6 @@ class Documentos extends Config{
                                                           FROM catalogo_medicamentos
                                                           WHERE existencia = 1 ORDER BY medicamento");
 
-        $sql['Vias'] = array('(cerebelomedular)','Auricular (ótica)','Bolo Intravenoso','Bucal','campo eléctrico','Conjuntival','Cutánea','Dental',
-        'Electro-osmosis','En los ventrículos cerebrales','Endocervical','Endosinusial','Endotraqueal','Enteral','Epidural','Extra-amniótico',
-        'Gastroenteral','Goteo Intravenoso','In vitro','Infiltración','Inhalatoria','Intercelular','Intersticial','Intra corpus cavernoso',
-        'Intraamniótica','Intraarterial','Intraarticular','Intrabdominal','Intrabiliar','Intrabronquial','Intrabursal','Intracardiaca',
-        'Intracartilaginoso','Intracaudal','Intracavernosa','Intracavitaria','Intracerebral','Intracervical','Intracisternal','Intracorneal',
-        'Intracoronaria','Intracoronario','Intradérmica','Intradiscal','Intraductal','Intraduodenal','Intradural','Intraepidermal','Intraesofágica',
-        'Intraesternal','Intragástrica ','Intragingival','Intrahepática','Intraileal','Intramedular','Intrameníngea','Intramuscular','Intraocular',
-        'Intraovárica','Intrapericardial','Intraperitoneal','Intrapleural','Intraprostática','Intrapulmonar','Intrasinovial',
-        'Intrasinusal (senosparanasales)','Intratecal','Intratendinosa','Intratesticular','Intratimpánica','Intratoráxica','Intratraqueal',
-        'Intratubular','Intratumoral','Intrauterina','Intravascular','Intravenosa','Intraventricular','Intravesicular','Intravítrea','Iontoforesis',
-        'Irrigación','la túnica fibrosa del ojo)','Laríngeo','Laringofaringeal','médula espinal)','Nasal','Oftálmica','Oral','Orofaríngea',
-        'Otra Administración es diferente de otros contemplados en ésta lista','Parenteral','Párpados y la superficie del globo ocular',
-        'Percutánea','Periarticular','Peridura','Perineural','Periodontal','Por difusión','Rectal','Retrobulbal','Sistémico','Sonda nasogástrica',
-        'Subaracnoidea','Subconjuntival','Subcutánea','Sublingual','Submucosa','Técnica de vendaje oclusivo','Tejido blando','tejidos del cuerpo',
-        'Tópica','Transdérmica','Transmamaria','Transmucosa','Transplacentaria','Transtimpánica','Transtraqueal','Ureteral','Uretral',
-        'Uso Intralesional','Uso Intralinfático','Uso oromucosa','Vaginal','Vía a través de Hemodiálisis');
-
 
         $sql['Prescripcion'] = $this->config_mdl->_query("SELECT *
                                                           FROM prescripcion INNER JOIN catalogo_medicamentos ON
@@ -1249,7 +1232,7 @@ class Documentos extends Config{
     public function AjaxPrescripciones(){
       $estado = $_GET['estado'];
       $sql['Prescripcion'] = $this->config_mdl->_query("SELECT catalogo_medicamentos.medicamento_id AS id_medicamento, medicamento, categoria_farmacologica,
-                                                        fecha_prescripcion, dosis, prescripcion.via AS via_administracion, frecuencia, aplicacion,
+                                                        fecha_prescripcion, dosis, observacion, prescripcion.via AS via_administracion, frecuencia, aplicacion,
                                                         fecha_inicio, tiempo, periodo, fecha_fin, prescripcion_id, estado
                                                         FROM prescripcion INNER JOIN catalogo_medicamentos ON
                                                         prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
@@ -1560,6 +1543,11 @@ class Documentos extends Config{
             // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
             // tabla "prescripcio"
             for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
+              $observacion = $this->input->post("observacion[$x]");
+              $otroMedicamento = $this->input->post("nomMedicamento[$x]");
+              if($this->input->post("idMedicamento[$x]") == '1'){
+                $observacion = $otroMedicamento.'-'.$observacion;
+              }
               $datosPrescripcion = array(
                 'empleado_id' => $this->UMAE_USER,
                 'triage_id' => $this->input->post('triage_id'),
@@ -1573,7 +1561,7 @@ class Documentos extends Config{
                 'tiempo' => $this->input->post("duracion[$x]"),
                 'periodo' => $this->input->post("periodo[$x]"),
                 'fecha_fin' => $this->input->post("fechaFin[$x]"),
-                'observacion' => $this->input->post("observacion[$x]"),
+                'observacion' => $observacion,
                 'estado' => "1"
               );
 
