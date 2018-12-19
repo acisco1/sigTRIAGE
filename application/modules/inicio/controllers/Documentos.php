@@ -193,19 +193,19 @@ class Documentos extends Config{
         $sql['Prescripcion_Basico'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
                                                                  INNER JOIN prescripcion
                                                                 	 ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
-                                                                 WHERE triage_id =$Paciente AND safe = 0;");
+                                                                 WHERE triage_id =$Paciente AND estado != 0 AND safe = 0;");
         $sql['Prescripcion_NPT'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
                                                               INNER JOIN prescripcion
                                                               	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                               INNER JOIN prescripcion_npt
                                                               	ON prescripcion.prescripcion_id = prescripcion_npt.prescripcion_id
-                                                              WHERE triage_id =$Paciente AND safe = 1 AND categoria_safe = 'npt';");
+                                                              WHERE triage_id =$Paciente AND estado != 0 AND safe = 1 AND categoria_safe = 'npt';");
         $sql['Prescripcion_Onco_Anti'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
                                                                     INNER JOIN prescripcion
                                                                     	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                                     INNER JOIN prescripcion_onco_antimicrobianos
                                                                     	ON prescripcion.prescripcion_id = prescripcion_onco_antimicrobianos.prescripcion_id
-                                                                    WHERE triage_id =$Paciente AND safe = 1;");
+                                                                    WHERE triage_id =$Paciente AND estado != 0 AND safe = 1;");
         //fin consultas para la prescripción
         $sql['Diagnosticos'] = $this->config_mdl->_query("SELECT cie10_clave, cie10_nombre, complemento, tipo_diagnostico FROM um_cie10
                                     INNER JOIN paciente_diagnosticos
@@ -757,19 +757,19 @@ class Documentos extends Config{
         $sql['Prescripcion_Basico'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
                                                                  INNER JOIN prescripcion
                                                                 	 ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
-                                                                 WHERE triage_id = ".$sql['Nota']['triage_id']." AND safe = 0;");
+                                                                 WHERE triage_id = ".$sql['Nota']['triage_id']." AND estado != 0 AND safe = 0;");
         $sql['Prescripcion_NPT'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
                                                               INNER JOIN prescripcion
                                                               	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                               INNER JOIN prescripcion_npt
                                                               	ON prescripcion.prescripcion_id = prescripcion_npt.prescripcion_id
-                                                              WHERE triage_id = ".$sql['Nota']['triage_id']." AND safe = 1 AND categoria_safe = 'npt';");
+                                                              WHERE triage_id = ".$sql['Nota']['triage_id']." AND estado != 0 AND safe = 1 AND categoria_safe = 'npt';");
         $sql['Prescripcion_Onco_Anti'] = $this->config_mdl->_query("SELECT * FROM catalogo_medicamentos
                                                                     INNER JOIN prescripcion
                                                                     	ON prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                                                     INNER JOIN prescripcion_onco_antimicrobianos
                                                                     	ON prescripcion.prescripcion_id = prescripcion_onco_antimicrobianos.prescripcion_id
-                                                                    WHERE triage_id = ".$sql['Nota']['triage_id']." AND safe = 1;");
+                                                                    WHERE triage_id = ".$sql['Nota']['triage_id']." AND estado != 0 AND safe = 1;");
 
         $sql['valores'] = array($sql['Nota']['triage_id'], $Nota);
         if($sqlSV[0]['sv_temp']!='' && !empty($sqlSV)){

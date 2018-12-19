@@ -11,7 +11,7 @@ var arrayViasAdministracion = ['(cerebelomedular)','Auricular (ótica)','Bolo In
 'Intrasinusal (senosparanasales)','Intratecal','Intratendinosa','Intratesticular','Intratimpánica','Intratoráxica','Intratraqueal',
 'Intratubular','Intratumoral','Intrauterina','Intravascular','Intravenosa','Intraventricular','Intravesicular','Intravítrea','Iontoforesis',
 'Irrigación','la túnica fibrosa del ojo)','Laríngeo','Laringofaringeal','médula espinal)','Nasal','Oftálmica','Oral','Orofaríngea',
-'Otra Administración es diferente de otros contemplados en ésta lista','Parenteral','Párpados y la superficie del globo ocular',
+'Otra Administración, diferente a ésta lista','Parenteral','Párpados y la superficie del globo ocular',
 'Percutánea','Periarticular','Peridura','Perineural','Periodontal','Por difusión','Rectal','Retrobulbal','Sistémico','Sonda nasogástrica',
 'Subaracnoidea','Subconjuntival','Subcutánea','Sublingual','Submucosa','Técnica de vendaje oclusivo','Tejido blando','tejidos del cuerpo',
 'Tópica','Transdérmica','Transmamaria','Transmucosa','Transplacentaria','Transtimpánica','Transtraqueal','Ureteral','Uretral',
@@ -716,7 +716,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       var medicamento = $('#fila_medicamento'+prescripcion_id).text();
 
       if(confirm('¿QUIERES MODIFICAR ESTA PRESCRIPCIÓN? '+medicamento)){
-
+          
           var medicamento_id = $('#fila_idmedicamento'+prescripcion_id).text();
           var categoria_farmacologica = $('#fila_categoria_farmacologica'+prescripcion_id).text();
           var fecha_prescripcion = $('#fila_fecha_prescripcion'+prescripcion_id).text();
@@ -729,9 +729,11 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           var periodo = $('#fila_periodo'+prescripcion_id).text();
           var fecha_fin = $('#fila_fecha_'+prescripcion_id).text();
           var observacion = $('#fila_observacion'+prescripcion_id).text();
+          var opcion_via = "<option value='1'>"+via+"</option>";
           //Fragmento para dividir la dosis en dos, cantidad y unidad
           var arregloDosis = dosis.split(" ");
 
+          $('#via').append(opcion_via);
           $('.formulario_prescripcion').removeAttr('hidden');
           $('.tiempo_tipo_medicamento').empty();
           $('#label_check_prescripcion').text('');
@@ -739,11 +741,11 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           $('#select_medicamento').select2('enable',false);
           $('#input_dosis').val(arregloDosis[0]);
           $('#select_unidad').val(arregloDosis[1]).trigger('change.select2');
-
-          $('#via').val(via).trigger('change.select2');
+          $('#via').select2('val',1).select2();
           $('#frecuencia').val(frecuencia);
           $('#aplicacion').val(aplicacion);
           $('#fechaInicio').val(fecha_inicio);
+
           //$('#duracion').val();
 
           $('#observacion').val(observacion);
@@ -786,19 +788,11 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
             "</div>";
           }else{
             formulario =
-            "<div class='col-sm-2' style='padding-right: 0; padding-left: 0;' >"+
+            "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
               "<label id='categoria_farmacologica' hidden>"+categoria_farmacologica+"</label>"+
-              "<label><b>Tiempo</b></label>"+
+              "<label><b>Duración</b></label>"+
               "<div class='input-group' >"+
-                "<input type='text' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
-                "<span class='input-group-btn'>"+
-                  "<div class='col-sm-12' style=''>"+
-                  "<a class='btn' title='Aumentar' onClick=AumentarNum() style='padding=0;margin-left:-28px; margin-top:-8px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-up'></span></a>"+
-                  "</div>"+
-                  "<div class='col-sm-12' style=''>"+
-                  "<a class='btn' title='Reducir' onClick=ReducirNum() style='padding=0;margin-left:-28px; margin-top:-17px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-down'></span></a>"+
-                  "</div>"+
-                "</span>"+
+                "<input type='number' min='0' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
               "</div>"+
             "</div>"+
             "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
@@ -1733,6 +1727,10 @@ function revisarCamposVaciosPrescripcion(){
 }
 //Limpia el formulario despues de usarse
 function limpiarFormularioPrescripcion(){
+  $('.btn_otro_medicamento').val('0');
+  $('.btn_otro_medicamento').text('Otro medicamento');
+  $('#borderMedicamento').removeAttr('hidden');
+  $('#border_otro_medicamento').attr('hidden', true);
   $('#select_medicamento').val("0").trigger('change.select2');
   $('#input_otro_medicamento').val('');
   $('#via').val("0").trigger('change.select2');
@@ -2683,29 +2681,16 @@ function TipoMedicamento(medicamento_id){
         "</div>";
       }else{
         formulario =
-        "<div class='col-sm-1' style='padding-right:0;' >"+
+        "<div class='col-sm-1' style='padding-right: 0; padding-left: 0;' >"+
           "<label id='categoria_farmacologica' hidden>"+farmacologica+"</label>"+
           "<label><b>Duración</b></label>"+
-          "<div class='input-group'>"+
+          "<div class='input-group' >"+
             "<input type='number' min='0' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
           "</div>"+
-          /*
-          "<div class='input-group' >"+
-            "<input type='text' class='form-control' id='duracion' onchange='mostrarFechaFin()' >"+
-            "<span class='input-group-btn'>"+
-              "<div class='col-sm-12' style=''>"+
-              "<a class='btn' title='Aumentar' onClick=AumentarNum() style='padding=0;margin-left:-28px; margin-top:-8px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-up'></span></a>"+
-              "</div>"+
-              "<div class='col-sm-12' style=''>"+
-              "<a class='btn' title='Reducir' onClick=ReducirNum() style='padding=0;margin-left:-28px; margin-top:-17px;' ><span style='border:1px solid #000; width:20px; height:17px;' class='glyphicon glyphicon-menu-down'></span></a>"+
-              "</div>"+
-            "</span>"+
-          "</div>"+
-          */
         "</div>"+
         "<div class='col-sm-2' style='padding-right: 0; padding-left: 1;' >"+
           "<label><b>Periodo</b></label>"+
-          "<select class='form-control' id='periodo' name='periodo' onchange='mostrarFechaFin()'>"+
+          "<select class='form-control' id='periodo' onchange='mostrarFechaFin()'>"+
             "<option value='Dias'>Dias</option>"+
             "<option value='Semanas'>Semanas</option>"+
           "</select>"+

@@ -348,15 +348,17 @@ if(count($Residentes) == 3){
            $observacion = $Prescripcion_Basico[$x]['observacion'];
            $medicamento = $Prescripcion_Basico[$x]['medicamento'];
 
+
            if($medicamento === "OTRO"){
 
-             $observacion = substr($observacion, (strpos($observacion, "-") + 1),  strlen($observacion) );
              $medicamento = substr($observacion, 0, strpos($observacion, "-"));
+             $observacion = substr($observacion, (strpos($observacion, "-") + 1),  strlen($observacion) );
+
            }
             ?>
            <strong><?= $x+1 ?>) <?= $medicamento." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
            Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>
-           via <?= strtolower($Prescripcion_Basico[$x]['via_administracion']); ?>,
+           via <?= strtolower($Prescripcion_Basico[$x]['via']); ?>,
            <?= ($Prescripcion_Basico[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Basico[$x]['frecuencia']); ?>,
            en el siguiente horario: <?= $Prescripcion_Basico[$x]['aplicacion'] ?>.
            Iniciando el <?= $Prescripcion_Basico[$x]['fecha_inicio'] ?>
@@ -365,7 +367,8 @@ if(count($Residentes) == 3){
                <br><strong>Observación</strong>
                <?= $observacion ?>
              <?php } ?>
-           <br>
+
+           <br><br><!-- Salto entre prescripciones -->
          <?php } ?>
 
 
