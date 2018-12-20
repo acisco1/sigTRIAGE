@@ -715,8 +715,10 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       var prescripcion_id = $(this).attr('data-value');
       var medicamento = $('#fila_medicamento'+prescripcion_id).text();
 
+
+
       if(confirm('¿QUIERES MODIFICAR ESTA PRESCRIPCIÓN? '+medicamento)){
-          
+
           var medicamento_id = $('#fila_idmedicamento'+prescripcion_id).text();
           var categoria_farmacologica = $('#fila_categoria_farmacologica'+prescripcion_id).text();
           var fecha_prescripcion = $('#fila_fecha_prescripcion'+prescripcion_id).text();
@@ -732,6 +734,15 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           var opcion_via = "<option value='1'>"+via+"</option>";
           //Fragmento para dividir la dosis en dos, cantidad y unidad
           var arregloDosis = dosis.split(" ");
+
+          if(medicamento_id == 1){
+            $('#border_otro_medicamento').removeAttr('hidden');
+            $('#borderMedicamento').attr('hidden', true);
+            $('#input_otro_medicamento').val(medicamento);
+            $('#input_otro_medicamento').attr('disabled', true);
+            $('.btn_otro_medicamento').val('1');
+            $('.btn_otro_medicamento').text('Ver catalogo');
+          }
 
           $('#via').append(opcion_via);
           $('.formulario_prescripcion').removeAttr('hidden');
@@ -818,8 +829,10 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           if(categoria_farmacologica.toLowerCase() != 'antibiotico'){
             $('#periodo').val(periodo);
           }
-
+          $('.btn_otro_medicamento').attr('disabled', true);
       }
+
+
 
     });
 
@@ -1422,6 +1435,7 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
 
     $('#btn_modificar_prescripcion').click(function(){
       var prescripcion_id = $(this).attr('data-value');
+      var medicamento_id = $('#select_medicamento').val();
       var dosis_cantidad = $('#input_dosis').val();
       var unidad = $('#select_unidad').val();
       var dosis = (dosis_cantidad+' '+unidad);
@@ -1431,6 +1445,10 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       var fecha_inicio = $('#fechaInicio').val();
       var observacion = $('#observacion').val();
       var motivo_actualizar = $('#motivo_actualizar').val();
+
+      if(medicamento_id == '1'){
+        observacion = $('#input_otro_medicamento').val() + '-' + observacion;
+      }
 
       var datos_viejos = DatosTabplaPrescripcionActivas(prescripcion_id);
       var motivo_datos_viejos =
@@ -2250,14 +2268,26 @@ function BitacoraPrescripcionMedicamento(folio){
     },success: function(data, textStatus, jqXHR){
       $("#historial_movimientos").empty();
       var paneles = "";
+      var medicamento_id = 0;
+      var medicamento = '';
+      var observacion = '';
       for(var x = 0; x < data.length; x++){
+
+        medicamento_id = data[x].medicamento_id;
+        medicamento = data[x].medicamento;
+
+        if(medicamento_id == 1){
+          observacion = data[x].observacion;
+          medicamento = observacion.substring(0, observacion.indexOf("-"));
+        }
+
         paneles =
         "<div class='panel-container'>"+
           "<div class='panel-heading' >"+
               "<a data-toggle='collapse' class='accordion-toggle prescripcion_historial' "+
               "style='font-size: 15px;' data-parent='#accordion' "+
               "href='#collapse"+x+"' data-value='"+data[x].prescripcion_id+"'>"+
-              data[x].medicamento + " / Fecha Prescripción: "+data[x].fecha_prescripcion+
+              medicamento + " / Fecha Prescripción: "+data[x].fecha_prescripcion+
               "</a>"+
           "</div>"+
           "<div id='collapse"+x+"' class='panel-collapse collapse'>"+
@@ -2303,7 +2333,7 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
       folio: folio
     },success: function(data, textStatus, jqXHR){
       $('#contenido_tabla_bitacora_prescripcion'+prescripcion_id).empty();
-      var
+      var medicamento_id,
           via,
           dosis,
           frecuencia,
@@ -2315,9 +2345,17 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
           datos_actualizar,
           filas,
           filas_motivo_observacion,
-          motivo_actualizar;
+          motivo_actualizar,
+          observacion;
 
       for(var x = 0; x < data.length; x++){
+        medicamento_id = data[x].medicamento_id;
+        observacion = data[x].observacion
+
+        if(medicamento_id == 1){
+          observacion = observacion.substring((observacion.indexOf("-") + 1), observacion.length);
+        }
+
         movimiento = data[x].tipo_accion;
         motivo = data[x].motivo;
         if(movimiento == "Actualizar"){
@@ -2331,7 +2369,7 @@ function BitacoraHistorialMedicamentos(prescripcion_id,folio){
           filas_motivo_observacion =
           "<th>Observaciones:</th>"+
           "<td colspan = 3 style='text-align:left;'>"+
-          data[x].observacion+
+          observacion+
           "</td>"+
           "<th>Motivo:</th>"+
           "<td colspan = 3 style='text-align:left;'>"+

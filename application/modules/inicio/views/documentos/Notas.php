@@ -337,6 +337,7 @@ if(count($Residentes) == 3){
           <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento'] ?><br>
         <?php } ?>
         <!-- Fin alergia a medicamentos -->
+
         <!-- Prescripcion -->
          <h5>PRESCRIPCIÓN</h5>
          <?php
@@ -487,28 +488,21 @@ if(count($Residentes) == 3){
 
 
         <!-- Zona interconsultas -->
-       <?php
+        <?php if(count($Interconsultas) > 0){ ?>
+          <h5>INTERCONSULTAS</h5>
+          <strong>Servicios solicitados:</strong>
+          <?php for ($x = 0; $x < count($Interconsultas); $x++) {  ?>
+             <?php $separacion = "";  ?>
+             <?php $separacion = (($x + 1) == count($Interconsultas))?'.':',';  ?>
+             <?= $Interconsultas[$x]['especialidad_nombre'].''.$separacion ?>
 
-         $count_interconsultas = count($Interconsultas);
-         if($count_interconsultas > 0){  ?>
-           <h5 style="margin-botton: -6px">INTERCONSULTAS SOLICITADAS: </h5>
-         <?php
-         $separacion = "Servicios: ";
-         $motivo = $Interconsultas[0]['motivo_interconsulta'];
-         echo "<strong>".$separacion." </strong>";
-         for($x = 0; $x < $count_interconsultas; $x++){
-           echo "".$Interconsultas[$x]['especialidad_nombre'].", ";
-           if($count_interconsultas == ($x + 1)){
-             $separacion = " ";
-           }
-           if($motivo != $Interconsultas[$x + 1]['motivo_interconsulta']){
-             echo "<br><strong>Motivo: </strong>".$motivo."<br><br><strong>".$separacion."</strong>";
-             $motivo = $Interconsultas[$x + 1]['motivo_interconsulta'];
-           }
-         }
-        ?>
-      <?php } ?>
-      <!-- fin zona interconsultas -->
+          <?php } ?>
+            <br><strong>Motivo:</strong> <?= $Interconsultas[0]['motivo_interconsulta'] ?>
+        <?php } ?>
+
+
+        <!-- fin zona interconsultas -->
+
     </span>
   </div>
     <page_footer>

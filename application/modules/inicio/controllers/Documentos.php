@@ -718,20 +718,11 @@ class Documentos extends Config{
 
 
         $sql['Interconsultas'] = $this->config_mdl->_query("SELECT especialidad_nombre, motivo_interconsulta
-                                                            FROM interconsulta_notas
-                                                            INNER JOIN doc_430200
-                                                            	ON interconsulta_notas.doc_id = doc_430200.doc_id
+                                                            FROM doc_430200
                                                             INNER JOIN um_especialidades
-                                                            	ON doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
-                                                            WHERE notas_id =".$Nota);
+                                                              ON doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
+                                                            WHERE doc_nota_id =".$Nota);
 
-          $sql['Interconsultas_Evaluadas'] = $this->config_mdl->_query("SELECT especialidad_nombre
-                                                              FROM interconsulta_notas
-                                                              INNER JOIN doc_430200
-                                                              	ON interconsulta_notas.doc_id = doc_430200.doc_id
-                                                              INNER JOIN um_especialidades
-                                                              	ON doc_430200.doc_servicio_solicitado = um_especialidades.especialidad_id
-                                                              WHERE notas_id =".$Nota." AND doc_estatus = 'Evaluado'");
 
         $sql['Prescripcion'] = $this->config_mdl->_query(
           "SELECT fecha_prescripcion,CONCAT(empleado_nombre,empleado_apellidos)empleado,

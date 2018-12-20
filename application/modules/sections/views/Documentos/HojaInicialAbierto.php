@@ -941,17 +941,28 @@
                                   </div>
                                   <div class="col-sm-12" style="padding:0">
 
-                                    <div class="col-sm-5" style="padding: 0;">
+                                    <div class="col-sm-12" style="padding: 0;">
+
                                       <div class="form-group">
-                                      <label><b>Medicamento / Forma farmaceutica</b></label>
-                                      <div id="borderMedicamento">
-                                        <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%">
-                                            <option value="0">-Seleccionar-</option>
-                                            <?php foreach ($Medicamentos as $value) {?>
-                                            <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
-                                            <?php } ?>
-                                        </select>
-                                      </div>
+
+                                        <label><b>Medicamento / Forma farmaceutica</b></label>
+                                        <div class="input-group">
+                                          <div id="borderMedicamento" >
+                                            <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" hidden>
+                                                <option value="0">-Seleccionar-</option>
+                                                <?php foreach ($Medicamentos as $value) {?>
+                                                <option value="<?=$value['medicamento_id']?>" ><?=$value['medicamento']?></option>
+                                                <?php } ?>
+                                            </select>
+
+                                          </div>
+                                          <div id="border_otro_medicamento" hidden>
+                                              <input type="text" class="form-control" id="input_otro_medicamento" placeholder="Indicar otro medicamento">
+                                          </div>
+                                          <span class="input-group-btn otro_boton_span">
+                                            <button class="btn btn-default btn_otro_medicamento" type="button" value="0" title="Indicar otro medicamento que no esta en catalogo">Otro medicamento</button>
+                                          </span>
+                                        </div>
 
                                       </div>
 
@@ -985,61 +996,7 @@
 
 
 
-                                    <div class="col-sm-3">
-                                      <label><b>Via de administración</b></label>
-                                      <div class="input-group" id="borderVia">
-                                        <div id="opcion_vias_administracion">
-                                          <select class="form control select2 width100" id="via">
-                                            <option value="0">-Seleccionar-</option>
-                                          </select>
-                                        </div>
-                                        <span class="input-group-btn">
-                                          <button class="btn btn-default btn_otra_via" type="button" value="0" title="Indicar otra via de administración">Otra</button>
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div class="col-sm-1" style="padding-right: 0;">
-                                      <div class="form-group" >
-                                        <label ><b>Dosis</b></label>
-                                        <div id="borderDosis">
-                                        <input type="number" min='0' id="input_dosis" class="form-control">
-                                        <label id="dosis_max" hidden></label>
-                                        <label id="gramaje_dosis_max" hidden></label>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-sm-1" style="padding-left: 0; padding-right: 0;">
-                                      <div class="form-group" >
-                                        <label ><b>Unidad</b></label>
-                                        <div id="borderUnidad">
-                                        <select name="" id="select_unidad" class="form-control">
-                                          <option value="0">-Unidad-</option>
-                                          <option value="g">g</option>
-                                          <option value="mg">mg</option>
-                                          <option value="mcg">mcg</option>
-                                          <option value="mL">mL</option>
-                                          <option value="UI">UI</option>
-                                        </select>
-                                        </div>
-                                      </div>
-                                    </div>
 
-                                    <div class="col-sm-2" style="padding-right: 0;">
-                                      <label><b>Frecuencia</b></label>
-                                      <div id="borderFrecuencia">
-                                      <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
-                                        <option value="0">- Frecuencia -</option>
-                                        <option value="4 hrs">4 hrs</option>
-                                        <option value="6 hrs">6 hrs</option>
-                                        <option value="8 hrs">8 hrs</option>
-                                        <option value="12 hrs">12 hrs</option>
-                                        <option value="24 hrs">24 hrs</option>
-                                        <option value="48 hrs">48 hrs</option>
-                                        <option value="72 hrs">72 hrs</option>
-                                        <option value="Dosis unica">Dosis unica</option>
-                                      </select>
-                                      </div>
-                                    </div>
 
                                     <!-- identificador de los medicamentos con interaccion interaccion_amarilla,
                                          el select se llena al seleccionar un medicamento -->
@@ -1068,7 +1025,64 @@
                                   </div>
                                   <div class="col-sm-12" style="padding:0">
 
-                                    <div class="col-sm-4" style="padding-left: 0;">
+                                    <div class="col-sm-5" style="padding-left: 0px;">
+                                      <label><b>Via de administración</b></label>
+                                      <div class="input-group" id="borderVia">
+                                        <div id="opcion_vias_administracion">
+                                          <select class="form control select2 width100" id="via">
+                                            <option value="0">-Seleccionar-</option>
+                                          </select>
+                                        </div>
+                                        <span class="input-group-btn">
+                                          <button class="btn btn-default btn_otra_via" type="button" value="0" title="Indicar otra via de administración">Otra</button>
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-sm-1" style="padding-right: 0; padding-left: 0;">
+                                      <div class="form-group" >
+                                        <label ><b>Dosis</b></label>
+                                        <div id="borderDosis">
+                                        <input type="number" min='0' id="input_dosis" class="form-control">
+                                        <label id="dosis_max" hidden></label>
+                                        <label id="gramaje_dosis_max" hidden></label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-1" style="padding-left: 0;">
+                                      <div class="form-group" >
+                                        <label ><b>Unidad</b></label>
+                                        <div id="borderUnidad">
+                                        <select name="" id="select_unidad" class="form-control">
+                                          <option value="0">-Unidad-</option>
+                                          <option value="g">g</option>
+                                          <option value="mg">mg</option>
+                                          <option value="mcg">mcg</option>
+                                          <option value="mL">mL</option>
+                                          <option value="UI">UI</option>
+                                        </select>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-sm-2" style="padding-left: 0;">
+                                      <label><b>Frecuencia</b></label>
+                                      <div id="borderFrecuencia">
+                                      <select class="form-control" id="frecuencia" onchange="asignarHorarioAplicacion()" >
+                                        <option value="0">- Frecuencia -</option>
+                                        <option value="4 hrs">4 hrs</option>
+                                        <option value="6 hrs">6 hrs</option>
+                                        <option value="8 hrs">8 hrs</option>
+                                        <option value="12 hrs">12 hrs</option>
+                                        <option value="24 hrs">24 hrs</option>
+                                        <option value="48 hrs">48 hrs</option>
+                                        <option value="72 hrs">72 hrs</option>
+                                        <option value="Dosis unica">Dosis unica</option>
+                                      </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-sm-3" style="padding-left: 0; padding-right: 0;">
                                       <label><b>Horario de administración</b></label>
                                       <div class="input-group" id="borderAplicacion">
                                         <input type="text" class="form-control" id="aplicacion" disabled='disabled' >
@@ -1078,10 +1092,17 @@
                                       </div>
                                     </div>
 
+                                  </div>
+
+                                  <div class="col-sm-12" style="padding:0">
+
                                     <div class="col-sm-2" style="padding-left: 0;">
                                       <label><b>Fecha inicio</b></label>
-                                      <div id="borderFechaInicio">
-                                      <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  >
+                                      <div class="input-group" id="borderFechaInicio">
+                                        <input id="fechaInicio" onchange="mostrarFechaFin()" class="form-control dd-mm-yyyy"  name="" placeholder="06/10/2016">
+                                        <span class="input-group-btn">
+                                          <button class="btn btn-default btn_fecha_actual" type="button" value="0" title="Fecha actual">Hoy</button>
+                                        </span>
                                       </div>
                                     </div>
                                     <!-- El div cambia dependiendo el medicamento que sea prescrito -->
@@ -1089,22 +1110,6 @@
 
 
                                     </div>
-
-
-
-
-
-<!-- <div class="col-lg-6">
-<div class="input-group">
-<input type="text" id="contador" class="form-control" placeholder="1" value="1">
-<span class="input-group-btn">
-<button class="btn btn-default" id="carga" onClick="sube()" type="button">Carga</button>
-</span>
-<span class="input-group-btn">
-<button class="btn btn-default" id="descarga" onClick="baja()" type="button">Descarga</button>
-</span>
-</div>
-</div> -->
 
                                   </div>
 

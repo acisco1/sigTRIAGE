@@ -1043,7 +1043,7 @@
                                                   <div class="form-group">
 
                                                     <label><b>Medicamento / Forma farmaceutica</b></label>
-                                                    <div class="input-group" id="borderVia">
+                                                    <div class="input-group">
                                                       <div id="borderMedicamento" >
                                                         <select id="select_medicamento" onchange="indicarInteraccion()" class="form control select2 selectpicker" style="width: 100%" hidden>
                                                             <option value="0">-Seleccionar-</option>

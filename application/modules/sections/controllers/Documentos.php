@@ -590,26 +590,32 @@ class Documentos extends Config{
               );
               $this->config_mdl->_insert('interconsulta_hoja_frontal',$datos);
             }
-
+            $fecha_actual = date('d-m-Y');
             // Numero de prescripciones ingresadas, almacena en arreglo y registra en la
             // tabla "prescripcio"
             for($x = 0; $x < count($this->input->post('idMedicamento')); $x++){
+              $observacion = $this->input->post("observacion[$x]");
+              $otroMedicamento = $this->input->post("nomMedicamento[$x]");
+              if($this->input->post("idMedicamento[$x]") == '1'){
+                $observacion = $otroMedicamento.'-'.$observacion;
+              }
               $datosPrescripcion = array(
                 'empleado_id' => $this->UMAE_USER,
                 'triage_id' => $this->input->post('triage_id'),
                 'medicamento_id' => $this->input->post("idMedicamento[$x]"),
+                'via' => $this->input->post("via_admi[$x]"),
+                'fecha_prescripcion' => $fecha_actual,
                 'dosis' => $this->input->post("dosis[$x]"),
-                'fecha_prescripcion' => date('d-m-Y')." ".date('H:i'),
-                'via' => $this->input->post("via[$x]"),
                 'frecuencia' => $this->input->post("frecuencia[$x]"),
                 'aplicacion' => $this->input->post("horaAplicacion[$x]"),
                 'fecha_inicio' => $this->input->post("fechaInicio[$x]"),
                 'tiempo' => $this->input->post("duracion[$x]"),
                 'periodo' => $this->input->post("periodo[$x]"),
                 'fecha_fin' => $this->input->post("fechaFin[$x]"),
-                'observacion' => $this->input->post("observacion[$x]"),
+                'observacion' => $observacion,
                 'estado' => "1"
               );
+
               $this->config_mdl->_insert('prescripcion',$datosPrescripcion);
 
 
@@ -1262,7 +1268,9 @@ class Documentos extends Config{
 
 
     public function AjaxBitacoraPrescripciones(){
-      $sql = $this->config_mdl->_query("SELECT prescripcion.prescripcion_id,fecha_prescripcion, CONCAT(medicamento, ' ', gramaje)medicamento
+      $sql = $this->config_mdl->_query("SELECT prescripcion.prescripcion_id, fecha_prescripcion,
+                                          CONCAT(medicamento, ' ', gramaje)medicamento, catalogo_medicamentos.medicamento_id,
+                                          observacion
                                         FROM prescripcion
                                         INNER JOIN catalogo_medicamentos ON
                                         prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
@@ -1290,10 +1298,11 @@ class Documentos extends Config{
 
     public function AjaxBitacoraHistorialMedicamentos(){
       $sql = $this->config_mdl->_query("SELECT fecha_prescripcion,
-                                        prescripcion.via as via_administracion, dosis,
-                                        frecuencia, aplicacion, fecha_inicio,
-                                        fecha_fin, observacion, fecha,
-                                        tipo_accion, motivo FROM prescripcion
+                                          prescripcion.via as via_administracion, dosis,
+                                          frecuencia, aplicacion, fecha_inicio, fecha_fin,
+                                          observacion, fecha, tipo_accion, motivo,
+                                          catalogo_medicamentos.medicamento_id
+                                        FROM prescripcion
                                         INNER JOIN catalogo_medicamentos ON
                                         prescripcion.medicamento_id = catalogo_medicamentos.medicamento_id
                                         INNER JOIN os_triage ON
@@ -1476,6 +1485,7 @@ class Documentos extends Config{
                 'triage_id' => $this->input->post('triage_id'),
                 'doc_modulo' => "Consultorios",
                 'motivo_interconsulta' => $this->input->post('motivo_interconsulta'),
+                'doc_nota_id' => $this->config_mdl->_get_last_id('doc_notas','notas_id'),
                 'empleado_envia'=> $this->UMAE_USER
               );
               $this->config_mdl->_insert('doc_430200',$datos_interconsulta);
@@ -1486,6 +1496,7 @@ class Documentos extends Config{
           Se consultan las interconsultas realizadas en el momento en que se genero
           la nota medica
           */
+
           $Interconsultas = $this->config_mdl->_query("SELECT doc_id FROM doc_430200
                                                       WHERE triage_id = ".$this->input->post('triage_id'));
           for($x = 0; $x < count($Interconsultas); $x++){
@@ -1495,6 +1506,9 @@ class Documentos extends Config{
             );
             $this->config_mdl->_insert('interconsulta_notas',$datos);
           }
+
+
+
           /*
           Se consultan los diagnosticos del paciente registrados
           para ser asignados en la nota evolucion

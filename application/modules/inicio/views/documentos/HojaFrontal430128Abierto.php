@@ -2,6 +2,7 @@
 <page backtop="80mm" backbottom="50mm" backleft="48" backright="1mm">
     <page_header>
         <style>
+
         </style>
         <img src="<?=  base_url()?>assets/doc/DOC430128_HF.png" style="position: absolute;width: 805px;margin-top: 0px;margin-left: -10px;">
         <div style="position: absolute;margin-top: 15px">
@@ -11,7 +12,7 @@
             <div style="position: absolute;margin-left: 435px;margin-top: 50px;width: 270px;text-transform: uppercase;font-size: 11px;text-align: left;">
                 <b>NOMBRE DEL PACIENTE:</b>
             </div>
-            <div style="position: absolute;margin-left: 435px;margin-top: 61px;width: 300px;text-transform: uppercase;font-size: 14px;text-align: left;">
+            <div style="position: absolute;margin-left: 435px;margin-top: 61px;width: 270px;text-transform: uppercase;font-size: 14px;text-align: left;">
                 <?=$info['triage_nombre_ap']?> <?=$info['triage_nombre_am']?> <?=$info['triage_nombre']?>
             </div>
             <div style="position: absolute;margin-left: 437px;margin-top: 75px;width: 270px;text-transform: uppercase;font-size: 13px;">
@@ -74,8 +75,8 @@
                 </p>
             </div>
 
-            <div style="position: absolute;margin-left: 337px;margin-top: 263px;width: 270px;text-transform: uppercase;font-size: 13px;">
-                <b>NOTA INICIAL DE ADMISIÓN CONTINUA</b>
+            <div style="position: absolute;margin-left: 437px;margin-top: 263px;width: 270px;text-transform: uppercase;font-size: 13px;">
+                <b>NOTA INICIAL</b>
             </div>
 
             <div style="position: absolute;margin-top:229px;margin-left: 134px ">
@@ -160,242 +161,308 @@
             </div>
         </div>
     </page_header>
-    <div style="position:absolute; left: 1px; margin-top: -15px; font-size: 12px;">
+
+       <div style="left: 1px; right: -2000px; margin-top: -15px; font-size: 12px;">
         <span style="text-align: justify;">
-            <?php if($hoja['hf_motivo']!=''){?>
-                <h5 style="margin-bottom: -6px">MOTIVO DE CONSULTA</h5>
-                <div style="width: 570px;"><?= $hoja['hf_motivo'] ?></div>
-            <?php }?>
-            <?php if($hoja['hf_antecedentes']!=''){?>
-                <h5 style="margin-bottom: -6px">ANTECEDENTES</h5>
-                <div style="width: 570px;"><?=$hoja['hf_antecedentes']?></div>
-            <?php }?>
-            <?php if($PINFO['alergias']!=''){?>
-                <h5 style="margin-bottom: -6px">ALERGIAS</h5>
-                <div style="width: 570px;"><?=$PINFO['alergias']?></div>
-            <?php }?>
-            <?php if($hoja['hf_padecimientoa']!=''){?>
-                <h5 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h5>
-                <div style="width: 570px;"><?=$hoja['hf_padecimientoa']?></div>
-            <?php }?>
-            <?php if($hoja['hf_exploracionfisica']!=''){?>
-                <h5 style="margin-bottom: -6px">EXPLORACIÓN FISICA</h5>
-                <div style="width: 570px;"><?=$hoja['hf_exploracionfisica']?></div>
-            <?php }?>
-            <?php if($hoja['hf_auxiliares']!=''){?>
-                <h5 style="margin-bottom: -6px">AUXILIARES DE DIAGNÓSTICO</h5>
-                <div style="width: 570px;"><?=$hoja['hf_auxiliares']?></div>
-            <?php }?>
-                <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
-                <?=$Diagnosticos[0]['cie10_clave']?> - <?=$Diagnosticos[0]['cie10_nombre']?><br>
-                <?=($Diagnosticos[0]['complemento'] === 'S/C')?'':$Diagnosticos[0]['complemento'];?>
-            <?php if(count($Diagnosticos) > 1) {?>
-                <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
-                <?php for($x = 1; $x < count($Diagnosticos); $x++){ ?>
-                   <?=$Diagnosticos[$x]['cie10_clave']?> - <?=$Diagnosticos[$x]['cie10_nombre']?><br>
-                   <?=($Diagnosticos[$x]['complemento'] === 'S/C')?'':$Diagnosticos[$x]['complemento'];?>
-                   <br>
-                <?php } ?>
-            <?php } ?>
-            <h5 style="margin-bottom: -6px">INDICACIONES Y ORDENES MÉDICAS</h5>
-            <?php if($hoja['hf_nutricion'] == '0') {
-              $nutricion = 'Ayuno';
-            }else if($hoja['hf_nutricion'] == '1'){
-              $nutricion = 'IB - Normal';
-            }else if($hoja['hf_nutricion'] == '2'){
-              $nutricion = 'IIA - Blanda';
-            }else if($hoja['hf_nutricion'] == '3'){
-              $nutricion = 'IIB - Astringente';
-            }else if($hoja['hf_nutricion'] == '4'){
-              $nutricion = 'III - Diabetica';
-            }else if($hoja['hf_nutricion'] == '5'){
-              $nutricion = 'IV - Hiposodica';
-            }else if($hoja['hf_nutricion'] == '6'){
-              $nutricion = 'V - Hipograsa';
-            }else if($hoja['hf_nutricion'] == '7'){
-              $nutricion = 'VI - Liquida clara';
-            }else if($hoja['hf_nutricion'] == '8'){
-              $nutricion = 'VIA - Liquida general';
-            }else if($hoja['hf_nutricion'] == '9'){
-              $nutricion = 'VIB - Licuada por sonda';
-            }else if($hoja['hf_nutricion'] == '10'){
-              $nutricion = 'VIB - Licuada por sonda artesanal';
-            }else if($hoja['hf_nutricion'] == '11'){
-              $nutricion = 'VII - Papilla';
-            }else if($hoja['hf_nutricion'] == '12'){
-              $nutricion = 'VIII - Epecial';
-            }else{
-              $nutricion = $hoja['hf_nutricion'];
-            }
+        <?php if($hoja['hf_motivo']!=''){?>
+        <h5 style="margin-bottom: -6px">MOTIVO DE CONSULTA</h5>
+        <div style="width: 570px;"><?= $hoja['hf_motivo'] ?></div>
+        <br>
+        <?php }?>
+        <?php if($hoja['hf_antecedentes']!=''){?>
+        <h5 style="margin-bottom: -6px">ANTECEDENTES</h5>
+        <div style="width: 570px;"><?=$hoja['hf_antecedentes']?></div>
+        <br>
+        <?php }?>
+        <?php if($PINFO['alergias']!=''){?>
+        <h5 style="margin-bottom: -6px">ALERGIAS</h5>
+        <div style="width: 570px;"><?=$PINFO['alergias']?></div>
+        <br>
+        <?php }?>
+
+        <?php if($hoja['hf_padecimientoa']!=''){?>
+        <h5 style="margin-bottom: -6px">PADECIMIENTO ACTUAL</h5>
+        <div style="width: 570px;"><?=$hoja['hf_padecimientoa']?></div>
+        <br>
+        <?php }?>
+        <?php if($hoja['hf_exploracionfisica']!=''){?>
+        <h5 style="margin-bottom: -6px">EXPLORACIÓN FISICA</h5>
+        <div style="width: 570px;"><?=$hoja['hf_exploracionfisica']?></div>
+        <br>
+        <?php }?>
+        <?php if($hoja['hf_auxiliares']!=''){?>
+        <h5 style="margin-bottom: -6px">AUXILIARES DE DIAGNÓSTICO</h5>
+        <div style="width: 570px;"><?=$hoja['hf_auxiliares']?></div>
+        <br>
+        <?php }?>
+        <h5 style="margin-bottom: -6px">DIAGNÓSTICO DE INGRESO</h5>
+        <?=$Diagnosticos[0]['cie10_clave']?> - <?=$Diagnosticos[0]['cie10_nombre']?>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?=($Diagnosticos[0]['complemento'] === 'S/C')?'':$Diagnosticos[0]['complemento'];?>
+        <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
+        <?php for($x = 1; $x < count($Diagnosticos); $x++){ ?>
+          <?=$Diagnosticos[$x]['cie10_clave']?> - <?=$Diagnosticos[$x]['cie10_nombre']?>
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <?=($Diagnosticos[$x]['complemento'] === 'S/C')?'':$Diagnosticos[$x]['complemento'];?>
+          <br>
+        <?php } ?>
+
+        <?php if($hoja['hf_diagnosticos']!=''){?>
+        <h5 style="margin-bottom: -6px">DIAGNÓSTICOS SECUNDARIOS</h5>
+        <?=$hoja['hf_diagnosticos']?>
+        <?php }?>
+        <h5 style="margin-bottom: -6px">INDICACIONES Y ORDENES MÉDICAS</h5>
+
+        <?php if($hoja['hf_nutricion'] == '0') {
+          $nutricion = 'Ayuno';
+        }else if($hoja['hf_nutricion'] == '1'){
+          $nutricion = 'IB - Normal';
+        }else if($hoja['hf_nutricion'] == '2'){
+          $nutricion = 'IIA - Blanda';
+        }else if($hoja['hf_nutricion'] == '3'){
+          $nutricion = 'IIB - Astringente';
+        }else if($hoja['hf_nutricion'] == '4'){
+          $nutricion = 'III - Diabetica';
+        }else if($hoja['hf_nutricion'] == '5'){
+          $nutricion = 'IV - Hiposodica';
+        }else if($hoja['hf_nutricion'] == '6'){
+          $nutricion = 'V - Hipograsa';
+        }else if($hoja['hf_nutricion'] == '7'){
+          $nutricion = 'VI - Liquida clara';
+        }else if($hoja['hf_nutricion'] == '8'){
+          $nutricion = 'VIA - Liquida general';
+        }else if($hoja['hf_nutricion'] == '9'){
+          $nutricion = 'VIB - Licuada por sonda';
+        }else if($hoja['hf_nutricion'] == '10'){
+          $nutricion = 'VIB - Licuada por sonda artesanal';
+        }else if($hoja['hf_nutricion'] == '11'){
+          $nutricion = 'VII - Papilla';
+        }else if($hoja['hf_nutricion'] == '12'){
+          $nutricion = 'VIII - Epecial';
+        }else{
+          $nutricion = $hoja['hf_nutricion'];
+        }
+        ?>
+        Dieta: <?= $nutricion ?> <br><br>
+
+
+
+        <?php
+        if($hoja['hf_signosycuidados'] == '1'){
+          $toma_signos = 'Por turno';
+        }else if($hoja['hf_signosycuidados'] == '2'){
+          $toma_signos = 'Cada 4 horas';
+        }else{
+          $toma_signos = $hoja['hf_signosycuidados'];
+        }
+        ?>
+        SIGNOS:<?=$toma_signos?><br><br>
+        <?php if($hoja['hf_cgenfermeria'] == '1'){ ?>
+          CUIDADOS GENERALES:<br><br>
+          <label style="margin-left:20px;" >a. Estado neurológico</label><br>
+          <label style="margin-left:20px;" >b. Cama Con barandales</label><br>
+          <label style="margin-left:20px;" >c. Calificación del dolor</label><br>
+          <label style="margin-left:20px;" >d. Calificación de riesgo de caida</label><br>
+          <label style="margin-left:20px;" >e. Control de liquidos por turno</label><br>
+          <label style="margin-left:20px;" >f. Vigilar riesgo de ulceras por presión</label><br>
+          <label style="margin-left:20px;" >g. Aseo bucal</label><br>
+          <label style="margin-left:20px;" >h. Lavado de manos</label><br><br>
+        <?php } ?>
+        <?php if($hoja['hf_cuidadosenfermeria']!=''){?>
+        CUIDADOS ESPECIFICOS DE ENFERMERIA:<br> <?=$hoja['hf_cuidadosenfermeria']?><br><br>
+        <?php }?>
+        <?php if($hoja['hf_solucionesp']!=''){?>
+        SOLUCIONES PARENTERALES:<br><?=$hoja['hf_solucionesp']?>
+        <?php }?>
+
+
+        <!-- Alergia a medicamentos -->
+        <?php  echo (count($AlergiaMedicamentos > 0))?'<h5 style="margin-bottom: -6px">ALERGIA A MEDICAMENTOS</h5>':'';?>
+        <?php for($x = 0; $x < count($AlergiaMedicamentos); $x++){ ?>
+          <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento'] ?><br>
+        <?php } ?>
+        <!-- Fin alergia a medicamentos -->
+
+        <!-- Prescripcion -->
+         <h5>PRESCRIPCIÓN</h5>
+         <?php
+          $observacion = "";
+          $medicamento = "";
+          ?>
+         <?php for($x = 0; $x < count($Prescripcion_Basico); $x++){ ?>
+           <?php
+           $observacion = $Prescripcion_Basico[$x]['observacion'];
+           $medicamento = $Prescripcion_Basico[$x]['medicamento'];
+
+
+           if($medicamento === "OTRO"){
+
+             $medicamento = substr($observacion, 0, strpos($observacion, "-"));
+             $observacion = substr($observacion, (strpos($observacion, "-") + 1),  strlen($observacion) );
+
+           }
             ?>
-            DIETA: <?= $nutricion ?> <br>
-            <?php
-            if($hoja['hf_signosycuidados'] == '1'){
-              $toma_signos = 'Por turno';
-            }else if($hoja['hf_signosycuidados'] == '2'){
-              $toma_signos = 'Cada 4 horas';
-            }else{
-              $toma_signos = $hoja['hf_signosycuidados'];
-            }
+           <strong><?= $x+1 ?>) <?= $medicamento." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
+           Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>
+           via <?= strtolower($Prescripcion_Basico[$x]['via']); ?>,
+           <?= ($Prescripcion_Basico[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Basico[$x]['frecuencia']); ?>,
+           en el siguiente horario: <?= $Prescripcion_Basico[$x]['aplicacion'] ?>.
+           Iniciando el <?= $Prescripcion_Basico[$x]['fecha_inicio'] ?>
+           hasta el <?= $Prescripcion_Basico[$x]['fecha_fin'] ?>.
+           <?php if($Prescripcion_Basico[$x]['observacion'] != 'Sin observaciones' ){ ?>
+               <br><strong>Observación</strong>
+               <?= $observacion ?>
+             <?php } ?>
+
+           <br><br><!-- Salto entre prescripciones -->
+         <?php } ?>
+
+
+         <?= (count($Prescripcion_Onco_Anti) > 0)?"<h5>Antimicrobiano</h5>":""; ?>
+
+         <?php for($x = 0; $x < count($Prescripcion_Onco_Anti); $x++){ ?>
+           <strong><?= $x+1 ?>) <?= $Prescripcion_Onco_Anti[$x]['medicamento']." ".$Prescripcion_Onco_Anti[$x]['gramaje']." ".$Prescripcion_Onco_Anti[$x]['forma_farmaceutica'] ?>. </strong>
+           Aplicar <?= $Prescripcion_Onco_Anti[$x]['dosis'] ?>
+           via <?= strtolower($Prescripcion_Onco_Anti[$x]['via']); ?>,
+           <?= ($Prescripcion_Onco_Anti[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Onco_Anti[$x]['frecuencia']); ?>,
+           en el siguiente horario: <?= $Prescripcion_Onco_Anti[$x]['aplicacion'] ?>.
+           Iniciando el <?= $Prescripcion_Onco_Anti[$x]['fecha_inicio'] ?>
+           hasta el <?= $Prescripcion_Onco_Anti[$x]['fecha_fin'] ?>.
+           <br>
+           <strong>Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['diluente'] ?> &nbsp;</u>&nbsp;&nbsp;&nbsp;
+           <strong>Vol. Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['vol_dilucion'] ?> ml.&nbsp;</u>
+           <?php if($Prescripcion_Onco_Anti[$x]['observacion'] != 'Sin observaciones' ){ ?>
+               <br><strong>Observación</strong>
+               <?= $Prescripcion_Onco_Anti[$x]['observacion'] ?>
+             <?php } ?>
+           <br>
+         <?php } ?>
+
+         <?= (count($Prescripcion_NPT) > 0)?"<h5>Nutrición Parenteral Total</h5>":""; ?>
+
+         <?php for($x = 0; $x < count($Prescripcion_NPT); $x++){ ?>
+           <strong><?= $x+1 ?>) <?= $Prescripcion_NPT[$x]['medicamento']." ".$Prescripcion_NPT[$x]['gramaje']." ".$Prescripcion_NPT[$x]['forma_farmaceutica'] ?>. </strong>
+           Aplicar <?= $Prescripcion_NPT[$x]['dosis'] ?>
+           via <?= strtolower($Prescripcion_NPT[$x]['via']); ?>,
+           <?= ($Prescripcion_NPT[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_NPT[$x]['frecuencia']); ?>,
+           en el siguiente horario: <?= $Prescripcion_NPT[$x]['aplicacion'] ?>.
+           Iniciando el <?= $Prescripcion_NPT[$x]['fecha_inicio'] ?>
+           hasta el <?= $Prescripcion_NPT[$x]['fecha_fin'] ?>.
+           <br>
+           <?php $totalvol = (
+                             $Prescripcion_NPT[$x]['aminoacido'] +
+                             $Prescripcion_NPT[$x]['dextrosa'] +
+                             $Prescripcion_NPT[$x]['lipidos'] +
+                             $Prescripcion_NPT[$x]['agua_inyect'] +
+                             $Prescripcion_NPT[$x]['cloruro_sodio'] +
+                             $Prescripcion_NPT[$x]['sulfato'] +
+                             $Prescripcion_NPT[$x]['cloruro_potasio'] +
+                             $Prescripcion_NPT[$x]['fosfato'] +
+                             $Prescripcion_NPT[$x]['gluconato'] +
+                             $Prescripcion_NPT[$x]['albumina'] +
+                             $Prescripcion_NPT[$x]['heparina'] +
+                             $Prescripcion_NPT[$x]['insulina'] +
+                             $Prescripcion_NPT[$x]['zinc'] +
+                             $Prescripcion_NPT[$x]['mvi'] +
+                             $Prescripcion_NPT[$x]['oligoelementos'] +
+                             $Prescripcion_NPT[$x]['vitamina']
+                           ); ?>
+           <strong>OVERFILL:</strong><u>&nbsp; 20 &nbsp;</u>&nbsp;&nbsp;&nbsp;<strong>Vol. Total:</strong><u>&nbsp; <?=$totalvol?> &nbsp;</u>
+           <br>
+           <!-- Consultar bases -->
+           <?php if($Prescripcion_NPT[$x]['aminoacido'] > 0 ||
+                   $Prescripcion_NPT[$x]['dextrosa'] > 0 ||
+                   $Prescripcion_NPT[$x]['lipidos'] > 0 ||
+                   $Prescripcion_NPT[$x]['agua_inyect'] > 0 ){ ?>
+                     <br>
+                     Solucion Base
+                     <br>
+                     <?= ($Prescripcion_NPT[$x]['aminoacido'] > 0) ? '<div>Aminoácidos Cristalinos 10% adulto <u>&nbsp;&nbsp; '.$Prescripcion_NPT[$x]['aminoacido'].' ml &nbsp;&nbsp;</u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['dextrosa'] > 0) ? '<div>Dextrosa al 50% <u>&nbsp;&nbsp; '.$Prescripcion_NPT[$x]['dextrosa'].' ml &nbsp;&nbsp;</u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['lipidos'] > 0) ? '<div>Lipdiso Intravenosos con Acidos grasos, Omega 3 y 9 <u>&nbsp;&nbsp; '.$Prescripcion_NPT[$x]['lipidos'].' ml &nbsp;&nbsp;</u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['agua_inyect'] > 0) ? '<div>Agua Inyectable <u>&nbsp;&nbsp; '.$Prescripcion_NPT[$x]['agua_inyect'].' ml &nbsp;&nbsp;</u></div>':'' ?>
+
+           <?php } ?>
+
+           <!-- Consultar sales -->
+           <?php if($Prescripcion_NPT[$x]['cloruro_sodio'] > 0 ||
+                   $Prescripcion_NPT[$x]['sulfato'] > 0 ||
+                   $Prescripcion_NPT[$x]['cloruro_potasio'] > 0 ||
+                   $Prescripcion_NPT[$x]['fosfato'] > 0 ||
+                   $Prescripcion_NPT[$x]['gluconato'] > 0 ){ ?>
+                     <br>
+                     Sales
+                     <br>
+                     <?= ($Prescripcion_NPT[$x]['cloruro_sodio'] > 0) ? '<div>Cloruro de Sodio 17.7% (3mEq/ml Na) <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['cloruro_sodio'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['sulfato'] > 0) ? '<div>Sulfato de Magnesio (0.81) mEq/ml <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['sulfato'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['cloruro_potasio'] > 0) ? '<div>Cloruro de Potasio (4 mEeq/ml K) <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['cloruro_potasio'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['fosfato'] > 0) ? '<div>Fosfato de Potasio (2 mEq/ml k/1.11 m mol PO4) <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['fosfato'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['gluconato'] > 0) ? '<div>Gluconato de Calcio (0.465 mEq/ml) <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['gluconato'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+
+
+           <?php } ?>
+
+           <!-- Consultar aditivos -->
+           <?php if($Prescripcion_NPT[$x]['albumina'] > 0 ||
+                   $Prescripcion_NPT[$x]['heparina'] > 0 ||
+                   $Prescripcion_NPT[$x]['insulina'] > 0 ||
+                   $Prescripcion_NPT[$x]['zinc'] > 0 ||
+                   $Prescripcion_NPT[$x]['mvi'] > 0 ||
+                   $Prescripcion_NPT[$x]['oligoelementos'] > 0 ||
+                   $Prescripcion_NPT[$x]['vitamina'] > 0){ ?>
+                     <br>
+                     Aditivos:
+                     <br>
+                     <?= ($Prescripcion_NPT[$x]['albumina'] > 0)?'<div>Albúmina 20% (0.20 g/ml): <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['albumina'].' gr &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['heparina'] > 0)?'<div>Heparina (1000 UI/ml): <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['heparina'].' UI &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['insulina'] > 0)?'<div>Insulina Humana (100 UI/ml): <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['insulina'].' UI &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['zinc'] > 0)?'<div>Zinc: <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['zinc'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['mvi'] > 0)?'<div>MVI - Adulto <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['mvi'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['oligoelementos'] > 0)?'<div>Oligoelementos Tracefusin <u> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['oligoelementos'].' ml &nbsp;&nbsp; </u></div>':'' ?>
+                     <?= ($Prescripcion_NPT[$x]['vitamina'] > 0)?'<div>Vitamina C (100 mg/ml) <u style="float:right;"> &nbsp;&nbsp; '.$Prescripcion_NPT[$x]['vitamina'].' mg &nbsp;&nbsp; </u></div>':'' ?>
+
+           <?php } ?>
+
+           <?php if($Prescripcion_NPT[$x]['observacion'] != 'Sin observaciones' ){ ?>
+               <br><strong>Observación</strong>
+               <?= $Prescripcion_NPT[$x]['observacion'] ?><br>
+             <?php } ?>
+           <br>
+         <?php } ?>
+       <!-- Fin prescripcion -->
+
+
+
+
+
+        <?php if($hoja['hf_indicaciones']!=''){?>
+        <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
+        <?=$hoja['hf_indicaciones']?>
+        <?php }?>
+        <h5 style="margin-bottom: -6px">ACCIÓN:</h5><p style="margin-top: -13px; margin-left: 60"><?=$hoja['hf_alta']?></p>
+        <?php $num_interconsultas = count($Interconsultas); ?>
+        <?php if($num_interconsultas > 0){ ?>
+        <h5 style="margin-bottom: -6px">INTERCONSULTAS</h5>
+          Servicios solicitados:
+          <?php for($x = 0; $x < $num_interconsultas; $x++){
+            $y = $x + 1;
+            $separacion = ($y == $num_interconsultas)?".":", ";
             ?>
-            SIGNOS:<?=$toma_signos?><br>
-            <?php if($hoja['hf_cgenfermeria'] == '1'){ ?>
-              CUIDADOS GENERALES:<br><br>
-              <label style="margin-left:20px;" >a. Estado neurológico</label><br>
-              <label style="margin-left:20px;" >b. Cama Con barandales</label><br>
-              <label style="margin-left:20px;" >c. Calificación del dolor</label><br>
-              <label style="margin-left:20px;" >d. Calificación de riesgo de caida</label><br>
-              <label style="margin-left:20px;" >e. Control de liquidos por turno</label><br>
-              <label style="margin-left:20px;" >f. Vigilar riesgo de ulceras por presión</label><br>
-              <label style="margin-left:20px;" >g. Aseo bucal</label><br>
-              <label style="margin-left:20px;" >h. Lavado de manos</label><br><br>
-            <?php } ?>
-            <?php if($hoja['hf_cuidadosenfermeria']!=''){?>
-            CUIDADOS ESPECIFICOS DE ENFERMERIA:<br> <?=$hoja['hf_cuidadosenfermeria']?><br><br>
-            <?php }?>
-            <?php if($hoja['hf_solucionesp']!=''){?>
-            SOLUCIONES PARENTERALES:<br><?=$hoja['hf_solucionesp']?>
-            <?php }?>
-            <!-- Alergia a medicamentos -->
-            <!-- <?php  echo (count($AlergiaMedicamentos > 0))?'<h5 style="margin-bottom: -6px">ALERGIA A MEDICAMENTOS</h5>':'';?>
-            <?php for($x = 0; $x < count($AlergiaMedicamentos); $x++){ ?>
-              <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento'] ?><br>
-            <?php } ?> -->
-            <!-- Fin alergia a medicamentos -->
+            <?=$Interconsultas[$x]['especialidad_nombre'].$separacion?>
+          <?php } ?>
+          <br><br>
+          Motivo interconsulta: <?=$Interconsultas[0]['motivo_interconsulta'] ?>
+        <?php } ?>
 
-              <!-- Prescripcion -->
-                <!-- se enlistan las prescripciones de cuadro basico y antibioticos -->
-            <?php if(count($Prescripcion) > 1){?>
-                <h5>PRESCRIPCIÓN</h5>
-                <?php for($x = 0; $x < count($Prescripcion_Basico); $x++){ ?>
-                <strong><?= $x+1 ?>) <?= $Prescripcion_Basico[$x]['medicamento']." ".$Prescripcion_Basico[$x]['gramaje']." ".$Prescripcion_Basico[$x]['forma_farmaceutica'] ?>. </strong>
-                Aplicar <?= $Prescripcion_Basico[$x]['dosis'] ?>
-                via <?= strtolower($Prescripcion_Basico[$x]['via']); ?>,
-                <?= ($Prescripcion_Basico[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Basico[$x]['frecuencia']); ?>,
-                en el siguiente horario: <?= $Prescripcion_Basico[$x]['aplicacion'] ?>.
-                Iniciando el <?= $Prescripcion_Basico[$x]['fecha_inicio'] ?>
-                hasta el <?= $Prescripcion_Basico[$x]['fecha_fin'] ?>.
-                <?php if($Prescripcion_Basico[$x]['observacion'] != 'Sin observaciones' ){ ?>
-                    <br><strong>Observación</strong>
-                    <?= $Prescripcion_Basico[$x]['observacion'] ?>
-                  <?php } ?>
-                <br>
-                <?php } ?>
-                 <?= (count($Prescripcion_Onco_Anti) > 0)?"<h5>Antimicrobiano</h5>":""; ?>
-                <?php for($x = 0; $x < count($Prescripcion_Onco_Anti); $x++){ ?>
-                <strong><?= $x+1 ?>) <?= $Prescripcion_Onco_Anti[$x]['medicamento']." ".$Prescripcion_Onco_Anti[$x]['gramaje']." ".$Prescripcion_Onco_Anti[$x]['forma_farmaceutica'] ?>. </strong>
-                Aplicar <?= $Prescripcion_Onco_Anti[$x]['dosis'] ?>
-                via <?= strtolower($Prescripcion_Onco_Anti[$x]['via']); ?>,
-                <?= ($Prescripcion_Onco_Anti[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_Onco_Anti[$x]['frecuencia']); ?>,
-                en el siguiente horario: <?= $Prescripcion_Onco_Anti[$x]['aplicacion'] ?>.
-                Iniciando el <?= $Prescripcion_Onco_Anti[$x]['fecha_inicio'] ?>
-                hasta el <?= $Prescripcion_Onco_Anti[$x]['fecha_fin'] ?>.
-                <br>
-                <strong>Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['diluente'] ?> &nbsp;</u>&nbsp;&nbsp;&nbsp;
-                <strong>Vol. Diluyente: </strong><u>&nbsp; <?= $Prescripcion_Onco_Anti[$x]['vol_dilucion'] ?> ml.&nbsp;</u>
-                <?php if($Prescripcion_Onco_Anti[$x]['observacion'] != 'Sin observaciones' ){ ?>
-                    <br><strong>Observación</strong>
-                    <?= $Prescripcion_Onco_Anti[$x]['observacion'] ?>
-                  <?php } ?>
-                <br>
-                <?php } ?>
-                <?= (count($Prescripcion_NPT) > 0)?"<h5>Nutrición Parenteral Total</h5>":""; ?>
-                <?php for($x = 0; $x < count($Prescripcion_NPT); $x++){ ?>
-                <strong><?= $x+1 ?>) <?= $Prescripcion_NPT[$x]['medicamento']." ".$Prescripcion_NPT[$x]['gramaje']." ".$Prescripcion_NPT[$x]['forma_farmaceutica'] ?>. </strong>
-                Aplicar <?= $Prescripcion_NPT[$x]['dosis'] ?>
-                via <?= strtolower($Prescripcion_NPT[$x]['via']); ?>,
-                <?= ($Prescripcion_NPT[$x]['frecuencia'] == 'Dosis unica')? '' : 'cada'; ?> <?= strtolower($Prescripcion_NPT[$x]['frecuencia']); ?>,
-                en el siguiente horario: <?= $Prescripcion_NPT[$x]['aplicacion'] ?>.
-                Iniciando el <?= $Prescripcion_NPT[$x]['fecha_inicio'] ?>
-                hasta el <?= $Prescripcion_NPT[$x]['fecha_fin'] ?>.
-                <br>
-                <strong>OVERFILL:</strong><u>&nbsp; 20 &nbsp;</u>&nbsp;&nbsp;&nbsp;<strong>Vol. Total:</strong><u>&nbsp; 1377 &nbsp;</u>
-                <br>
-                <!-- Consultar bases -->
-                <?php if($Prescripcion_NPT[$x]['aminoacido'] > 0 ||
-                        $Prescripcion_NPT[$x]['dextrosa'] > 0 ||
-                        $Prescripcion_NPT[$x]['lipidos'] > 0 ||
-                        $Prescripcion_NPT[$x]['agua_inyect'] > 0 ){ ?>
-                          <br>
-                          Solucion Base
-                          <br>
-                          <?= ($Prescripcion_NPT[$x]['aminoacido'] > 0) ? '<div>Aminoácidos Cristalinos 10% adulto <u> '.$Prescripcion_NPT[$x]['aminoacido'].' ml</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['dextrosa'] > 0) ? '<div>Dextrosa al 50% <u> '.$Prescripcion_NPT[$x]['dextrosa'].' ml</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['lipidos'] > 0) ? '<div>Lipdiso Intravenosos con Acidos grasos, Omega 3 y 9 <u> '.$Prescripcion_NPT[$x]['lipidos'].' ml</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['agua_inyect'] > 0) ? '<div>Agua Inyectable <u> '.$Prescripcion_NPT[$x]['agua_inyect'].' ml</u></div>':'' ?>
-                <?php } ?>
-                <!-- Consultar sales -->
-                <?php if($Prescripcion_NPT[$x]['cloruro_sodio'] > 0 ||
-                    $Prescripcion_NPT[$x]['sulfato'] > 0 ||
-                    $Prescripcion_NPT[$x]['cloruro_potasio'] > 0 ||
-                    $Prescripcion_NPT[$x]['fosfato'] > 0 ||
-                    $Prescripcion_NPT[$x]['gluconato'] > 0 ){ ?>
-                      <br>
-                      Sales
-                      <br>
-                      <?= ($Prescripcion_NPT[$x]['cloruro_sodio'] > 0) ? '<div>Cloruro de Sodio 17.7% (3mEq/ml Na) <u> '.$Prescripcion_NPT[$x]['cloruro_sodio'].' ml</u></div>':'' ?>
-                      <?= ($Prescripcion_NPT[$x]['sulfato'] > 0) ? '<div>Sulfato de Magnesio (0.81) mEq/ml <u> '.$Prescripcion_NPT[$x]['sulfato'].' ml</u></div>':'' ?>
-                      <?= ($Prescripcion_NPT[$x]['cloruro_potasio'] > 0) ? '<div>Cloruro de Potasio (4 mEeq/ml K) <u> '.$Prescripcion_NPT[$x]['cloruro_potasio'].' ml</u></div>':'' ?>
-                      <?= ($Prescripcion_NPT[$x]['fosfato'] > 0) ? '<div>Fosfato de Potasio (2 mEq/ml k/1.11 m mol PO4) <u> '.$Prescripcion_NPT[$x]['fosfato'].' ml</u></div>':'' ?>
-                      <?= ($Prescripcion_NPT[$x]['gluconato'] > 0) ? '<div>Gluconato de Calcio (0.465 mEq/ml) <u> '.$Prescripcion_NPT[$x]['gluconato'].' ml</u></div>':'' ?>
-                <?php } ?>
-
-                <!-- Consultar aditivos -->
-                <?php if($Prescripcion_NPT[$x]['albumina'] > 0 ||
-                        $Prescripcion_NPT[$x]['heparina'] > 0 ||
-                        $Prescripcion_NPT[$x]['insulina'] > 0 ||
-                        $Prescripcion_NPT[$x]['zinc'] > 0 ||
-                        $Prescripcion_NPT[$x]['mvi'] > 0 ||
-                        $Prescripcion_NPT[$x]['oligoelementos'] > 0 ||
-                        $Prescripcion_NPT[$x]['vitamina'] > 0){ ?>
-                          <br>
-                          Aditivos:
-                          <br>
-                          <?= ($Prescripcion_NPT[$x]['albumina'] > 0)?'<div>Albúmina 20% (0.20 g/ml): <u> '.$Prescripcion_NPT[$x]['albumina'].' gr</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['heparina'] > 0)?'<div>Heparina (1000 UI/ml): <u> '.$Prescripcion_NPT[$x]['heparina'].' UI</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['insulina'] > 0)?'<div>Insulina Humana (100 UI/ml): <u> '.$Prescripcion_NPT[$x]['insulina'].' UI</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['zinc'] > 0)?'<div>Zinc: <u> '.$Prescripcion_NPT[$x]['zinc'].' ml</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['mvi'] > 0)?'<div>MVI - Adulto <u> '.$Prescripcion_NPT[$x]['mvi'].' ml</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['oligoelementos'] > 0)?'<div>Oligoelementos Tracefusin <u> '.$Prescripcion_NPT[$x]['oligoelementos'].' ml</u></div>':'' ?>
-                          <?= ($Prescripcion_NPT[$x]['vitamina'] > 0)?'<div>Vitamina C (100 mg/ml) <u> '.$Prescripcion_NPT[$x]['vitamina'].' mg</u></div>':'' ?>
-
-                <?php } ?>
-                <?php if($Prescripcion_NPT[$x]['observacion'] != 'Sin observaciones' ){ ?>
-                    <br><strong>Observación</strong>
-                    <?= $Prescripcion_NPT[$x]['observacion'] ?>
-                <?php } ?>
-                <br>
-                <?php } ?>
-            <?php }?>
-            <!-- Fin prescripcion -->
-            <?php if($hoja['hf_indicaciones']!=''){?>
-                <h5 style="margin-bottom: -6px">PRONÓSTICO</h5>
-            <?=$hoja['hf_indicaciones']?>
-            <?php }?>
-            <?php if($hoja['hf_estadosalud']!=''){?>
-                <h5 style="margin-bottom: -6px">ESTADO DE SALUD</h5>
-            <?=$hoja['hf_estadosalud']?>
-            <?php }?>
-                <h5 style="margin-bottom: -6px">ACCIÓN:</h5><p style="margin-top: -13px; margin-left: 60">Envio a <?=$hoja['hf_alta']?></p>
-            <?php $num_interconsultas = count($Interconsultas); ?>
-            <?php if($num_interconsultas > 0){ ?>
-                <h5 style="margin-bottom: -6px">INTERCONSULTAS SOLICITADAS:</h5>
-                Servicio(s) solicitado(s):
-                <?php for($x = 0; $x < $num_interconsultas; $x++){
-                    $y = $x + 1;
-                    $separacion = ($y == $num_interconsultas)?".":", ";
-                ?>
-                <?=$Interconsultas[$x]['especialidad_nombre'].$separacion?>
-                <?php } ?>
-                <br>
-                Motivo interconsulta: <?=$Interconsultas[0]['motivo_interconsulta'] ?>
-            <?php } ?>
-            <?php if($hoja['hf_interconsulta']!=''){?>
-                <h5 style="margin-bottom: -6px">VALORACION POR: <?=$hoja['hf_interconsulta']?></h5>
-            <?php }?>
+         <?php if($hoja['hf_interconsulta']!=''){?>
+        <h5 style="margin-bottom: -6px">VALORACION POR: <?=$hoja['hf_interconsulta']?></h5>
+        <?php }?>
        </span>
     </div>
     <page_footer>
+
     </page_footer>
 </page>
 <?php
@@ -403,6 +470,6 @@
     $pdf=new HTML2PDF('P','A4','fr','UTF-8');
     $pdf->writeHTML($html);
     $pdf->pdf->IncludeJS("print(true);");
-    $pdf->pdf->SetTitle('NOTA INICIAL ADMISION CONTINUA');
+    $pdf->pdf->SetTitle('NOTA INICIAL');
     $pdf->Output($Nota['notas_tipo'].'.pdf');
 ?>
