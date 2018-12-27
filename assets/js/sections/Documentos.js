@@ -889,6 +889,17 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
                     },callback: function(result){
                       motivo = result;
                       if(motivo!=null && motivo!=''){
+                        var nota_id = "";
+                        var tipo_nota = "";
+
+                        if($('input[name=hf_id]').val() != ''){
+                          nota_id = $('input[name=hf_id]').val();
+                          tipo_nota = "hojafrontalf";
+                        }else if($('input[name=notas_id]').val() != ''){
+                          nota_id = $('input[name=notas_id]').val();
+                          tipo_nota = "evolucion";
+                        }
+
                         $.ajax({
                           url: base_url+"Sections/Documentos/AjaxCambiarEstadoPrescripcion",
                           type: 'GET',
@@ -897,7 +908,9 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
                             estado: estado,
                             prescripcion_id: prescripcion_id,
                             paciente: paciente,
-                            dias: dias
+                            dias: dias,
+                            nota_id: nota_id,
+                            tipo_nota: tipo_nota
                           },success: function (data, textStatus, jqXHR) {
                               msj_success_noti(data.mensaje);
                               ActualizarHistorialPrescripcion(paciente,"2");
@@ -1439,13 +1452,14 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       var dosis_cantidad = $('#input_dosis').val();
       var unidad = $('#select_unidad').val();
       var dosis = (dosis_cantidad+' '+unidad);
-      var via = $('#via').val();
+      var via = $('#via option:selected').text()
       var frecuencia = $('#frecuencia').val();
       var aplicacion = $('#aplicacion').val();
       var fecha_inicio = $('#fechaInicio').val();
       var observacion = $('#observacion').val();
       var motivo_actualizar = $('#motivo_actualizar').val();
-
+      var tiempo = $('#duracion').val();
+      var periodo = $('#periodo option:selected').text();
       if(medicamento_id == '1'){
         observacion = $('#input_otro_medicamento').val() + '-' + observacion;
       }
@@ -1457,6 +1471,8 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
       datos_viejos['aplicacion']+","+
       datos_viejos['fecha_inicio']+","+
       datos_viejos['observacion']+","+
+      datos_viejos['tiempo']+","+
+      datos_viejos['periodo']+","+
       datos_viejos['dosis']+","+
       motivo_actualizar;
 
@@ -1471,16 +1487,20 @@ if(dosis != "" && dosis_max != "" && gramaje_dosis_max != "" && select_unidad !=
           fecha_inicio : fecha_inicio,
           observacion : observacion,
           dosis : dosis,
+          tiempo : tiempo,
+          periodo : periodo,
           prescripcion_id : prescripcion_id
         },
         success: function(data, textStatus, jqXHR){
+          $('.formulario_prescripcion').attr('hidden','true');
           msj_success_noti("Modificacion correcta");
           limpiarFormularioPrescripcion();
           RegistrarAccionBitacoraPrescripcion(prescripcion_id,'Actualizar',motivo_datos_viejos);
           var paciente = $('input[name=triage_id]').val();
           $('#historial_prescripcion').removeAttr('hidden');
-          ActualizarHistorialPrescripcion(paciente,"2");
+          ActualizarHistorialPrescripcion(paciente,"0");
           $('#select_medicamento').select2('enable',true);
+
         },error: function (e) {
             bootbox.hideAll();
             msj_error_serve();
@@ -2491,8 +2511,8 @@ function ActualizarHistorialPrescripcion(folio,estado){
           "<td id='fila_frecuencia"+data[x].prescripcion_id+"'  >"+data[x].frecuencia+"</td>"+
           "<td id='fila_aplicacion"+data[x].prescripcion_id+"' style='padding: 5px;' >"+data[x].aplicacion+"</td>"+
           "<td id='fila_fecha_inicio"+data[x].prescripcion_id+"'  >"+data[x].fecha_inicio+"</td>"+
-          "<td id='fila_tiempo"+data[x].prescripcion_id+"'  >"+data[x].tiempo+"</td>"+
-          "<td id='fila_periodo"+data[x].prescripcion_id+"' style='padding: 5px;' >"+data[x].periodo+"</td>"+
+          "<td style='padding-right: 0px;' id='fila_tiempo"+data[x].prescripcion_id+"'  >"+data[x].tiempo+"</td>"+
+          "<td style='padding-left: 0px;' id='fila_periodo"+data[x].prescripcion_id+"' style='padding: 5px;' >"+data[x].periodo+"</td>"+
           "<td id='fila_fecha_"+data[x].prescripcion_id+"'  >"+data[x].fecha_fin+"</td>"+
           filas_dias_fechafin+
           filas_diasTranscurridos_acciones+
@@ -2669,6 +2689,8 @@ function DatosTabplaPrescripcionActivas(prescripcion_id){
     aplicacion : $('#fila_aplicacion'+prescripcion_id).text(),
     fecha_inicio : $('#fila_fecha_inicio'+prescripcion_id).text(),
     observacion : $('#fila_observacion'+prescripcion_id).text(),
+    tiempo : $('#fila_tiempo'+prescripcion_id).text(),
+    periodo : $('#fila_periodo'+prescripcion_id).text(),
     dosis: $('#fila_dosis'+prescripcion_id).text()
   }
   return datos;

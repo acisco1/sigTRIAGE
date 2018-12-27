@@ -1020,6 +1020,7 @@
 
                                             </div>
 
+                                            <!-- Fin panel prescripcion -->
 
 
                                             <!-- Inicio formulario prescripcion -->

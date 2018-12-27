@@ -6,14 +6,20 @@
                 padding: 0 10px 10px 10px;
                 border-bottom: none;
             }
-            #acordeon_prescripciones_activas, #acordeon_prescripciones_canceladas{
+            #acordeon_prescripciones_activas, #acordeon_prescripciones_pendientes,
+            #acordeon_prescripciones_canceladas, #acordeon_alergia_medicamentos,
+            #acordeon_reacciones, #acordeon_notificaciones, #acordeon_prescripciones_pendientes,
+            #acordeon_prescripciones_notificaciones{
               color: rgb(255,255,255);
               font-size: 16px;
               padding-top: -4px;
               padding-button: -4px;
 
             }
-            #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover{
+            #acordeon_prescripciones_activas:hover, #acordeon_prescripciones_canceladas:hover,
+            #acordeon_alergia_medicamentos:hover, #acordeon_prescripciones_pendientes:hover,
+            #acordeon_reacciones:hover, #acordeon_notificaciones:hover,
+            #acordeon_prescripciones_pendientes:hover, #acordeon_prescripciones_notificaciones:hover{
               background-color: rgba(0, 0, 0, 0.12);
             }
 
@@ -33,10 +39,6 @@
               border-radius: 8px;
             }
 
-            /*    .panel {
-            /* for text on pannel
-            margin-top: 27px !important;
-            } */
 
             .panel-body {
             padding-top: 30px !important;
@@ -88,7 +90,9 @@
                 .panel-container{
                   border-bottom: 1px solid #ddd;
                 }
-                #label_total_activas, #label_total_canceladas{
+                #label_total_activas, #label_total_canceladas, #label_total_alergia_medicamentos,
+                #label_total_reacciones, #label_total_notificaciones, #label_total_pendientes,
+                #label_total_notificaciones{
                   display: inline-block;
                 }
                 .lista_resultado_diagnosticos{
@@ -869,20 +873,13 @@
                                 </label>
 
                                 <!-- Panel con el historial de prescripciones -->
-                                <!--
                                 <nav class=" back-imss">
 
                                     <ul class="nav navbar-nav" >
                                       <li>
                                         <a id="acordeon_prescripciones_activas">
                                             Prescripciones activas:
-                                            <label id="label_total_activas"><?= $Prescripciones_activas[0]['activas'] ?></label>
-                                        </a>
-                                      </li>
-                                      <li>
-                                        <a id="acordeon_prescripciones_canceladas">
-                                            Canceladas o Actualizadas:
-                                            <label id="label_total_canceladas"><?= count($Prescripciones_canceladas) ?></label>
+                                            <label id="label_total_activas"><?= count($Prescripcion) ?></label>
                                         </a>
                                       </li>
                                     </ul>
@@ -890,27 +887,29 @@
 
                                 </nav>
                                 <div>
-                                  <table id="historial_medicamentos_activos" style="width:100%;" hidden>
+                                  <table class="table-hover table-condensed table-responsive"
+                                   id="historial_medicamentos_activos" style="width:100%; font-size:11px;" >
                                     <thead id="historial_prescripcion" >
                                       <tr>
                                         <th>Medicamento</th>
-                                        <th>Categoria Farmacologica</th>
+                                        <th>Categoria F.</th>
                                         <th>Fecha prescripción</th>
                                         <th>Dosis</th>
                                         <th>Vía</th>
                                         <th>Frecuencia</th>
                                         <th>Aplicación</th>
-                                        <th>Fecha Inicio</th>
+                                        <th>Inicio</th>
                                         <th colspan="2">Tiempo</th>
-                                        <th>Fecha Fin</th>
+                                        <th>Fin</th>
                                         <th id="col_dias">Días Transcurridos</th>
                                         <th id="col_fechaFin" >Acciones</th>
-                                        <th id="col_acciones" hidden>Acciones</th>
-                                        <th id="col_movimiento" hidden>Movimiento</th>
-                                        <th id="col_fecha_movimiento" hidden>Fecha Movimiento</th>
+                                        <!-- <th id="col_acciones" >Acciones</th>
+                                        <th id="col_movimiento" >Movimiento</th>
+                                        <th id="col_fecha_movimiento" >Fecha Movimiento</th> -->
                                       </tr>
                                     </thead>
-                                    <tbody id="table_prescripcion_historial">
+                                    <tbody id="table_prescripcion_historial" >
+
 
                                     </tbody>
                                   </table>
@@ -920,8 +919,43 @@
 
                                   </div>
                                 </div>
-                              -->
-                                <!-- Fin panel historial prescripciones -->
+                                <div id='historial_reacciones' hidden>
+                                  <table style="width:100%;">
+                                    <thead>
+                                      <th>Medicamento</th>
+                                      <th>Observacion</th>
+                                    </thead>
+                                    <tbody id="table_historial_reacciones">
+
+                                    </tbody>
+                                  </table>
+
+                                </div>
+                                <div id="historial_alergia_medicamentos" hidden>
+                                  <table style="width:100%;" >
+                                    <thead>
+
+                                      <th>Medicamentos que presentan alergias</th>
+                                    </thead>
+                                    <tbody >
+                                      <tr>
+                                        <td id="table_historial_alergia_medicamentos">
+                                        <?php for($x=0 ;$x < count($AlergiaMedicamentos); $x++){ ?>
+                                          <?=($x + 1).") ".$AlergiaMedicamentos[$x]['medicamento']."&nbsp;&nbsp;&nbsp;"?>
+                                        <?php } ?>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div>
+                                  <div class="panel-group" id='historial_notificaciones' hidden>
+
+                                  </div>
+
+                                </div>
+
+                                <!-- Fin panel prescripcion -->
 
 
 
@@ -1503,3 +1537,7 @@
 <script type="text/javascript" src="<?= base_url()?>assets/libs/light-bootstrap/shieldui-all.min.js"></script>
 <script src="<?= base_url('assets/js/sections/CIE10.js?md5='). md5(microtime())?>" type="text/javascript"></script>
 <script src="<?= base_url('assets/js/sections/Documentos.js?md5'). md5(microtime())?>" type="text/javascript"></script>
+<script type="text/javascript">
+  var paciente = $('input[name=triage_id]').val();
+  window.onload = ActualizarHistorialPrescripcion(paciente, 0);
+</script>

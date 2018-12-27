@@ -202,7 +202,7 @@
                                       $accion_editar_hf1 = base_url().'Sections/Documentos/HojaFrontal?hf='.$value['hf_id'].'&a=edit&folio='.$this->uri->segment(4).'&tipo='.$_GET['tipo'];
                                       $accion_editar_hf2 = base_url().'Sections/Documentos/HojaInicialAbierto?hf='.$value['hf_id'].'&a=edit&folio='.$this->uri->segment(4).'&tipo='.$_GET['tipo'];
                                       $opacidad = '';
-                                      if($tiempo_transcurrido_hf > 15){
+                                      if($tiempo_transcurrido_hf > 600){
                                         $accion_editar_hf1 = '#';
                                         $accion_editar_hf2 = '#';
                                         $opacidad = 'opacity: 0.4;';
@@ -257,7 +257,8 @@
                                       $accion_editar_notas = "AbrirVista(base_url+'Sections/Documentos/Notas/".$value['notas_id']."/?a=edit&TipoNota=".$value['notas_tipo']."&folio=".$this->uri->segment(4)."&via=".$_GET['via']."&doc_id=".$_GET['doc_id']."&inputVia=".$_GET['tipo']."',1100)";
                                       $opacidad_edit_notas = "";
                                       $mensaje_edit_notas = '';
-                                      if($tiempo_transcurrido_notas > 15){
+
+                                      if($tiempo_transcurrido_notas > 600){
                                         $accion_editar_notas = "";
                                         $opacidad_edit_notas = "opacity:0.4;";
                                         $mensaje_edit_notas = 'El tiempo de edición a expirado';
